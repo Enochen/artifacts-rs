@@ -7,7 +7,7 @@ echo "Downloading specs..."
 curl -L "$URL" -o openapi.json
 
 echo "Generating client..."
-openapi-generator-cli generate -i openapi.json -g rust --additional-properties=useSingleRequestParameter=true,preferUnsignedInt=true
+openapi-generator-cli generate -i openapi.json -g rust -t template --additional-properties=useSingleRequestParameter=true,preferUnsignedInt=true
 
 echo "Fixing generated code..."
 cargo clippy --fix --allow-dirty
