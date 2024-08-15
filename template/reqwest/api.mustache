@@ -56,6 +56,9 @@ pub enum {{{operationIdCamelCase}}}Success {
 pub enum {{{operationIdCamelCase}}}Error {
     {{#responses}}
     {{#is4xx}}
+    {{#message}}
+    /// {{message}}
+    {{/message}}
     Status{{code}}({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
     {{/is4xx}}
     {{#is5xx}}

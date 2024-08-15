@@ -23,7 +23,9 @@ pub struct CreateAccountAccountsCreatePostParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateAccountAccountsCreatePostError {
+    /// Username already used.
     Status456(),
+    /// Email already used.
     Status457(),
     UnknownValue(serde_json::Value),
 }

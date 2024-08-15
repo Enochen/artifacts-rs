@@ -26,6 +26,7 @@ pub struct GetAllEventsEventsGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllEventsEventsGetError {
+    /// Events not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

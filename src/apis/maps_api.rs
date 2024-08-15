@@ -39,6 +39,7 @@ pub struct GetMapMapsXyGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllMapsMapsGetError {
+    /// Maps not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -47,6 +48,7 @@ pub enum GetAllMapsMapsGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetMapMapsXyGetError {
+    /// Map not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

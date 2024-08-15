@@ -33,6 +33,7 @@ pub struct GetGeItemGeCodeGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllGeItemsGeGetError {
+    /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -41,6 +42,7 @@ pub enum GetAllGeItemsGeGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetGeItemGeCodeGetError {
+    /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

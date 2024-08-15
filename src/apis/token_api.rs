@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GenerateTokenTokenPostError {
+    /// Token generation failed.
     Status455(),
     UnknownValue(serde_json::Value),
 }

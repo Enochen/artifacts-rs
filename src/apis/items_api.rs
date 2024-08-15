@@ -45,6 +45,7 @@ pub struct GetItemItemsCodeGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllItemsItemsGetError {
+    /// Items not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -53,6 +54,7 @@ pub enum GetAllItemsItemsGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetItemItemsCodeGetError {
+    /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

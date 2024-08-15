@@ -34,6 +34,7 @@ pub struct GetBankItemsMyBankItemsGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ChangePasswordMyChangePasswordPostError {
+    /// Use a different password.
     Status458(),
     UnknownValue(serde_json::Value),
 }
@@ -49,6 +50,7 @@ pub enum GetBankGoldsMyBankGoldGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetBankItemsMyBankItemsGetError {
+    /// Items not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

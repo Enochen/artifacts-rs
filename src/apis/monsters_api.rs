@@ -39,6 +39,7 @@ pub struct GetMonsterMonstersCodeGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllMonstersMonstersGetError {
+    /// Monsters not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -47,6 +48,7 @@ pub enum GetAllMonstersMonstersGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetMonsterMonstersCodeGetError {
+    /// Monster not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

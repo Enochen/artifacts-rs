@@ -157,10 +157,14 @@ pub struct GetAllCharactersLogsMyLogsGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionAcceptNewTaskMyNameActionTaskNewPostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
     Status598(),
+    /// Character already has a task.
     Status489(),
     UnknownValue(serde_json::Value),
 }
@@ -169,12 +173,18 @@ pub enum ActionAcceptNewTaskMyNameActionTaskNewPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
     Status598(),
+    /// Character has not completed the task.
     Status488(),
+    /// Character has no task.
     Status487(),
+    /// Character inventory is full.
     Status497(),
     UnknownValue(serde_json::Value),
 }
@@ -183,13 +193,20 @@ pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionCraftingMyNameActionCraftingPostError {
+    /// Craft not found.
     Status404(),
     Status598(),
+    /// Character not found.
     Status498(),
+    /// Character inventory is full.
     Status497(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Not skill level required.
     Status493(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
     UnknownValue(serde_json::Value),
 }
@@ -198,9 +215,13 @@ pub enum ActionCraftingMyNameActionCraftingPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionDeleteItemMyNameActionDeletePostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
     UnknownValue(serde_json::Value),
 }
@@ -210,10 +231,15 @@ pub enum ActionDeleteItemMyNameActionDeletePostError {
 #[serde(untagged)]
 pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
     Status598(),
+    /// Insufficient golds on your character.
     Status492(),
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// A transaction is already in progress with this item/your golds in your bank.
     Status461(),
+    /// An action is already in progress by your character.
     Status486(),
     UnknownValue(serde_json::Value),
 }
@@ -223,11 +249,17 @@ pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
 #[serde(untagged)]
 pub enum ActionDepositBankMyNameActionBankDepositPostError {
     Status598(),
+    /// Item not found.
     Status404(),
+    /// A transaction is already in progress with this item/your golds in your bank.
     Status461(),
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
     UnknownValue(serde_json::Value),
 }
@@ -236,13 +268,21 @@ pub enum ActionDepositBankMyNameActionBankDepositPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionEquipItemMyNameActionEquipPostError {
+    /// Item not found.
     Status404(),
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
+    /// Character level is insufficient.
     Status496(),
+    /// Slot is not empty.
     Status491(),
+    /// This item is already equipped.
     Status485(),
     UnknownValue(serde_json::Value),
 }
@@ -251,10 +291,14 @@ pub enum ActionEquipItemMyNameActionEquipPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionFightMyNameActionFightPostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
     Status598(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Character inventory is full.
     Status497(),
     UnknownValue(serde_json::Value),
 }
@@ -263,11 +307,16 @@ pub enum ActionFightMyNameActionFightPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionGatheringMyNameActionGatheringPostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
     Status598(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Not skill level required.
     Status493(),
+    /// Character inventory is full.
     Status497(),
     UnknownValue(serde_json::Value),
 }
@@ -277,13 +326,21 @@ pub enum ActionGatheringMyNameActionGatheringPostError {
 #[serde(untagged)]
 pub enum ActionGeBuyItemMyNameActionGeBuyPostError {
     Status598(),
+    /// Character not found.
     Status498(),
+    /// Character inventory is full.
     Status497(),
+    /// Character in cooldown.
     Status499(),
+    /// A transaction is already in progress on this item by a another character.
     Status483(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Insufficient golds on your character.
     Status492(),
+    /// No stock for this item.
     Status480(),
+    /// No item at this price.
     Status482(),
     UnknownValue(serde_json::Value),
 }
@@ -292,12 +349,19 @@ pub enum ActionGeBuyItemMyNameActionGeBuyPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionGeSellItemMyNameActionGeSellPostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// Item not found.
     Status404(),
+    /// A transaction is already in progress on this item by a another character.
     Status483(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
+    /// No item at this price.
     Status482(),
     Status598(),
     UnknownValue(serde_json::Value),
@@ -307,10 +371,15 @@ pub enum ActionGeSellItemMyNameActionGeSellPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionMoveMyNameActionMovePostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// Character already at destination.
     Status490(),
+    /// Map not found.
     Status404(),
+    /// An action is already in progress by your character.
     Status486(),
     UnknownValue(serde_json::Value),
 }
@@ -319,14 +388,22 @@ pub enum ActionMoveMyNameActionMovePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionRecyclingMyNameActionRecyclingPostError {
+    /// Item not found.
     Status404(),
     Status598(),
+    /// Character not found.
     Status498(),
+    /// Character inventory is full.
     Status497(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Not skill level required.
     Status493(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
+    /// This item cannot be recycled.
     Status473(),
     UnknownValue(serde_json::Value),
 }
@@ -335,11 +412,16 @@ pub enum ActionRecyclingMyNameActionRecyclingPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionTaskExchangeMyNameActionTaskExchangePostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
     Status598(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
+    /// Character inventory is full.
     Status497(),
     UnknownValue(serde_json::Value),
 }
@@ -348,11 +430,17 @@ pub enum ActionTaskExchangeMyNameActionTaskExchangePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionUnequipItemMyNameActionUnequipPostError {
+    /// Item not found.
     Status404(),
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Slot is empty.
     Status491(),
+    /// Character inventory is full.
     Status497(),
     UnknownValue(serde_json::Value),
 }
@@ -361,11 +449,16 @@ pub enum ActionUnequipItemMyNameActionUnequipPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError {
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// A transaction is already in progress with this item/your golds in your bank.
     Status461(),
+    /// An action is already in progress by your character.
     Status486(),
     Status598(),
+    /// Insufficient golds in your bank.
     Status460(),
     UnknownValue(serde_json::Value),
 }
@@ -374,13 +467,20 @@ pub enum ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionWithdrawBankMyNameActionBankWithdrawPostError {
+    /// Item not found.
     Status404(),
+    /// Character not found.
     Status498(),
+    /// Character in cooldown.
     Status499(),
+    /// A transaction is already in progress with this item/your golds in your bank.
     Status461(),
+    /// An action is already in progress by your character.
     Status486(),
+    /// Character inventory is full.
     Status497(),
     Status598(),
+    /// Missing item or insufficient quantity in your inventory.
     Status478(),
     UnknownValue(serde_json::Value),
 }
@@ -389,7 +489,9 @@ pub enum ActionWithdrawBankMyNameActionBankWithdrawPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllCharactersLogsMyLogsGetError {
+    /// Logs not found.
     Status404(),
+    /// Character not found.
     Status498(),
     UnknownValue(serde_json::Value),
 }
@@ -398,6 +500,7 @@ pub enum GetAllCharactersLogsMyLogsGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetMyCharactersMyCharactersGetError {
+    /// Characters not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

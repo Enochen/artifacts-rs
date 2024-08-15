@@ -41,6 +41,7 @@ pub struct GetResourceResourcesCodeGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllResourcesResourcesGetError {
+    /// Resources not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -49,6 +50,7 @@ pub enum GetAllResourcesResourcesGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetResourceResourcesCodeGetError {
+    /// Ressource not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }

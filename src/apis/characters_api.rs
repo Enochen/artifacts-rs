@@ -47,7 +47,9 @@ pub struct GetCharacterCharactersNameGetParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateCharacterCharactersCreatePostError {
+    /// Name already used.
     Status494(),
+    /// Maximum characters reached on your account.
     Status495(),
     UnknownValue(serde_json::Value),
 }
@@ -56,6 +58,7 @@ pub enum CreateCharacterCharactersCreatePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteCharacterCharactersDeletePostError {
+    /// Character not found.
     Status498(),
     UnknownValue(serde_json::Value),
 }
@@ -64,6 +67,7 @@ pub enum DeleteCharacterCharactersDeletePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAllCharactersCharactersGetError {
+    /// Characters not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
@@ -72,6 +76,7 @@ pub enum GetAllCharactersCharactersGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetCharacterCharactersNameGetError {
+    /// Character not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
