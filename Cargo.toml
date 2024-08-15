@@ -1,10 +1,12 @@
 [package]
 name = "archaeologist"
+description = "Rust client for Artifacts"
 version = "0.1.0"
 authors = ["Enochen"]
 license = "MIT"
 edition = "2021"
 keywords = ["artifactsmmo"]
+repository = "https://github.com/Enochen/archaeologist"
 readme = "README.md"
 
 [dependencies]
