@@ -163,6 +163,7 @@ pub enum ActionAcceptNewTaskMyNameActionTaskNewPostError {
     Status499(),
     /// An action is already in progress by your character.
     Status486(),
+    /// Tasks Master not found on this map.
     Status598(),
     /// Character already has a task.
     Status489(),
@@ -179,6 +180,7 @@ pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
     Status499(),
     /// An action is already in progress by your character.
     Status486(),
+    /// Tasks Master not found on this map.
     Status598(),
     /// Character has not completed the task.
     Status488(),
@@ -195,6 +197,7 @@ pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
 pub enum ActionCraftingMyNameActionCraftingPostError {
     /// Craft not found.
     Status404(),
+    /// Workshop not found on this map.
     Status598(),
     /// Character not found.
     Status498(),
@@ -230,6 +233,7 @@ pub enum ActionDeleteItemMyNameActionDeletePostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
+    /// Bank not found on this map.
     Status598(),
     /// Insufficient golds on your character.
     Status492(),
@@ -248,6 +252,7 @@ pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionDepositBankMyNameActionBankDepositPostError {
+    /// Bank not found on this map.
     Status598(),
     /// Item not found.
     Status404(),
@@ -295,6 +300,7 @@ pub enum ActionFightMyNameActionFightPostError {
     Status498(),
     /// Character in cooldown.
     Status499(),
+    /// Monster not found on this map.
     Status598(),
     /// An action is already in progress by your character.
     Status486(),
@@ -311,6 +317,7 @@ pub enum ActionGatheringMyNameActionGatheringPostError {
     Status498(),
     /// Character in cooldown.
     Status499(),
+    /// Resource not found on this map.
     Status598(),
     /// An action is already in progress by your character.
     Status486(),
@@ -325,6 +332,7 @@ pub enum ActionGatheringMyNameActionGatheringPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ActionGeBuyItemMyNameActionGeBuyPostError {
+    /// Grand Exchange not found on this map.
     Status598(),
     /// Character not found.
     Status498(),
@@ -363,6 +371,7 @@ pub enum ActionGeSellItemMyNameActionGeSellPostError {
     Status478(),
     /// No item at this price.
     Status482(),
+    /// Grand Exchange not found on this map.
     Status598(),
     UnknownValue(serde_json::Value),
 }
@@ -390,6 +399,7 @@ pub enum ActionMoveMyNameActionMovePostError {
 pub enum ActionRecyclingMyNameActionRecyclingPostError {
     /// Item not found.
     Status404(),
+    /// Workshop not found on this map.
     Status598(),
     /// Character not found.
     Status498(),
@@ -418,6 +428,7 @@ pub enum ActionTaskExchangeMyNameActionTaskExchangePostError {
     Status499(),
     /// An action is already in progress by your character.
     Status486(),
+    /// Tasks Master not found on this map.
     Status598(),
     /// Missing item or insufficient quantity in your inventory.
     Status478(),
@@ -457,6 +468,7 @@ pub enum ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError {
     Status461(),
     /// An action is already in progress by your character.
     Status486(),
+    /// Bank not found on this map.
     Status598(),
     /// Insufficient golds in your bank.
     Status460(),
@@ -479,6 +491,7 @@ pub enum ActionWithdrawBankMyNameActionBankWithdrawPostError {
     Status486(),
     /// Character inventory is full.
     Status497(),
+    /// Bank not found on this map.
     Status598(),
     /// Missing item or insufficient quantity in your inventory.
     Status478(),
