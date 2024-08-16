@@ -1,0 +1,4 @@
+generatorName: 'rust'
+templateDir: 'template'
+useSingleRequestParameter: true
+preferUnsignedInt: true
