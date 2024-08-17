@@ -34,7 +34,10 @@ impl <T> fmt::Display for Error<T> {
             {{/supportMiddleware}}
             Error::Serde(e) => ("serde", e.to_string()),
             Error::Io(e) => ("IO", e.to_string()),
-            Error::ResponseError(e) => ("response", format!("status code {}", e.status)),
+            Error::ResponseError(e) => (
+                "response",
+                format!("status code: {}, content: {}", e.status, e.content),
+            ),
             {{#withAWSV4Signature}}
             Error::AWSV4SignatureError(e) => ("aws v4 signature", e.to_string()),
             {{/withAWSV4Signature}}
