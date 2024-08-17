@@ -1,4 +1,5 @@
-generatorName: 'rust'
-templateDir: 'template'
+generatorName: rust
+templateDir: template
 useSingleRequestParameter: true
 preferUnsignedInt: true
+basePathCustom: https://api.artifactsmmo.com
