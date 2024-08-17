@@ -17,7 +17,7 @@ async fn main() {
     let mut config = Configuration::new();
     config.bearer_access_token = Some("YOUR_TOKEN".to_owned());
 
-    match my_account_api::get_bank_golds_my_bank_gold_get(&config).await {
+    match my_account_api::get_bank_gold(&config).await {
         Ok(GoldBankResponseSchema { data }) => println!("{:?}", data),
         Err(err) => panic!("{}", err),
     }
