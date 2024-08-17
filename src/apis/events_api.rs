@@ -32,6 +32,7 @@ pub enum GetAllEventsError {
 
 impl TryFrom<StatusCode> for GetAllEventsError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

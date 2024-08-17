@@ -45,6 +45,7 @@ pub enum GetAllMonstersError {
 
 impl TryFrom<StatusCode> for GetAllMonstersError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -63,6 +64,7 @@ pub enum GetMonsterError {
 
 impl TryFrom<StatusCode> for GetMonsterError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

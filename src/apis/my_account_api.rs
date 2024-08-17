@@ -40,6 +40,7 @@ pub enum ChangePasswordError {
 
 impl TryFrom<StatusCode> for ChangePasswordError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             458 => Ok(Self::Status458),
@@ -55,6 +56,7 @@ pub enum GetBankGoldError {}
 
 impl TryFrom<StatusCode> for GetBankGoldError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             _ => Err("status code not in spec"),
@@ -72,6 +74,7 @@ pub enum GetBankItemsError {
 
 impl TryFrom<StatusCode> for GetBankItemsError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

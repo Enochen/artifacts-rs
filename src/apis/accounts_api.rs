@@ -31,6 +31,7 @@ pub enum CreateAccountError {
 
 impl TryFrom<StatusCode> for CreateAccountError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             456 => Ok(Self::Status456),

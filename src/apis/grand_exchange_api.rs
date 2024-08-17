@@ -39,6 +39,7 @@ pub enum GetAllGeItemsError {
 
 impl TryFrom<StatusCode> for GetAllGeItemsError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -57,6 +58,7 @@ pub enum GetGeItemError {
 
 impl TryFrom<StatusCode> for GetGeItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

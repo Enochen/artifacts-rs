@@ -47,6 +47,7 @@ pub enum GetAllResourcesError {
 
 impl TryFrom<StatusCode> for GetAllResourcesError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -65,6 +66,7 @@ pub enum GetResourceError {
 
 impl TryFrom<StatusCode> for GetResourceError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

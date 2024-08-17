@@ -20,6 +20,7 @@ pub enum GetStatusError {}
 
 impl TryFrom<StatusCode> for GetStatusError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             _ => Err("status code not in spec"),

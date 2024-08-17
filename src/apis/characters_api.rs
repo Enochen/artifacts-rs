@@ -55,6 +55,7 @@ pub enum CreateCharacterError {
 
 impl TryFrom<StatusCode> for CreateCharacterError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             494 => Ok(Self::Status494),
@@ -74,6 +75,7 @@ pub enum DeleteCharacterError {
 
 impl TryFrom<StatusCode> for DeleteCharacterError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -92,6 +94,7 @@ pub enum GetAllCharactersError {
 
 impl TryFrom<StatusCode> for GetAllCharactersError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -110,6 +113,7 @@ pub enum GetCharacterError {
 
 impl TryFrom<StatusCode> for GetCharacterError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),

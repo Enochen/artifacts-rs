@@ -23,6 +23,7 @@ pub enum GenerateTokenError {
 
 impl TryFrom<StatusCode> for GenerateTokenError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             455 => Ok(Self::Status455),

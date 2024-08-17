@@ -171,6 +171,7 @@ pub enum AcceptNewTaskError {
 
 impl TryFrom<StatusCode> for AcceptNewTaskError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -205,6 +206,7 @@ pub enum CompleteTaskError {
 
 impl TryFrom<StatusCode> for CompleteTaskError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -243,6 +245,7 @@ pub enum CraftError {
 
 impl TryFrom<StatusCode> for CraftError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -274,6 +277,7 @@ pub enum DeleteItemError {
 
 impl TryFrom<StatusCode> for DeleteItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -305,6 +309,7 @@ pub enum DepositGoldError {
 
 impl TryFrom<StatusCode> for DepositGoldError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             598 => Ok(Self::Status598),
@@ -340,6 +345,7 @@ pub enum DepositItemError {
 
 impl TryFrom<StatusCode> for DepositItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             598 => Ok(Self::Status598),
@@ -378,6 +384,7 @@ pub enum EquipItemError {
 
 impl TryFrom<StatusCode> for EquipItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -411,6 +418,7 @@ pub enum FightError {
 
 impl TryFrom<StatusCode> for FightError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -443,6 +451,7 @@ pub enum GatherError {
 
 impl TryFrom<StatusCode> for GatherError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -482,6 +491,7 @@ pub enum GeBuyItemError {
 
 impl TryFrom<StatusCode> for GeBuyItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             598 => Ok(Self::Status598),
@@ -522,6 +532,7 @@ pub enum GeSellItemError {
 
 impl TryFrom<StatusCode> for GeSellItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -549,6 +560,7 @@ pub enum GetAllCharactersLogsError {
 
 impl TryFrom<StatusCode> for GetAllCharactersLogsError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -568,6 +580,7 @@ pub enum GetMyCharactersError {
 
 impl TryFrom<StatusCode> for GetMyCharactersError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -594,6 +607,7 @@ pub enum MoveCharacterError {
 
 impl TryFrom<StatusCode> for MoveCharacterError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -632,6 +646,7 @@ pub enum RecycleError {
 
 impl TryFrom<StatusCode> for RecycleError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -668,6 +683,7 @@ pub enum TaskExchangeError {
 
 impl TryFrom<StatusCode> for TaskExchangeError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -701,6 +717,7 @@ pub enum UnequipItemError {
 
 impl TryFrom<StatusCode> for UnequipItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
@@ -734,6 +751,7 @@ pub enum WithdrawGoldError {
 
 impl TryFrom<StatusCode> for WithdrawGoldError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             498 => Ok(Self::Status498),
@@ -771,6 +789,7 @@ pub enum WithdrawItemError {
 
 impl TryFrom<StatusCode> for WithdrawItemError {
     type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             404 => Ok(Self::Status404),
