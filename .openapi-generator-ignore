@@ -1,8 +1,7 @@
+docs/
 .gitignore
+git_push.sh
 .travis.yml
-README.md
-openapitools.json
 Cargo.toml
 Cargo.lock
-git_push.sh
-docs/
+README.md
