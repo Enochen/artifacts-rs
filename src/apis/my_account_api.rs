@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`change_password`]
@@ -35,15 +35,31 @@ pub struct GetBankItemsParams {
 #[serde(untagged)]
 pub enum ChangePasswordError {
     /// Use a different password.
-    Status458(),
-    UnknownValue(serde_json::Value),
+    Status458,
+}
+
+impl TryFrom<StatusCode> for ChangePasswordError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            458 => Ok(Self::Status458),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_bank_gold`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetBankGoldError {
-    UnknownValue(serde_json::Value),
+pub enum GetBankGoldError {}
+
+impl TryFrom<StatusCode> for GetBankGoldError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_bank_items`]
@@ -51,8 +67,17 @@ pub enum GetBankGoldError {
 #[serde(untagged)]
 pub enum GetBankItemsError {
     /// Items not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetBankItemsError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Change your account password. Changing the password reset the account token.
@@ -89,8 +114,7 @@ pub async fn change_password(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ChangePasswordError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<ChangePasswordError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -105,8 +129,6 @@ pub async fn get_bank_gold(
     configuration: &configuration::Configuration,
 ) -> Result<models::GoldBankResponseSchema, Error<GetBankGoldError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
 
     let local_var_client = &local_var_configuration.client;
 
@@ -131,8 +153,7 @@ pub async fn get_bank_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankGoldError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetBankGoldError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -151,7 +172,9 @@ pub async fn get_bank_items(
 
     // unbox the parameters
     let item_code = params.item_code;
+    // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -189,8 +212,7 @@ pub async fn get_bank_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankItemsError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetBankItemsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

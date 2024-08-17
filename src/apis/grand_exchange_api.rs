@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`get_all_ge_items`]
@@ -34,8 +34,17 @@ pub struct GetGeItemParams {
 #[serde(untagged)]
 pub enum GetAllGeItemsError {
     /// Item not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAllGeItemsError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_ge_item`]
@@ -43,8 +52,17 @@ pub enum GetAllGeItemsError {
 #[serde(untagged)]
 pub enum GetGeItemError {
     /// Item not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetGeItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Fetch Grand Exchange items details.
@@ -56,6 +74,7 @@ pub async fn get_all_ge_items(
 
     // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -86,8 +105,7 @@ pub async fn get_all_ge_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllGeItemsError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetAllGeItemsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -131,8 +149,7 @@ pub async fn get_ge_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetGeItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

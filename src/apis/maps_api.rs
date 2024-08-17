@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`get_all_maps`]
@@ -40,8 +40,17 @@ pub struct GetMapParams {
 #[serde(untagged)]
 pub enum GetAllMapsError {
     /// Maps not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAllMapsError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_map`]
@@ -49,8 +58,17 @@ pub enum GetAllMapsError {
 #[serde(untagged)]
 pub enum GetMapError {
     /// Map not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetMapError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Fetch maps details.
@@ -62,8 +80,11 @@ pub async fn get_all_maps(
 
     // unbox the parameters
     let content_type = params.content_type;
+    // unbox the parameters
     let content_code = params.content_code;
+    // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -102,8 +123,7 @@ pub async fn get_all_maps(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllMapsError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetAllMapsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -122,6 +142,7 @@ pub async fn get_map(
 
     // unbox the parameters
     let x = params.x;
+    // unbox the parameters
     let y = params.y;
 
     let local_var_client = &local_var_configuration.client;
@@ -149,7 +170,7 @@ pub async fn get_map(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMapError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetMapError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for typed errors of method [`generate_token`]
@@ -18,8 +18,17 @@ use serde::{Deserialize, Serialize};
 #[serde(untagged)]
 pub enum GenerateTokenError {
     /// Token generation failed.
-    Status455(),
-    UnknownValue(serde_json::Value),
+    Status455,
+}
+
+impl TryFrom<StatusCode> for GenerateTokenError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            455 => Ok(Self::Status455),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Use your account as HTTPBasic Auth to generate your token to use the API. You can also generate your token directly on the website.
@@ -27,8 +36,6 @@ pub async fn generate_token(
     configuration: &configuration::Configuration,
 ) -> Result<models::TokenResponseSchema, Error<GenerateTokenError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
 
     let local_var_client = &local_var_configuration.client;
 
@@ -56,8 +63,7 @@ pub async fn generate_token(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GenerateTokenError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GenerateTokenError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

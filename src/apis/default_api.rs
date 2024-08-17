@@ -10,14 +10,21 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for typed errors of method [`get_status`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetStatusError {
-    UnknownValue(serde_json::Value),
+pub enum GetStatusError {}
+
+impl TryFrom<StatusCode> for GetStatusError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Return the status of the game server.
@@ -25,8 +32,6 @@ pub async fn get_status(
     configuration: &configuration::Configuration,
 ) -> Result<models::StatusResponseSchema, Error<GetStatusError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
 
     let local_var_client = &local_var_configuration.client;
 
@@ -48,8 +53,7 @@ pub async fn get_status(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetStatusError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetStatusError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

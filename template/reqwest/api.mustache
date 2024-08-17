@@ -1,6 +1,6 @@
 {{>partial_header}}
 
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
@@ -36,10 +36,10 @@ pub struct {{{operationIdCamelCase}}}Params {
 pub enum {{{operationIdCamelCase}}}Success {
     {{#responses}}
     {{#is2xx}}
-    Status{{code}}({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
+    Status{{code}}{{#isEnum}}{{#enumName}}({{.}}){{/enumName}}{{/isEnum}}{{^isEnum}}{{#dataType}}({{.}}){{/dataType}}{{/isEnum}},
     {{/is2xx}}
     {{#is3xx}}
-    Status{{code}}({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
+    Status{{code}}{{#isEnum}}{{#enumName}}({{.}}){{/enumName}}{{/isEnum}}{{^isEnum}}{{#dataType}}({{.}}){{/dataType}}{{/isEnum}},
     {{/is3xx}}
     {{/responses}}
     UnknownValue(serde_json::Value),
@@ -57,17 +57,30 @@ pub enum {{{operationIdCamelCase}}}Error {
     {{#responses}}
     {{#is4xx}}
     {{#message}}/// {{.}}{{/message}}
-    Status{{code}}({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
+    Status{{code}}{{#isEnum}}{{#enumName}}({{.}}){{/enumName}}{{/isEnum}}{{^isEnum}}{{#dataType}}({{.}}){{/dataType}}{{/isEnum}},
     {{/is4xx}}
     {{#is5xx}}
     {{#message}}/// {{.}}{{/message}}
-    Status{{code}}({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
+    Status{{code}}{{#isEnum}}{{#enumName}}({{.}}){{/enumName}}{{/isEnum}}{{^isEnum}}{{#dataType}}({{.}}){{/dataType}}{{/isEnum}},
     {{/is5xx}}
-    {{#isDefault}}
-    DefaultResponse({{#isEnum}}{{{enumName}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}),
-    {{/isDefault}}
     {{/responses}}
-    UnknownValue(serde_json::Value),
+}
+
+impl TryFrom<StatusCode> for {{{operationIdCamelCase}}}Error {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            {{#responses}}
+            {{#is4xx}}
+            {{code}} => Ok(Self::Status{{code}}),
+            {{/is4xx}}
+            {{#is5xx}}
+            {{code}} => Ok(Self::Status{{code}}),
+            {{/is5xx}}
+            {{/responses}}
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 {{/operation}}
@@ -85,8 +98,8 @@ pub enum {{{operationIdCamelCase}}}Error {
 pub {{#supportAsync}}async {{/supportAsync}}fn {{{operationId}}}(configuration: &configuration::Configuration{{#allParams}}{{#-first}}, params: {{{operationIdCamelCase}}}Params{{/-first}}{{/allParams}}) -> Result<{{#supportMultipleResponses}}ResponseContent<{{{operationIdCamelCase}}}Success>{{/supportMultipleResponses}}{{^supportMultipleResponses}}{{^returnType}}(){{/returnType}}{{{returnType}}}{{/supportMultipleResponses}}, Error<{{{operationIdCamelCase}}}Error>> {
     let local_var_configuration = configuration;
 
-    // unbox the parameters
     {{#allParams}}
+    // unbox the parameters
     let {{paramName}} = params.{{paramName}};
     {{/allParams}}
 
@@ -364,7 +377,7 @@ pub {{#supportAsync}}async {{/supportAsync}}fn {{{operationId}}}(configuration: 
         Ok(local_var_result)
         {{/supportMultipleResponses}}
     } else {
-        let local_var_entity: Option<{{{operationIdCamelCase}}}Error> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<{{{operationIdCamelCase}}}Error> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
     }

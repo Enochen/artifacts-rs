@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`get_all_monsters`]
@@ -40,8 +40,17 @@ pub struct GetMonsterParams {
 #[serde(untagged)]
 pub enum GetAllMonstersError {
     /// Monsters not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAllMonstersError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_monster`]
@@ -49,8 +58,17 @@ pub enum GetAllMonstersError {
 #[serde(untagged)]
 pub enum GetMonsterError {
     /// Monster not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetMonsterError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Fetch monsters details.
@@ -62,9 +80,13 @@ pub async fn get_all_monsters(
 
     // unbox the parameters
     let min_level = params.min_level;
+    // unbox the parameters
     let max_level = params.max_level;
+    // unbox the parameters
     let drop = params.drop;
+    // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -107,8 +129,7 @@ pub async fn get_all_monsters(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllMonstersError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetAllMonstersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -152,8 +173,7 @@ pub async fn get_monster(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMonsterError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetMonsterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

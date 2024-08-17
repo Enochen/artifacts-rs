@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`create_account`]
@@ -24,10 +24,20 @@ pub struct CreateAccountParams {
 #[serde(untagged)]
 pub enum CreateAccountError {
     /// Username already used.
-    Status456(),
+    Status456,
     /// Email already used.
-    Status457(),
-    UnknownValue(serde_json::Value),
+    Status457,
+}
+
+impl TryFrom<StatusCode> for CreateAccountError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            456 => Ok(Self::Status456),
+            457 => Ok(Self::Status457),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Create an account.
@@ -61,8 +71,7 @@ pub async fn create_account(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateAccountError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<CreateAccountError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

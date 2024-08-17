@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`create_character`]
@@ -48,10 +48,20 @@ pub struct GetCharacterParams {
 #[serde(untagged)]
 pub enum CreateCharacterError {
     /// Name already used.
-    Status494(),
+    Status494,
     /// Maximum characters reached on your account.
-    Status495(),
-    UnknownValue(serde_json::Value),
+    Status495,
+}
+
+impl TryFrom<StatusCode> for CreateCharacterError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            494 => Ok(Self::Status494),
+            495 => Ok(Self::Status495),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`delete_character`]
@@ -59,8 +69,17 @@ pub enum CreateCharacterError {
 #[serde(untagged)]
 pub enum DeleteCharacterError {
     /// Character not found.
-    Status498(),
-    UnknownValue(serde_json::Value),
+    Status498,
+}
+
+impl TryFrom<StatusCode> for DeleteCharacterError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_all_characters`]
@@ -68,8 +87,17 @@ pub enum DeleteCharacterError {
 #[serde(untagged)]
 pub enum GetAllCharactersError {
     /// Characters not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAllCharactersError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_character`]
@@ -77,8 +105,17 @@ pub enum GetAllCharactersError {
 #[serde(untagged)]
 pub enum GetCharacterError {
     /// Character not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetCharacterError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Create new character on your account. You can create up to 5 characters.
@@ -115,8 +152,7 @@ pub async fn create_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateCharacterError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<CreateCharacterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -160,8 +196,7 @@ pub async fn delete_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DeleteCharacterError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<DeleteCharacterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -180,7 +215,9 @@ pub async fn get_all_characters(
 
     // unbox the parameters
     let sort = params.sort;
+    // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -215,8 +252,7 @@ pub async fn get_all_characters(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllCharactersError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetAllCharactersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -260,8 +296,7 @@ pub async fn get_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharacterError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetCharacterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

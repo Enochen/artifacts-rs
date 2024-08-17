@@ -10,7 +10,7 @@
 
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
-use reqwest;
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
 /// struct for passing parameters to the method [`accept_new_task`]
@@ -158,16 +158,29 @@ pub struct WithdrawItemParams {
 #[serde(untagged)]
 pub enum AcceptNewTaskError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Tasks Master not found on this map.
-    Status598(),
+    Status598,
     /// Character already has a task.
-    Status489(),
-    UnknownValue(serde_json::Value),
+    Status489,
+}
+
+impl TryFrom<StatusCode> for AcceptNewTaskError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            598 => Ok(Self::Status598),
+            489 => Ok(Self::Status489),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`complete_task`]
@@ -175,20 +188,35 @@ pub enum AcceptNewTaskError {
 #[serde(untagged)]
 pub enum CompleteTaskError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Tasks Master not found on this map.
-    Status598(),
+    Status598,
     /// Character has not completed the task.
-    Status488(),
+    Status488,
     /// Character has no task.
-    Status487(),
+    Status487,
     /// Character inventory is full.
-    Status497(),
-    UnknownValue(serde_json::Value),
+    Status497,
+}
+
+impl TryFrom<StatusCode> for CompleteTaskError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            598 => Ok(Self::Status598),
+            488 => Ok(Self::Status488),
+            487 => Ok(Self::Status487),
+            497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`craft`]
@@ -196,22 +224,38 @@ pub enum CompleteTaskError {
 #[serde(untagged)]
 pub enum CraftError {
     /// Craft not found.
-    Status404(),
+    Status404,
     /// Workshop not found on this map.
-    Status598(),
+    Status598,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character inventory is full.
-    Status497(),
+    Status497,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Not skill level required.
-    Status493(),
+    Status493,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
-    UnknownValue(serde_json::Value),
+    Status478,
+}
+
+impl TryFrom<StatusCode> for CraftError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            493 => Ok(Self::Status493),
+            478 => Ok(Self::Status478),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`delete_item`]
@@ -219,14 +263,26 @@ pub enum CraftError {
 #[serde(untagged)]
 pub enum DeleteItemError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
-    UnknownValue(serde_json::Value),
+    Status478,
+}
+
+impl TryFrom<StatusCode> for DeleteItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`deposit_gold`]
@@ -234,18 +290,32 @@ pub enum DeleteItemError {
 #[serde(untagged)]
 pub enum DepositGoldError {
     /// Bank not found on this map.
-    Status598(),
+    Status598,
     /// Insufficient golds on your character.
-    Status492(),
+    Status492,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// A transaction is already in progress with this item/your golds in your bank.
-    Status461(),
+    Status461,
     /// An action is already in progress by your character.
-    Status486(),
-    UnknownValue(serde_json::Value),
+    Status486,
+}
+
+impl TryFrom<StatusCode> for DepositGoldError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            492 => Ok(Self::Status492),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            461 => Ok(Self::Status461),
+            486 => Ok(Self::Status486),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`deposit_item`]
@@ -253,20 +323,35 @@ pub enum DepositGoldError {
 #[serde(untagged)]
 pub enum DepositItemError {
     /// Bank not found on this map.
-    Status598(),
+    Status598,
     /// Item not found.
-    Status404(),
+    Status404,
     /// A transaction is already in progress with this item/your golds in your bank.
-    Status461(),
+    Status461,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
-    UnknownValue(serde_json::Value),
+    Status478,
+}
+
+impl TryFrom<StatusCode> for DepositItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            404 => Ok(Self::Status404),
+            461 => Ok(Self::Status461),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`equip_item`]
@@ -274,22 +359,38 @@ pub enum DepositItemError {
 #[serde(untagged)]
 pub enum EquipItemError {
     /// Item not found.
-    Status404(),
+    Status404,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
+    Status478,
     /// Character level is insufficient.
-    Status496(),
+    Status496,
     /// Slot is not empty.
-    Status491(),
+    Status491,
     /// This item is already equipped.
-    Status485(),
-    UnknownValue(serde_json::Value),
+    Status485,
+}
+
+impl TryFrom<StatusCode> for EquipItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            496 => Ok(Self::Status496),
+            491 => Ok(Self::Status491),
+            485 => Ok(Self::Status485),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`fight`]
@@ -297,16 +398,29 @@ pub enum EquipItemError {
 #[serde(untagged)]
 pub enum FightError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// Monster not found on this map.
-    Status598(),
+    Status598,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Character inventory is full.
-    Status497(),
-    UnknownValue(serde_json::Value),
+    Status497,
+}
+
+impl TryFrom<StatusCode> for FightError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            598 => Ok(Self::Status598),
+            486 => Ok(Self::Status486),
+            497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`gather`]
@@ -314,18 +428,32 @@ pub enum FightError {
 #[serde(untagged)]
 pub enum GatherError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// Resource not found on this map.
-    Status598(),
+    Status598,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Not skill level required.
-    Status493(),
+    Status493,
     /// Character inventory is full.
-    Status497(),
-    UnknownValue(serde_json::Value),
+    Status497,
+}
+
+impl TryFrom<StatusCode> for GatherError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            598 => Ok(Self::Status598),
+            486 => Ok(Self::Status486),
+            493 => Ok(Self::Status493),
+            497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`ge_buy_item`]
@@ -333,24 +461,41 @@ pub enum GatherError {
 #[serde(untagged)]
 pub enum GeBuyItemError {
     /// Grand Exchange not found on this map.
-    Status598(),
+    Status598,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character inventory is full.
-    Status497(),
+    Status497,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// A transaction is already in progress on this item by a another character.
-    Status483(),
+    Status483,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Insufficient golds on your character.
-    Status492(),
+    Status492,
     /// No stock for this item.
-    Status480(),
+    Status480,
     /// No item at this price.
-    Status482(),
-    UnknownValue(serde_json::Value),
+    Status482,
+}
+
+impl TryFrom<StatusCode> for GeBuyItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            483 => Ok(Self::Status483),
+            486 => Ok(Self::Status486),
+            492 => Ok(Self::Status492),
+            480 => Ok(Self::Status480),
+            482 => Ok(Self::Status482),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`ge_sell_item`]
@@ -358,22 +503,38 @@ pub enum GeBuyItemError {
 #[serde(untagged)]
 pub enum GeSellItemError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// Item not found.
-    Status404(),
+    Status404,
     /// A transaction is already in progress on this item by a another character.
-    Status483(),
+    Status483,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
+    Status478,
     /// No item at this price.
-    Status482(),
+    Status482,
     /// Grand Exchange not found on this map.
-    Status598(),
-    UnknownValue(serde_json::Value),
+    Status598,
+}
+
+impl TryFrom<StatusCode> for GeSellItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            404 => Ok(Self::Status404),
+            483 => Ok(Self::Status483),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            482 => Ok(Self::Status482),
+            598 => Ok(Self::Status598),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_all_characters_logs`]
@@ -381,10 +542,20 @@ pub enum GeSellItemError {
 #[serde(untagged)]
 pub enum GetAllCharactersLogsError {
     /// Logs not found.
-    Status404(),
+    Status404,
     /// Character not found.
-    Status498(),
-    UnknownValue(serde_json::Value),
+    Status498,
+}
+
+impl TryFrom<StatusCode> for GetAllCharactersLogsError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_my_characters`]
@@ -392,8 +563,17 @@ pub enum GetAllCharactersLogsError {
 #[serde(untagged)]
 pub enum GetMyCharactersError {
     /// Characters not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetMyCharactersError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`move_character`]
@@ -401,16 +581,29 @@ pub enum GetMyCharactersError {
 #[serde(untagged)]
 pub enum MoveCharacterError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// Character already at destination.
-    Status490(),
+    Status490,
     /// Map not found.
-    Status404(),
+    Status404,
     /// An action is already in progress by your character.
-    Status486(),
-    UnknownValue(serde_json::Value),
+    Status486,
+}
+
+impl TryFrom<StatusCode> for MoveCharacterError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            490 => Ok(Self::Status490),
+            404 => Ok(Self::Status404),
+            486 => Ok(Self::Status486),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`recycle`]
@@ -418,24 +611,41 @@ pub enum MoveCharacterError {
 #[serde(untagged)]
 pub enum RecycleError {
     /// Item not found.
-    Status404(),
+    Status404,
     /// Workshop not found on this map.
-    Status598(),
+    Status598,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character inventory is full.
-    Status497(),
+    Status497,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Not skill level required.
-    Status493(),
+    Status493,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
+    Status478,
     /// This item cannot be recycled.
-    Status473(),
-    UnknownValue(serde_json::Value),
+    Status473,
+}
+
+impl TryFrom<StatusCode> for RecycleError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            493 => Ok(Self::Status493),
+            478 => Ok(Self::Status478),
+            473 => Ok(Self::Status473),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`task_exchange`]
@@ -443,18 +653,32 @@ pub enum RecycleError {
 #[serde(untagged)]
 pub enum TaskExchangeError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Tasks Master not found on this map.
-    Status598(),
+    Status598,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
+    Status478,
     /// Character inventory is full.
-    Status497(),
-    UnknownValue(serde_json::Value),
+    Status497,
+}
+
+impl TryFrom<StatusCode> for TaskExchangeError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            598 => Ok(Self::Status598),
+            478 => Ok(Self::Status478),
+            497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`unequip_item`]
@@ -462,18 +686,32 @@ pub enum TaskExchangeError {
 #[serde(untagged)]
 pub enum UnequipItemError {
     /// Item not found.
-    Status404(),
+    Status404,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Slot is empty.
-    Status491(),
+    Status491,
     /// Character inventory is full.
-    Status497(),
-    UnknownValue(serde_json::Value),
+    Status497,
+}
+
+impl TryFrom<StatusCode> for UnequipItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            491 => Ok(Self::Status491),
+            497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`withdraw_gold`]
@@ -481,18 +719,32 @@ pub enum UnequipItemError {
 #[serde(untagged)]
 pub enum WithdrawGoldError {
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// A transaction is already in progress with this item/your golds in your bank.
-    Status461(),
+    Status461,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Bank not found on this map.
-    Status598(),
+    Status598,
     /// Insufficient golds in your bank.
-    Status460(),
-    UnknownValue(serde_json::Value),
+    Status460,
+}
+
+impl TryFrom<StatusCode> for WithdrawGoldError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            461 => Ok(Self::Status461),
+            486 => Ok(Self::Status486),
+            598 => Ok(Self::Status598),
+            460 => Ok(Self::Status460),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// struct for typed errors of method [`withdraw_item`]
@@ -500,22 +752,38 @@ pub enum WithdrawGoldError {
 #[serde(untagged)]
 pub enum WithdrawItemError {
     /// Item not found.
-    Status404(),
+    Status404,
     /// Character not found.
-    Status498(),
+    Status498,
     /// Character in cooldown.
-    Status499(),
+    Status499,
     /// A transaction is already in progress with this item/your golds in your bank.
-    Status461(),
+    Status461,
     /// An action is already in progress by your character.
-    Status486(),
+    Status486,
     /// Character inventory is full.
-    Status497(),
+    Status497,
     /// Bank not found on this map.
-    Status598(),
+    Status598,
     /// Missing item or insufficient quantity in your inventory.
-    Status478(),
-    UnknownValue(serde_json::Value),
+    Status478,
+}
+
+impl TryFrom<StatusCode> for WithdrawItemError {
+    type Error = &'static str;
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            461 => Ok(Self::Status461),
+            486 => Ok(Self::Status486),
+            497 => Ok(Self::Status497),
+            598 => Ok(Self::Status598),
+            478 => Ok(Self::Status478),
+            _ => Err("status code not in spec"),
+        }
+    }
 }
 
 /// Accepting a new task.
@@ -555,8 +823,7 @@ pub async fn accept_new_task(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<AcceptNewTaskError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<AcceptNewTaskError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -603,8 +870,7 @@ pub async fn complete_task(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CompleteTaskError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<CompleteTaskError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -623,6 +889,7 @@ pub async fn craft(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let crafting_schema = params.crafting_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -653,7 +920,7 @@ pub async fn craft(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CraftError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<CraftError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -672,6 +939,7 @@ pub async fn delete_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let simple_item_schema = params.simple_item_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -702,8 +970,7 @@ pub async fn delete_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DeleteItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<DeleteItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -722,6 +989,7 @@ pub async fn deposit_gold(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let deposit_withdraw_gold_schema = params.deposit_withdraw_gold_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -752,8 +1020,7 @@ pub async fn deposit_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DepositGoldError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<DepositGoldError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -772,6 +1039,7 @@ pub async fn deposit_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let simple_item_schema = params.simple_item_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -802,8 +1070,7 @@ pub async fn deposit_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DepositItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<DepositItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -822,6 +1089,7 @@ pub async fn equip_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let equip_schema = params.equip_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -852,8 +1120,7 @@ pub async fn equip_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<EquipItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<EquipItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -900,7 +1167,7 @@ pub async fn fight(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<FightError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<FightError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -947,7 +1214,7 @@ pub async fn gather(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GatherError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GatherError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -966,6 +1233,7 @@ pub async fn ge_buy_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let ge_transaction_item_schema = params.ge_transaction_item_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -996,8 +1264,7 @@ pub async fn ge_buy_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeBuyItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GeBuyItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1016,6 +1283,7 @@ pub async fn ge_sell_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let ge_transaction_item_schema = params.ge_transaction_item_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1046,8 +1314,7 @@ pub async fn ge_sell_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeSellItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GeSellItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1066,6 +1333,7 @@ pub async fn get_all_characters_logs(
 
     // unbox the parameters
     let page = params.page;
+    // unbox the parameters
     let size = params.size;
 
     let local_var_client = &local_var_configuration.client;
@@ -1099,8 +1367,7 @@ pub async fn get_all_characters_logs(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllCharactersLogsError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetAllCharactersLogsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1115,8 +1382,6 @@ pub async fn get_my_characters(
     configuration: &configuration::Configuration,
 ) -> Result<models::MyCharactersListSchema, Error<GetMyCharactersError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
 
     let local_var_client = &local_var_configuration.client;
 
@@ -1141,8 +1406,7 @@ pub async fn get_my_characters(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMyCharactersError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetMyCharactersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1161,6 +1425,7 @@ pub async fn move_character(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let destination_schema = params.destination_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1191,8 +1456,7 @@ pub async fn move_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<MoveCharacterError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<MoveCharacterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1211,6 +1475,7 @@ pub async fn recycle(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let recycling_schema = params.recycling_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1241,7 +1506,7 @@ pub async fn recycle(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<RecycleError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<RecycleError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1288,8 +1553,7 @@ pub async fn task_exchange(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<TaskExchangeError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<TaskExchangeError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1308,6 +1572,7 @@ pub async fn unequip_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let unequip_schema = params.unequip_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1338,8 +1603,7 @@ pub async fn unequip_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<UnequipItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<UnequipItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1358,6 +1622,7 @@ pub async fn withdraw_gold(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let deposit_withdraw_gold_schema = params.deposit_withdraw_gold_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1388,8 +1653,7 @@ pub async fn withdraw_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<WithdrawGoldError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<WithdrawGoldError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1408,6 +1672,7 @@ pub async fn withdraw_item(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
     let simple_item_schema = params.simple_item_schema;
 
     let local_var_client = &local_var_configuration.client;
@@ -1438,8 +1703,7 @@ pub async fn withdraw_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<WithdrawItemError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<WithdrawItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
