@@ -13,9 +13,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_maps_maps_get`]
+/// struct for passing parameters to the method [`get_all_maps`]
 #[derive(Clone, Debug)]
-pub struct GetAllMapsMapsGetParams {
+pub struct GetAllMapsParams {
     /// Type of content on the map.
     pub content_type: Option<String>,
     /// Content code on the map.
@@ -26,38 +26,38 @@ pub struct GetAllMapsMapsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_map_maps_xy_get`]
+/// struct for passing parameters to the method [`get_map`]
 #[derive(Clone, Debug)]
-pub struct GetMapMapsXyGetParams {
+pub struct GetMapParams {
     /// The position x of the map.
     pub x: i32,
     /// The position X of the map.
     pub y: i32,
 }
 
-/// struct for typed errors of method [`get_all_maps_maps_get`]
+/// struct for typed errors of method [`get_all_maps`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllMapsMapsGetError {
+pub enum GetAllMapsError {
     /// Maps not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_map_maps_xy_get`]
+/// struct for typed errors of method [`get_map`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetMapMapsXyGetError {
+pub enum GetMapError {
     /// Map not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch maps details.
-pub async fn get_all_maps_maps_get(
+pub async fn get_all_maps(
     configuration: &configuration::Configuration,
-    params: GetAllMapsMapsGetParams,
-) -> Result<models::DataPageMapSchema, Error<GetAllMapsMapsGetError>> {
+    params: GetAllMapsParams,
+) -> Result<models::DataPageMapSchema, Error<GetAllMapsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -102,7 +102,7 @@ pub async fn get_all_maps_maps_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllMapsMapsGetError> =
+        let local_var_entity: Option<GetAllMapsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -114,10 +114,10 @@ pub async fn get_all_maps_maps_get(
 }
 
 /// Retrieve the details of a map.
-pub async fn get_map_maps_xy_get(
+pub async fn get_map(
     configuration: &configuration::Configuration,
-    params: GetMapMapsXyGetParams,
-) -> Result<models::MapResponseSchema, Error<GetMapMapsXyGetError>> {
+    params: GetMapParams,
+) -> Result<models::MapResponseSchema, Error<GetMapError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -149,8 +149,7 @@ pub async fn get_map_maps_xy_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMapMapsXyGetError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetMapError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

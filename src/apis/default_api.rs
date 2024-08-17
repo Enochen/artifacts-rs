@@ -13,17 +13,17 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for typed errors of method [`get_status_get`]
+/// struct for typed errors of method [`get_status`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetStatusGetError {
+pub enum GetStatusError {
     UnknownValue(serde_json::Value),
 }
 
 /// Return the status of the game server.
-pub async fn get_status_get(
+pub async fn get_status(
     configuration: &configuration::Configuration,
-) -> Result<models::StatusResponseSchema, Error<GetStatusGetError>> {
+) -> Result<models::StatusResponseSchema, Error<GetStatusError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -48,7 +48,7 @@ pub async fn get_status_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetStatusGetError> =
+        let local_var_entity: Option<GetStatusError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

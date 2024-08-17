@@ -13,9 +13,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_items_items_get`]
+/// struct for passing parameters to the method [`get_all_items`]
 #[derive(Clone, Debug)]
-pub struct GetAllItemsItemsGetParams {
+pub struct GetAllItemsParams {
     /// Minimum level items.
     pub min_level: Option<u32>,
     /// Maximum level items.
@@ -34,36 +34,36 @@ pub struct GetAllItemsItemsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_item_items_code_get`]
+/// struct for passing parameters to the method [`get_item`]
 #[derive(Clone, Debug)]
-pub struct GetItemItemsCodeGetParams {
+pub struct GetItemParams {
     /// The code of the item.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_items_items_get`]
+/// struct for typed errors of method [`get_all_items`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllItemsItemsGetError {
+pub enum GetAllItemsError {
     /// Items not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_item_items_code_get`]
+/// struct for typed errors of method [`get_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetItemItemsCodeGetError {
+pub enum GetItemError {
     /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch items details.
-pub async fn get_all_items_items_get(
+pub async fn get_all_items(
     configuration: &configuration::Configuration,
-    params: GetAllItemsItemsGetParams,
-) -> Result<models::DataPageItemSchema, Error<GetAllItemsItemsGetError>> {
+    params: GetAllItemsParams,
+) -> Result<models::DataPageItemSchema, Error<GetAllItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -128,7 +128,7 @@ pub async fn get_all_items_items_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllItemsItemsGetError> =
+        let local_var_entity: Option<GetAllItemsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -140,10 +140,10 @@ pub async fn get_all_items_items_get(
 }
 
 /// Retrieve the details of a item.
-pub async fn get_item_items_code_get(
+pub async fn get_item(
     configuration: &configuration::Configuration,
-    params: GetItemItemsCodeGetParams,
-) -> Result<models::ItemResponseSchema, Error<GetItemItemsCodeGetError>> {
+    params: GetItemParams,
+) -> Result<models::ItemResponseSchema, Error<GetItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -173,8 +173,7 @@ pub async fn get_item_items_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetItemItemsCodeGetError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GetItemError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

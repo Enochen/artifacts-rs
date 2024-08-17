@@ -13,9 +13,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_monsters_monsters_get`]
+/// struct for passing parameters to the method [`get_all_monsters`]
 #[derive(Clone, Debug)]
-pub struct GetAllMonstersMonstersGetParams {
+pub struct GetAllMonstersParams {
     /// Monster minimum level.
     pub min_level: Option<u32>,
     /// Monster maximum level.
@@ -28,36 +28,36 @@ pub struct GetAllMonstersMonstersGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_monster_monsters_code_get`]
+/// struct for passing parameters to the method [`get_monster`]
 #[derive(Clone, Debug)]
-pub struct GetMonsterMonstersCodeGetParams {
+pub struct GetMonsterParams {
     /// The code of the monster.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_monsters_monsters_get`]
+/// struct for typed errors of method [`get_all_monsters`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllMonstersMonstersGetError {
+pub enum GetAllMonstersError {
     /// Monsters not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_monster_monsters_code_get`]
+/// struct for typed errors of method [`get_monster`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetMonsterMonstersCodeGetError {
+pub enum GetMonsterError {
     /// Monster not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch monsters details.
-pub async fn get_all_monsters_monsters_get(
+pub async fn get_all_monsters(
     configuration: &configuration::Configuration,
-    params: GetAllMonstersMonstersGetParams,
-) -> Result<models::DataPageMonsterSchema, Error<GetAllMonstersMonstersGetError>> {
+    params: GetAllMonstersParams,
+) -> Result<models::DataPageMonsterSchema, Error<GetAllMonstersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -107,7 +107,7 @@ pub async fn get_all_monsters_monsters_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllMonstersMonstersGetError> =
+        let local_var_entity: Option<GetAllMonstersError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -119,10 +119,10 @@ pub async fn get_all_monsters_monsters_get(
 }
 
 /// Retrieve the details of a monster.
-pub async fn get_monster_monsters_code_get(
+pub async fn get_monster(
     configuration: &configuration::Configuration,
-    params: GetMonsterMonstersCodeGetParams,
-) -> Result<models::MonsterResponseSchema, Error<GetMonsterMonstersCodeGetError>> {
+    params: GetMonsterParams,
+) -> Result<models::MonsterResponseSchema, Error<GetMonsterError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -152,7 +152,7 @@ pub async fn get_monster_monsters_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMonsterMonstersCodeGetError> =
+        let local_var_entity: Option<GetMonsterError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

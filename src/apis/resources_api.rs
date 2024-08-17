@@ -13,9 +13,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_resources_resources_get`]
+/// struct for passing parameters to the method [`get_all_resources`]
 #[derive(Clone, Debug)]
-pub struct GetAllResourcesResourcesGetParams {
+pub struct GetAllResourcesParams {
     /// Skill minimum level.
     pub min_level: Option<u32>,
     /// Skill maximum level.
@@ -30,36 +30,36 @@ pub struct GetAllResourcesResourcesGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_resource_resources_code_get`]
+/// struct for passing parameters to the method [`get_resource`]
 #[derive(Clone, Debug)]
-pub struct GetResourceResourcesCodeGetParams {
+pub struct GetResourceParams {
     /// The code of the resource.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_resources_resources_get`]
+/// struct for typed errors of method [`get_all_resources`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllResourcesResourcesGetError {
+pub enum GetAllResourcesError {
     /// Resources not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_resource_resources_code_get`]
+/// struct for typed errors of method [`get_resource`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetResourceResourcesCodeGetError {
+pub enum GetResourceError {
     /// Ressource not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch resources details.
-pub async fn get_all_resources_resources_get(
+pub async fn get_all_resources(
     configuration: &configuration::Configuration,
-    params: GetAllResourcesResourcesGetParams,
-) -> Result<models::DataPageResourceSchema, Error<GetAllResourcesResourcesGetError>> {
+    params: GetAllResourcesParams,
+) -> Result<models::DataPageResourceSchema, Error<GetAllResourcesError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -114,7 +114,7 @@ pub async fn get_all_resources_resources_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllResourcesResourcesGetError> =
+        let local_var_entity: Option<GetAllResourcesError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -126,10 +126,10 @@ pub async fn get_all_resources_resources_get(
 }
 
 /// Retrieve the details of a resource.
-pub async fn get_resource_resources_code_get(
+pub async fn get_resource(
     configuration: &configuration::Configuration,
-    params: GetResourceResourcesCodeGetParams,
-) -> Result<models::ResourceResponseSchema, Error<GetResourceResourcesCodeGetError>> {
+    params: GetResourceParams,
+) -> Result<models::ResourceResponseSchema, Error<GetResourceError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -159,7 +159,7 @@ pub async fn get_resource_resources_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetResourceResourcesCodeGetError> =
+        let local_var_entity: Option<GetResourceError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

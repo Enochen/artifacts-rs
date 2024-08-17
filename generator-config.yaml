@@ -3,3 +3,44 @@ templateDir: template
 useSingleRequestParameter: true
 preferUnsignedInt: true
 basePathCustom: https://api.artifactsmmo.com
+operationIdNameMappings:
+  actionMoveMyNameActionMovePost: move_character
+  actionEquipItemMyNameActionEquipPost: equip_item
+  actionUnequipItemMyNameActionUnequipPost: unequip_item
+  actionFightMyNameActionFightPost: fight
+  actionGatheringMyNameActionGatheringPost: gather
+  actionCraftingMyNameActionCraftingPost: craft
+  actionDepositBankMyNameActionBankDepositPost: deposit_item
+  actionDepositBankGoldMyNameActionBankDepositGoldPost: deposit_gold
+  actionRecyclingMyNameActionRecyclingPost: recycle
+  actionWithdrawBankMyNameActionBankWithdrawPost: withdraw_item
+  actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost: withdraw_gold
+  actionGeBuyItemMyNameActionGeBuyPost: ge_buy_item
+  actionGeSellItemMyNameActionGeSellPost: ge_sell_item
+  actionAcceptNewTaskMyNameActionTaskNewPost: accept_new_task
+  actionCompleteTaskMyNameActionTaskCompletePost: complete_task
+  actionTaskExchangeMyNameActionTaskExchangePost: task_exchange
+  actionDeleteItemMyNameActionDeletePost: delete_item
+  getAllCharactersLogsMyLogsGet: get_all_characters_logs
+  getMyCharactersMyCharactersGet: get_my_characters
+  getBankItemsMyBankItemsGet: get_bank_items
+  getBankGoldsMyBankGoldGet: get_bank_gold
+  changePasswordMyChangePasswordPost: change_password
+  createCharacterCharactersCreatePost: create_character
+  deleteCharacterCharactersDeletePost: delete_character
+  getAllCharactersCharactersGet: get_all_characters
+  getCharacterCharactersNameGet: get_character
+  getAllMapsMapsGet: get_all_maps
+  getMapMapsXYGet: get_map
+  getAllItemsItemsGet: get_all_items
+  getItemItemsCodeGet: get_item
+  getAllMonstersMonstersGet: get_all_monsters
+  getMonsterMonstersCodeGet: get_monster
+  getAllResourcesResourcesGet: get_all_resources
+  getResourceResourcesCodeGet: get_resource
+  getAllEventsEventsGet: get_all_events
+  getAllGeItemsGeGet: get_all_ge_items
+  getGeItemGeCodeGet: get_ge_item
+  createAccountAccountsCreatePost: create_account
+  generateTokenTokenPost: generate_token
+  getStatusGet: get_status

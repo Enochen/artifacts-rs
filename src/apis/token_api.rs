@@ -13,19 +13,19 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for typed errors of method [`generate_token_token_post`]
+/// struct for typed errors of method [`generate_token`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GenerateTokenTokenPostError {
+pub enum GenerateTokenError {
     /// Token generation failed.
     Status455(),
     UnknownValue(serde_json::Value),
 }
 
 /// Use your account as HTTPBasic Auth to generate your token to use the API. You can also generate your token directly on the website.
-pub async fn generate_token_token_post(
+pub async fn generate_token(
     configuration: &configuration::Configuration,
-) -> Result<models::TokenResponseSchema, Error<GenerateTokenTokenPostError>> {
+) -> Result<models::TokenResponseSchema, Error<GenerateTokenError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -56,7 +56,7 @@ pub async fn generate_token_token_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GenerateTokenTokenPostError> =
+        let local_var_entity: Option<GenerateTokenError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

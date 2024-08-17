@@ -13,29 +13,29 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_events_events_get`]
+/// struct for passing parameters to the method [`get_all_events`]
 #[derive(Clone, Debug)]
-pub struct GetAllEventsEventsGetParams {
+pub struct GetAllEventsParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`get_all_events_events_get`]
+/// struct for typed errors of method [`get_all_events`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllEventsEventsGetError {
+pub enum GetAllEventsError {
     /// Events not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch events details.
-pub async fn get_all_events_events_get(
+pub async fn get_all_events(
     configuration: &configuration::Configuration,
-    params: GetAllEventsEventsGetParams,
-) -> Result<models::DataPageActiveEventSchema, Error<GetAllEventsEventsGetError>> {
+    params: GetAllEventsParams,
+) -> Result<models::DataPageActiveEventSchema, Error<GetAllEventsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -70,7 +70,7 @@ pub async fn get_all_events_events_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllEventsEventsGetError> =
+        let local_var_entity: Option<GetAllEventsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

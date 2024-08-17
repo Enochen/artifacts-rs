@@ -13,16 +13,16 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`create_account_accounts_create_post`]
+/// struct for passing parameters to the method [`create_account`]
 #[derive(Clone, Debug)]
-pub struct CreateAccountAccountsCreatePostParams {
+pub struct CreateAccountParams {
     pub add_account_schema: models::AddAccountSchema,
 }
 
-/// struct for typed errors of method [`create_account_accounts_create_post`]
+/// struct for typed errors of method [`create_account`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum CreateAccountAccountsCreatePostError {
+pub enum CreateAccountError {
     /// Username already used.
     Status456(),
     /// Email already used.
@@ -31,10 +31,10 @@ pub enum CreateAccountAccountsCreatePostError {
 }
 
 /// Create an account.
-pub async fn create_account_accounts_create_post(
+pub async fn create_account(
     configuration: &configuration::Configuration,
-    params: CreateAccountAccountsCreatePostParams,
-) -> Result<models::ResponseSchema, Error<CreateAccountAccountsCreatePostError>> {
+    params: CreateAccountParams,
+) -> Result<models::ResponseSchema, Error<CreateAccountError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -61,7 +61,7 @@ pub async fn create_account_accounts_create_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateAccountAccountsCreatePostError> =
+        let local_var_entity: Option<CreateAccountError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

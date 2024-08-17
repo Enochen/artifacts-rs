@@ -13,150 +13,150 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`action_accept_new_task_my_name_action_task_new_post`]
+/// struct for passing parameters to the method [`accept_new_task`]
 #[derive(Clone, Debug)]
-pub struct ActionAcceptNewTaskMyNameActionTaskNewPostParams {
+pub struct AcceptNewTaskParams {
     /// Name of your character.
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_complete_task_my_name_action_task_complete_post`]
+/// struct for passing parameters to the method [`complete_task`]
 #[derive(Clone, Debug)]
-pub struct ActionCompleteTaskMyNameActionTaskCompletePostParams {
+pub struct CompleteTaskParams {
     /// Name of your character.
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_crafting_my_name_action_crafting_post`]
+/// struct for passing parameters to the method [`craft`]
 #[derive(Clone, Debug)]
-pub struct ActionCraftingMyNameActionCraftingPostParams {
+pub struct CraftParams {
     /// Name of your character.
     pub name: String,
     pub crafting_schema: models::CraftingSchema,
 }
 
-/// struct for passing parameters to the method [`action_delete_item_my_name_action_delete_post`]
+/// struct for passing parameters to the method [`delete_item`]
 #[derive(Clone, Debug)]
-pub struct ActionDeleteItemMyNameActionDeletePostParams {
+pub struct DeleteItemParams {
     /// Name of your character.
     pub name: String,
     pub simple_item_schema: models::SimpleItemSchema,
 }
 
-/// struct for passing parameters to the method [`action_deposit_bank_gold_my_name_action_bank_deposit_gold_post`]
+/// struct for passing parameters to the method [`deposit_gold`]
 #[derive(Clone, Debug)]
-pub struct ActionDepositBankGoldMyNameActionBankDepositGoldPostParams {
+pub struct DepositGoldParams {
     /// Name of your character.
     pub name: String,
     pub deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
 }
 
-/// struct for passing parameters to the method [`action_deposit_bank_my_name_action_bank_deposit_post`]
+/// struct for passing parameters to the method [`deposit_item`]
 #[derive(Clone, Debug)]
-pub struct ActionDepositBankMyNameActionBankDepositPostParams {
+pub struct DepositItemParams {
     /// Name of your character.
     pub name: String,
     pub simple_item_schema: models::SimpleItemSchema,
 }
 
-/// struct for passing parameters to the method [`action_equip_item_my_name_action_equip_post`]
+/// struct for passing parameters to the method [`equip_item`]
 #[derive(Clone, Debug)]
-pub struct ActionEquipItemMyNameActionEquipPostParams {
+pub struct EquipItemParams {
     /// Name of your character.
     pub name: String,
     pub equip_schema: models::EquipSchema,
 }
 
-/// struct for passing parameters to the method [`action_fight_my_name_action_fight_post`]
+/// struct for passing parameters to the method [`fight`]
 #[derive(Clone, Debug)]
-pub struct ActionFightMyNameActionFightPostParams {
+pub struct FightParams {
     /// Name of your character.
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_gathering_my_name_action_gathering_post`]
+/// struct for passing parameters to the method [`gather`]
 #[derive(Clone, Debug)]
-pub struct ActionGatheringMyNameActionGatheringPostParams {
+pub struct GatherParams {
     /// Name of your character.
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_ge_buy_item_my_name_action_ge_buy_post`]
+/// struct for passing parameters to the method [`ge_buy_item`]
 #[derive(Clone, Debug)]
-pub struct ActionGeBuyItemMyNameActionGeBuyPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub ge_transaction_item_schema: models::GeTransactionItemSchema,
-}
-
-/// struct for passing parameters to the method [`action_ge_sell_item_my_name_action_ge_sell_post`]
-#[derive(Clone, Debug)]
-pub struct ActionGeSellItemMyNameActionGeSellPostParams {
+pub struct GeBuyItemParams {
     /// Name of your character.
     pub name: String,
     pub ge_transaction_item_schema: models::GeTransactionItemSchema,
 }
 
-/// struct for passing parameters to the method [`action_move_my_name_action_move_post`]
+/// struct for passing parameters to the method [`ge_sell_item`]
 #[derive(Clone, Debug)]
-pub struct ActionMoveMyNameActionMovePostParams {
+pub struct GeSellItemParams {
     /// Name of your character.
     pub name: String,
-    pub destination_schema: models::DestinationSchema,
+    pub ge_transaction_item_schema: models::GeTransactionItemSchema,
 }
 
-/// struct for passing parameters to the method [`action_recycling_my_name_action_recycling_post`]
+/// struct for passing parameters to the method [`get_all_characters_logs`]
 #[derive(Clone, Debug)]
-pub struct ActionRecyclingMyNameActionRecyclingPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub recycling_schema: models::RecyclingSchema,
-}
-
-/// struct for passing parameters to the method [`action_task_exchange_my_name_action_task_exchange_post`]
-#[derive(Clone, Debug)]
-pub struct ActionTaskExchangeMyNameActionTaskExchangePostParams {
-    /// Name of your character.
-    pub name: String,
-}
-
-/// struct for passing parameters to the method [`action_unequip_item_my_name_action_unequip_post`]
-#[derive(Clone, Debug)]
-pub struct ActionUnequipItemMyNameActionUnequipPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub unequip_schema: models::UnequipSchema,
-}
-
-/// struct for passing parameters to the method [`action_withdraw_bank_gold_my_name_action_bank_withdraw_gold_post`]
-#[derive(Clone, Debug)]
-pub struct ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
-}
-
-/// struct for passing parameters to the method [`action_withdraw_bank_my_name_action_bank_withdraw_post`]
-#[derive(Clone, Debug)]
-pub struct ActionWithdrawBankMyNameActionBankWithdrawPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub simple_item_schema: models::SimpleItemSchema,
-}
-
-/// struct for passing parameters to the method [`get_all_characters_logs_my_logs_get`]
-#[derive(Clone, Debug)]
-pub struct GetAllCharactersLogsMyLogsGetParams {
+pub struct GetAllCharactersLogsParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`action_accept_new_task_my_name_action_task_new_post`]
+/// struct for passing parameters to the method [`move_character`]
+#[derive(Clone, Debug)]
+pub struct MoveCharacterParams {
+    /// Name of your character.
+    pub name: String,
+    pub destination_schema: models::DestinationSchema,
+}
+
+/// struct for passing parameters to the method [`recycle`]
+#[derive(Clone, Debug)]
+pub struct RecycleParams {
+    /// Name of your character.
+    pub name: String,
+    pub recycling_schema: models::RecyclingSchema,
+}
+
+/// struct for passing parameters to the method [`task_exchange`]
+#[derive(Clone, Debug)]
+pub struct TaskExchangeParams {
+    /// Name of your character.
+    pub name: String,
+}
+
+/// struct for passing parameters to the method [`unequip_item`]
+#[derive(Clone, Debug)]
+pub struct UnequipItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub unequip_schema: models::UnequipSchema,
+}
+
+/// struct for passing parameters to the method [`withdraw_gold`]
+#[derive(Clone, Debug)]
+pub struct WithdrawGoldParams {
+    /// Name of your character.
+    pub name: String,
+    pub deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
+}
+
+/// struct for passing parameters to the method [`withdraw_item`]
+#[derive(Clone, Debug)]
+pub struct WithdrawItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub simple_item_schema: models::SimpleItemSchema,
+}
+
+/// struct for typed errors of method [`accept_new_task`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionAcceptNewTaskMyNameActionTaskNewPostError {
+pub enum AcceptNewTaskError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -170,10 +170,10 @@ pub enum ActionAcceptNewTaskMyNameActionTaskNewPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_complete_task_my_name_action_task_complete_post`]
+/// struct for typed errors of method [`complete_task`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
+pub enum CompleteTaskError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -191,10 +191,10 @@ pub enum ActionCompleteTaskMyNameActionTaskCompletePostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_crafting_my_name_action_crafting_post`]
+/// struct for typed errors of method [`craft`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionCraftingMyNameActionCraftingPostError {
+pub enum CraftError {
     /// Craft not found.
     Status404(),
     /// Workshop not found on this map.
@@ -214,10 +214,10 @@ pub enum ActionCraftingMyNameActionCraftingPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_delete_item_my_name_action_delete_post`]
+/// struct for typed errors of method [`delete_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionDeleteItemMyNameActionDeletePostError {
+pub enum DeleteItemError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -229,10 +229,10 @@ pub enum ActionDeleteItemMyNameActionDeletePostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_deposit_bank_gold_my_name_action_bank_deposit_gold_post`]
+/// struct for typed errors of method [`deposit_gold`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
+pub enum DepositGoldError {
     /// Bank not found on this map.
     Status598(),
     /// Insufficient golds on your character.
@@ -248,10 +248,10 @@ pub enum ActionDepositBankGoldMyNameActionBankDepositGoldPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_deposit_bank_my_name_action_bank_deposit_post`]
+/// struct for typed errors of method [`deposit_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionDepositBankMyNameActionBankDepositPostError {
+pub enum DepositItemError {
     /// Bank not found on this map.
     Status598(),
     /// Item not found.
@@ -269,10 +269,10 @@ pub enum ActionDepositBankMyNameActionBankDepositPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_equip_item_my_name_action_equip_post`]
+/// struct for typed errors of method [`equip_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionEquipItemMyNameActionEquipPostError {
+pub enum EquipItemError {
     /// Item not found.
     Status404(),
     /// Character not found.
@@ -292,10 +292,10 @@ pub enum ActionEquipItemMyNameActionEquipPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_fight_my_name_action_fight_post`]
+/// struct for typed errors of method [`fight`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionFightMyNameActionFightPostError {
+pub enum FightError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -309,10 +309,10 @@ pub enum ActionFightMyNameActionFightPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_gathering_my_name_action_gathering_post`]
+/// struct for typed errors of method [`gather`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionGatheringMyNameActionGatheringPostError {
+pub enum GatherError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -328,10 +328,10 @@ pub enum ActionGatheringMyNameActionGatheringPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_ge_buy_item_my_name_action_ge_buy_post`]
+/// struct for typed errors of method [`ge_buy_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionGeBuyItemMyNameActionGeBuyPostError {
+pub enum GeBuyItemError {
     /// Grand Exchange not found on this map.
     Status598(),
     /// Character not found.
@@ -353,10 +353,10 @@ pub enum ActionGeBuyItemMyNameActionGeBuyPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_ge_sell_item_my_name_action_ge_sell_post`]
+/// struct for typed errors of method [`ge_sell_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionGeSellItemMyNameActionGeSellPostError {
+pub enum GeSellItemError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -376,10 +376,30 @@ pub enum ActionGeSellItemMyNameActionGeSellPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_move_my_name_action_move_post`]
+/// struct for typed errors of method [`get_all_characters_logs`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionMoveMyNameActionMovePostError {
+pub enum GetAllCharactersLogsError {
+    /// Logs not found.
+    Status404(),
+    /// Character not found.
+    Status498(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`get_my_characters`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetMyCharactersError {
+    /// Characters not found.
+    Status404(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`move_character`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum MoveCharacterError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -393,10 +413,10 @@ pub enum ActionMoveMyNameActionMovePostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_recycling_my_name_action_recycling_post`]
+/// struct for typed errors of method [`recycle`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionRecyclingMyNameActionRecyclingPostError {
+pub enum RecycleError {
     /// Item not found.
     Status404(),
     /// Workshop not found on this map.
@@ -418,10 +438,10 @@ pub enum ActionRecyclingMyNameActionRecyclingPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_task_exchange_my_name_action_task_exchange_post`]
+/// struct for typed errors of method [`task_exchange`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionTaskExchangeMyNameActionTaskExchangePostError {
+pub enum TaskExchangeError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -437,10 +457,10 @@ pub enum ActionTaskExchangeMyNameActionTaskExchangePostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_unequip_item_my_name_action_unequip_post`]
+/// struct for typed errors of method [`unequip_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionUnequipItemMyNameActionUnequipPostError {
+pub enum UnequipItemError {
     /// Item not found.
     Status404(),
     /// Character not found.
@@ -456,10 +476,10 @@ pub enum ActionUnequipItemMyNameActionUnequipPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_withdraw_bank_gold_my_name_action_bank_withdraw_gold_post`]
+/// struct for typed errors of method [`withdraw_gold`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError {
+pub enum WithdrawGoldError {
     /// Character not found.
     Status498(),
     /// Character in cooldown.
@@ -475,10 +495,10 @@ pub enum ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`action_withdraw_bank_my_name_action_bank_withdraw_post`]
+/// struct for typed errors of method [`withdraw_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionWithdrawBankMyNameActionBankWithdrawPostError {
+pub enum WithdrawItemError {
     /// Item not found.
     Status404(),
     /// Character not found.
@@ -498,31 +518,11 @@ pub enum ActionWithdrawBankMyNameActionBankWithdrawPostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_all_characters_logs_my_logs_get`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum GetAllCharactersLogsMyLogsGetError {
-    /// Logs not found.
-    Status404(),
-    /// Character not found.
-    Status498(),
-    UnknownValue(serde_json::Value),
-}
-
-/// struct for typed errors of method [`get_my_characters_my_characters_get`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum GetMyCharactersMyCharactersGetError {
-    /// Characters not found.
-    Status404(),
-    UnknownValue(serde_json::Value),
-}
-
 /// Accepting a new task.
-pub async fn action_accept_new_task_my_name_action_task_new_post(
+pub async fn accept_new_task(
     configuration: &configuration::Configuration,
-    params: ActionAcceptNewTaskMyNameActionTaskNewPostParams,
-) -> Result<models::TaskResponseSchema, Error<ActionAcceptNewTaskMyNameActionTaskNewPostError>> {
+    params: AcceptNewTaskParams,
+) -> Result<models::TaskResponseSchema, Error<AcceptNewTaskError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -555,7 +555,7 @@ pub async fn action_accept_new_task_my_name_action_task_new_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionAcceptNewTaskMyNameActionTaskNewPostError> =
+        let local_var_entity: Option<AcceptNewTaskError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -567,13 +567,10 @@ pub async fn action_accept_new_task_my_name_action_task_new_post(
 }
 
 /// Complete a task.
-pub async fn action_complete_task_my_name_action_task_complete_post(
+pub async fn complete_task(
     configuration: &configuration::Configuration,
-    params: ActionCompleteTaskMyNameActionTaskCompletePostParams,
-) -> Result<
-    models::TaskRewardResponseSchema,
-    Error<ActionCompleteTaskMyNameActionTaskCompletePostError>,
-> {
+    params: CompleteTaskParams,
+) -> Result<models::TaskRewardResponseSchema, Error<CompleteTaskError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -606,7 +603,7 @@ pub async fn action_complete_task_my_name_action_task_complete_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionCompleteTaskMyNameActionTaskCompletePostError> =
+        let local_var_entity: Option<CompleteTaskError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -618,10 +615,10 @@ pub async fn action_complete_task_my_name_action_task_complete_post(
 }
 
 /// Crafting an item. The character must be on a map with a workshop.
-pub async fn action_crafting_my_name_action_crafting_post(
+pub async fn craft(
     configuration: &configuration::Configuration,
-    params: ActionCraftingMyNameActionCraftingPostParams,
-) -> Result<models::SkillResponseSchema, Error<ActionCraftingMyNameActionCraftingPostError>> {
+    params: CraftParams,
+) -> Result<models::SkillResponseSchema, Error<CraftError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -656,8 +653,7 @@ pub async fn action_crafting_my_name_action_crafting_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionCraftingMyNameActionCraftingPostError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<CraftError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -668,10 +664,10 @@ pub async fn action_crafting_my_name_action_crafting_post(
 }
 
 /// Delete an item from your character's inventory.
-pub async fn action_delete_item_my_name_action_delete_post(
+pub async fn delete_item(
     configuration: &configuration::Configuration,
-    params: ActionDeleteItemMyNameActionDeletePostParams,
-) -> Result<models::DeleteItemResponseSchema, Error<ActionDeleteItemMyNameActionDeletePostError>> {
+    params: DeleteItemParams,
+) -> Result<models::DeleteItemResponseSchema, Error<DeleteItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -706,7 +702,7 @@ pub async fn action_delete_item_my_name_action_delete_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionDeleteItemMyNameActionDeletePostError> =
+        let local_var_entity: Option<DeleteItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -718,13 +714,10 @@ pub async fn action_delete_item_my_name_action_delete_post(
 }
 
 /// Deposit golds in a bank on the character's map.
-pub async fn action_deposit_bank_gold_my_name_action_bank_deposit_gold_post(
+pub async fn deposit_gold(
     configuration: &configuration::Configuration,
-    params: ActionDepositBankGoldMyNameActionBankDepositGoldPostParams,
-) -> Result<
-    models::GoldResponseSchema,
-    Error<ActionDepositBankGoldMyNameActionBankDepositGoldPostError>,
-> {
+    params: DepositGoldParams,
+) -> Result<models::GoldResponseSchema, Error<DepositGoldError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -759,7 +752,7 @@ pub async fn action_deposit_bank_gold_my_name_action_bank_deposit_gold_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionDepositBankGoldMyNameActionBankDepositGoldPostError> =
+        let local_var_entity: Option<DepositGoldError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -771,13 +764,10 @@ pub async fn action_deposit_bank_gold_my_name_action_bank_deposit_gold_post(
 }
 
 /// Deposit an item in a bank on the character's map.
-pub async fn action_deposit_bank_my_name_action_bank_deposit_post(
+pub async fn deposit_item(
     configuration: &configuration::Configuration,
-    params: ActionDepositBankMyNameActionBankDepositPostParams,
-) -> Result<
-    models::ActionItemBankResponseSchema,
-    Error<ActionDepositBankMyNameActionBankDepositPostError>,
-> {
+    params: DepositItemParams,
+) -> Result<models::ActionItemBankResponseSchema, Error<DepositItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -812,7 +802,7 @@ pub async fn action_deposit_bank_my_name_action_bank_deposit_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionDepositBankMyNameActionBankDepositPostError> =
+        let local_var_entity: Option<DepositItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -824,10 +814,10 @@ pub async fn action_deposit_bank_my_name_action_bank_deposit_post(
 }
 
 /// Equip an item on your character.
-pub async fn action_equip_item_my_name_action_equip_post(
+pub async fn equip_item(
     configuration: &configuration::Configuration,
-    params: ActionEquipItemMyNameActionEquipPostParams,
-) -> Result<models::EquipmentResponseSchema, Error<ActionEquipItemMyNameActionEquipPostError>> {
+    params: EquipItemParams,
+) -> Result<models::EquipmentResponseSchema, Error<EquipItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -862,7 +852,7 @@ pub async fn action_equip_item_my_name_action_equip_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionEquipItemMyNameActionEquipPostError> =
+        let local_var_entity: Option<EquipItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -874,10 +864,10 @@ pub async fn action_equip_item_my_name_action_equip_post(
 }
 
 /// Start a fight against a monster on the character's map.
-pub async fn action_fight_my_name_action_fight_post(
+pub async fn fight(
     configuration: &configuration::Configuration,
-    params: ActionFightMyNameActionFightPostParams,
-) -> Result<models::CharacterFightResponseSchema, Error<ActionFightMyNameActionFightPostError>> {
+    params: FightParams,
+) -> Result<models::CharacterFightResponseSchema, Error<FightError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -910,8 +900,7 @@ pub async fn action_fight_my_name_action_fight_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionFightMyNameActionFightPostError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<FightError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -922,10 +911,10 @@ pub async fn action_fight_my_name_action_fight_post(
 }
 
 /// Harvest a resource on the character's map.
-pub async fn action_gathering_my_name_action_gathering_post(
+pub async fn gather(
     configuration: &configuration::Configuration,
-    params: ActionGatheringMyNameActionGatheringPostParams,
-) -> Result<models::SkillResponseSchema, Error<ActionGatheringMyNameActionGatheringPostError>> {
+    params: GatherParams,
+) -> Result<models::SkillResponseSchema, Error<GatherError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -958,8 +947,7 @@ pub async fn action_gathering_my_name_action_gathering_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionGatheringMyNameActionGatheringPostError> =
-            serde_json::from_str(&local_var_content).ok();
+        let local_var_entity: Option<GatherError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -970,10 +958,10 @@ pub async fn action_gathering_my_name_action_gathering_post(
 }
 
 /// Buy an item at the Grand Exchange on the character's map.
-pub async fn action_ge_buy_item_my_name_action_ge_buy_post(
+pub async fn ge_buy_item(
     configuration: &configuration::Configuration,
-    params: ActionGeBuyItemMyNameActionGeBuyPostParams,
-) -> Result<models::GeTransactionResponseSchema, Error<ActionGeBuyItemMyNameActionGeBuyPostError>> {
+    params: GeBuyItemParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeBuyItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -1008,7 +996,7 @@ pub async fn action_ge_buy_item_my_name_action_ge_buy_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionGeBuyItemMyNameActionGeBuyPostError> =
+        let local_var_entity: Option<GeBuyItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -1020,11 +1008,10 @@ pub async fn action_ge_buy_item_my_name_action_ge_buy_post(
 }
 
 /// Sell an item at the Grand Exchange on the character's map.
-pub async fn action_ge_sell_item_my_name_action_ge_sell_post(
+pub async fn ge_sell_item(
     configuration: &configuration::Configuration,
-    params: ActionGeSellItemMyNameActionGeSellPostParams,
-) -> Result<models::GeTransactionResponseSchema, Error<ActionGeSellItemMyNameActionGeSellPostError>>
-{
+    params: GeSellItemParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeSellItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -1059,314 +1046,7 @@ pub async fn action_ge_sell_item_my_name_action_ge_sell_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionGeSellItemMyNameActionGeSellPostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Moves a character on the map using the map's X and Y position.
-pub async fn action_move_my_name_action_move_post(
-    configuration: &configuration::Configuration,
-    params: ActionMoveMyNameActionMovePostParams,
-) -> Result<models::CharacterMovementResponseSchema, Error<ActionMoveMyNameActionMovePostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    let destination_schema = params.destination_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/move",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&destination_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionMoveMyNameActionMovePostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Recyling an item. The character must be on a map with a workshop (only for equipments and weapons).
-pub async fn action_recycling_my_name_action_recycling_post(
-    configuration: &configuration::Configuration,
-    params: ActionRecyclingMyNameActionRecyclingPostParams,
-) -> Result<models::RecyclingResponseSchema, Error<ActionRecyclingMyNameActionRecyclingPostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    let recycling_schema = params.recycling_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/recycling",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&recycling_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionRecyclingMyNameActionRecyclingPostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Exchange 3 tasks coins for a random reward. Rewards are exclusive resources for crafting  items.
-pub async fn action_task_exchange_my_name_action_task_exchange_post(
-    configuration: &configuration::Configuration,
-    params: ActionTaskExchangeMyNameActionTaskExchangePostParams,
-) -> Result<
-    models::TaskRewardResponseSchema,
-    Error<ActionTaskExchangeMyNameActionTaskExchangePostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/task/exchange",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionTaskExchangeMyNameActionTaskExchangePostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Unequip an item on your character.
-pub async fn action_unequip_item_my_name_action_unequip_post(
-    configuration: &configuration::Configuration,
-    params: ActionUnequipItemMyNameActionUnequipPostParams,
-) -> Result<models::EquipmentResponseSchema, Error<ActionUnequipItemMyNameActionUnequipPostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    let unequip_schema = params.unequip_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/unequip",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&unequip_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionUnequipItemMyNameActionUnequipPostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Withdraw gold from your bank.
-pub async fn action_withdraw_bank_gold_my_name_action_bank_withdraw_gold_post(
-    configuration: &configuration::Configuration,
-    params: ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostParams,
-) -> Result<
-    models::GoldResponseSchema,
-    Error<ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    let deposit_withdraw_gold_schema = params.deposit_withdraw_gold_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/bank/withdraw/gold",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&deposit_withdraw_gold_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionWithdrawBankGoldMyNameActionBankWithdrawGoldPostError> =
-            serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Take an item from your bank and put it in the character's inventory.
-pub async fn action_withdraw_bank_my_name_action_bank_withdraw_post(
-    configuration: &configuration::Configuration,
-    params: ActionWithdrawBankMyNameActionBankWithdrawPostParams,
-) -> Result<
-    models::ActionItemBankResponseSchema,
-    Error<ActionWithdrawBankMyNameActionBankWithdrawPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    let simple_item_schema = params.simple_item_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/bank/withdraw",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionWithdrawBankMyNameActionBankWithdrawPostError> =
+        let local_var_entity: Option<GeSellItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -1378,10 +1058,10 @@ pub async fn action_withdraw_bank_my_name_action_bank_withdraw_post(
 }
 
 /// History of the last 100 actions of all your characters.
-pub async fn get_all_characters_logs_my_logs_get(
+pub async fn get_all_characters_logs(
     configuration: &configuration::Configuration,
-    params: GetAllCharactersLogsMyLogsGetParams,
-) -> Result<models::DataPageLogSchema, Error<GetAllCharactersLogsMyLogsGetError>> {
+    params: GetAllCharactersLogsParams,
+) -> Result<models::DataPageLogSchema, Error<GetAllCharactersLogsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -1419,7 +1099,7 @@ pub async fn get_all_characters_logs_my_logs_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllCharactersLogsMyLogsGetError> =
+        let local_var_entity: Option<GetAllCharactersLogsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -1431,9 +1111,9 @@ pub async fn get_all_characters_logs_my_logs_get(
 }
 
 /// List of your characters.
-pub async fn get_my_characters_my_characters_get(
+pub async fn get_my_characters(
     configuration: &configuration::Configuration,
-) -> Result<models::MyCharactersListSchema, Error<GetMyCharactersMyCharactersGetError>> {
+) -> Result<models::MyCharactersListSchema, Error<GetMyCharactersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -1461,7 +1141,304 @@ pub async fn get_my_characters_my_characters_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMyCharactersMyCharactersGetError> =
+        let local_var_entity: Option<GetMyCharactersError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Moves a character on the map using the map's X and Y position.
+pub async fn move_character(
+    configuration: &configuration::Configuration,
+    params: MoveCharacterParams,
+) -> Result<models::CharacterMovementResponseSchema, Error<MoveCharacterError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    let destination_schema = params.destination_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/move",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&destination_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<MoveCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Recyling an item. The character must be on a map with a workshop (only for equipments and weapons).
+pub async fn recycle(
+    configuration: &configuration::Configuration,
+    params: RecycleParams,
+) -> Result<models::RecyclingResponseSchema, Error<RecycleError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    let recycling_schema = params.recycling_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/recycling",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&recycling_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<RecycleError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Exchange 3 tasks coins for a random reward. Rewards are exclusive resources for crafting  items.
+pub async fn task_exchange(
+    configuration: &configuration::Configuration,
+    params: TaskExchangeParams,
+) -> Result<models::TaskRewardResponseSchema, Error<TaskExchangeError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/task/exchange",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<TaskExchangeError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Unequip an item on your character.
+pub async fn unequip_item(
+    configuration: &configuration::Configuration,
+    params: UnequipItemParams,
+) -> Result<models::EquipmentResponseSchema, Error<UnequipItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    let unequip_schema = params.unequip_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/unequip",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&unequip_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<UnequipItemError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Withdraw gold from your bank.
+pub async fn withdraw_gold(
+    configuration: &configuration::Configuration,
+    params: WithdrawGoldParams,
+) -> Result<models::GoldResponseSchema, Error<WithdrawGoldError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    let deposit_withdraw_gold_schema = params.deposit_withdraw_gold_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/bank/withdraw/gold",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&deposit_withdraw_gold_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<WithdrawGoldError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Take an item from your bank and put it in the character's inventory.
+pub async fn withdraw_item(
+    configuration: &configuration::Configuration,
+    params: WithdrawItemParams,
+) -> Result<models::ActionItemBankResponseSchema, Error<WithdrawItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    let simple_item_schema = params.simple_item_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/bank/withdraw",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<WithdrawItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

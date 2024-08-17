@@ -13,21 +13,21 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`create_character_characters_create_post`]
+/// struct for passing parameters to the method [`create_character`]
 #[derive(Clone, Debug)]
-pub struct CreateCharacterCharactersCreatePostParams {
+pub struct CreateCharacterParams {
     pub add_character_schema: models::AddCharacterSchema,
 }
 
-/// struct for passing parameters to the method [`delete_character_characters_delete_post`]
+/// struct for passing parameters to the method [`delete_character`]
 #[derive(Clone, Debug)]
-pub struct DeleteCharacterCharactersDeletePostParams {
+pub struct DeleteCharacterParams {
     pub delete_character_schema: models::DeleteCharacterSchema,
 }
 
-/// struct for passing parameters to the method [`get_all_characters_characters_get`]
+/// struct for passing parameters to the method [`get_all_characters`]
 #[derive(Clone, Debug)]
-pub struct GetAllCharactersCharactersGetParams {
+pub struct GetAllCharactersParams {
     /// Default sort by combat total XP.
     pub sort: Option<String>,
     /// Page number
@@ -36,17 +36,17 @@ pub struct GetAllCharactersCharactersGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_character_characters_name_get`]
+/// struct for passing parameters to the method [`get_character`]
 #[derive(Clone, Debug)]
-pub struct GetCharacterCharactersNameGetParams {
+pub struct GetCharacterParams {
     /// The character name.
     pub name: String,
 }
 
-/// struct for typed errors of method [`create_character_characters_create_post`]
+/// struct for typed errors of method [`create_character`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum CreateCharacterCharactersCreatePostError {
+pub enum CreateCharacterError {
     /// Name already used.
     Status494(),
     /// Maximum characters reached on your account.
@@ -54,38 +54,38 @@ pub enum CreateCharacterCharactersCreatePostError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`delete_character_characters_delete_post`]
+/// struct for typed errors of method [`delete_character`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum DeleteCharacterCharactersDeletePostError {
+pub enum DeleteCharacterError {
     /// Character not found.
     Status498(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_all_characters_characters_get`]
+/// struct for typed errors of method [`get_all_characters`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllCharactersCharactersGetError {
+pub enum GetAllCharactersError {
     /// Characters not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_character_characters_name_get`]
+/// struct for typed errors of method [`get_character`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetCharacterCharactersNameGetError {
+pub enum GetCharacterError {
     /// Character not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Create new character on your account. You can create up to 5 characters.
-pub async fn create_character_characters_create_post(
+pub async fn create_character(
     configuration: &configuration::Configuration,
-    params: CreateCharacterCharactersCreatePostParams,
-) -> Result<models::CharacterResponseSchema, Error<CreateCharacterCharactersCreatePostError>> {
+    params: CreateCharacterParams,
+) -> Result<models::CharacterResponseSchema, Error<CreateCharacterError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -115,7 +115,7 @@ pub async fn create_character_characters_create_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateCharacterCharactersCreatePostError> =
+        let local_var_entity: Option<CreateCharacterError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -127,10 +127,10 @@ pub async fn create_character_characters_create_post(
 }
 
 /// Delete character on your account.
-pub async fn delete_character_characters_delete_post(
+pub async fn delete_character(
     configuration: &configuration::Configuration,
-    params: DeleteCharacterCharactersDeletePostParams,
-) -> Result<models::CharacterResponseSchema, Error<DeleteCharacterCharactersDeletePostError>> {
+    params: DeleteCharacterParams,
+) -> Result<models::CharacterResponseSchema, Error<DeleteCharacterError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -160,7 +160,7 @@ pub async fn delete_character_characters_delete_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DeleteCharacterCharactersDeletePostError> =
+        let local_var_entity: Option<DeleteCharacterError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -172,10 +172,10 @@ pub async fn delete_character_characters_delete_post(
 }
 
 /// Fetch characters details.
-pub async fn get_all_characters_characters_get(
+pub async fn get_all_characters(
     configuration: &configuration::Configuration,
-    params: GetAllCharactersCharactersGetParams,
-) -> Result<models::DataPageCharacterSchema, Error<GetAllCharactersCharactersGetError>> {
+    params: GetAllCharactersParams,
+) -> Result<models::DataPageCharacterSchema, Error<GetAllCharactersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -215,7 +215,7 @@ pub async fn get_all_characters_characters_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllCharactersCharactersGetError> =
+        let local_var_entity: Option<GetAllCharactersError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -227,10 +227,10 @@ pub async fn get_all_characters_characters_get(
 }
 
 /// Retrieve the details of a character.
-pub async fn get_character_characters_name_get(
+pub async fn get_character(
     configuration: &configuration::Configuration,
-    params: GetCharacterCharactersNameGetParams,
-) -> Result<models::CharacterResponseSchema, Error<GetCharacterCharactersNameGetError>> {
+    params: GetCharacterParams,
+) -> Result<models::CharacterResponseSchema, Error<GetCharacterError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -260,7 +260,7 @@ pub async fn get_character_characters_name_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharacterCharactersNameGetError> =
+        let local_var_entity: Option<GetCharacterError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

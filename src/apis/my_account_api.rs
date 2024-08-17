@@ -13,15 +13,15 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`change_password_my_change_password_post`]
+/// struct for passing parameters to the method [`change_password`]
 #[derive(Clone, Debug)]
-pub struct ChangePasswordMyChangePasswordPostParams {
+pub struct ChangePasswordParams {
     pub change_password: models::ChangePassword,
 }
 
-/// struct for passing parameters to the method [`get_bank_items_my_bank_items_get`]
+/// struct for passing parameters to the method [`get_bank_items`]
 #[derive(Clone, Debug)]
-pub struct GetBankItemsMyBankItemsGetParams {
+pub struct GetBankItemsParams {
     /// Item to search in your bank.
     pub item_code: Option<String>,
     /// Page number
@@ -30,36 +30,36 @@ pub struct GetBankItemsMyBankItemsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`change_password_my_change_password_post`]
+/// struct for typed errors of method [`change_password`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ChangePasswordMyChangePasswordPostError {
+pub enum ChangePasswordError {
     /// Use a different password.
     Status458(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_bank_golds_my_bank_gold_get`]
+/// struct for typed errors of method [`get_bank_gold`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetBankGoldsMyBankGoldGetError {
+pub enum GetBankGoldError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_bank_items_my_bank_items_get`]
+/// struct for typed errors of method [`get_bank_items`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetBankItemsMyBankItemsGetError {
+pub enum GetBankItemsError {
     /// Items not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Change your account password. Changing the password reset the account token.
-pub async fn change_password_my_change_password_post(
+pub async fn change_password(
     configuration: &configuration::Configuration,
-    params: ChangePasswordMyChangePasswordPostParams,
-) -> Result<models::ResponseSchema, Error<ChangePasswordMyChangePasswordPostError>> {
+    params: ChangePasswordParams,
+) -> Result<models::ResponseSchema, Error<ChangePasswordError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -89,7 +89,7 @@ pub async fn change_password_my_change_password_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ChangePasswordMyChangePasswordPostError> =
+        let local_var_entity: Option<ChangePasswordError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -101,9 +101,9 @@ pub async fn change_password_my_change_password_post(
 }
 
 /// Fetch golds in your bank.
-pub async fn get_bank_golds_my_bank_gold_get(
+pub async fn get_bank_gold(
     configuration: &configuration::Configuration,
-) -> Result<models::GoldBankResponseSchema, Error<GetBankGoldsMyBankGoldGetError>> {
+) -> Result<models::GoldBankResponseSchema, Error<GetBankGoldError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -131,7 +131,7 @@ pub async fn get_bank_golds_my_bank_gold_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankGoldsMyBankGoldGetError> =
+        let local_var_entity: Option<GetBankGoldError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -143,10 +143,10 @@ pub async fn get_bank_golds_my_bank_gold_get(
 }
 
 /// Fetch all items in your bank.
-pub async fn get_bank_items_my_bank_items_get(
+pub async fn get_bank_items(
     configuration: &configuration::Configuration,
-    params: GetBankItemsMyBankItemsGetParams,
-) -> Result<models::DataPageSimpleItemSchema, Error<GetBankItemsMyBankItemsGetError>> {
+    params: GetBankItemsParams,
+) -> Result<models::DataPageSimpleItemSchema, Error<GetBankItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -189,7 +189,7 @@ pub async fn get_bank_items_my_bank_items_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankItemsMyBankItemsGetError> =
+        let local_var_entity: Option<GetBankItemsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

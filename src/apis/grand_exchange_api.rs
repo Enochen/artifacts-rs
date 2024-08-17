@@ -13,45 +13,45 @@ use crate::{apis::ResponseContent, models};
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_ge_items_ge_get`]
+/// struct for passing parameters to the method [`get_all_ge_items`]
 #[derive(Clone, Debug)]
-pub struct GetAllGeItemsGeGetParams {
+pub struct GetAllGeItemsParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_ge_item_ge_code_get`]
+/// struct for passing parameters to the method [`get_ge_item`]
 #[derive(Clone, Debug)]
-pub struct GetGeItemGeCodeGetParams {
+pub struct GetGeItemParams {
     /// The code of the item.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_ge_items_ge_get`]
+/// struct for typed errors of method [`get_all_ge_items`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllGeItemsGeGetError {
+pub enum GetAllGeItemsError {
     /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_ge_item_ge_code_get`]
+/// struct for typed errors of method [`get_ge_item`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeItemGeCodeGetError {
+pub enum GetGeItemError {
     /// Item not found.
     Status404(),
     UnknownValue(serde_json::Value),
 }
 
 /// Fetch Grand Exchange items details.
-pub async fn get_all_ge_items_ge_get(
+pub async fn get_all_ge_items(
     configuration: &configuration::Configuration,
-    params: GetAllGeItemsGeGetParams,
-) -> Result<models::DataPageGeItemSchema, Error<GetAllGeItemsGeGetError>> {
+    params: GetAllGeItemsParams,
+) -> Result<models::DataPageGeItemSchema, Error<GetAllGeItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -86,7 +86,7 @@ pub async fn get_all_ge_items_ge_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllGeItemsGeGetError> =
+        let local_var_entity: Option<GetAllGeItemsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -98,10 +98,10 @@ pub async fn get_all_ge_items_ge_get(
 }
 
 /// Retrieve the details of a Grand Exchange item.
-pub async fn get_ge_item_ge_code_get(
+pub async fn get_ge_item(
     configuration: &configuration::Configuration,
-    params: GetGeItemGeCodeGetParams,
-) -> Result<models::GeItemResponseSchema, Error<GetGeItemGeCodeGetError>> {
+    params: GetGeItemParams,
+) -> Result<models::GeItemResponseSchema, Error<GetGeItemError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -131,7 +131,7 @@ pub async fn get_ge_item_ge_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeItemGeCodeGetError> =
+        let local_var_entity: Option<GetGeItemError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
