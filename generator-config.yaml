@@ -17,19 +17,22 @@ operationIdNameMappings:
   actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost: withdraw_gold
   actionGeBuyItemMyNameActionGeBuyPost: ge_buy_item
   actionGeSellItemMyNameActionGeSellPost: ge_sell_item
+  actionBuyBankExpansionMyNameActionBankBuyExpansionPost: buy_bank_expansion
   actionAcceptNewTaskMyNameActionTaskNewPost: accept_new_task
   actionCompleteTaskMyNameActionTaskCompletePost: complete_task
   actionTaskExchangeMyNameActionTaskExchangePost: task_exchange
+  actionTaskCancelMyNameActionTaskCancelPost: cancel_task
   actionDeleteItemMyNameActionDeletePost: delete_item
   getAllCharactersLogsMyLogsGet: get_all_characters_logs
   getMyCharactersMyCharactersGet: get_my_characters
+  getBankDetailsMyBankGet: get_bank_details
   getBankItemsMyBankItemsGet: get_bank_items
-  getBankGoldsMyBankGoldGet: get_bank_gold
   changePasswordMyChangePasswordPost: change_password
   createCharacterCharactersCreatePost: create_character
   deleteCharacterCharactersDeletePost: delete_character
   getAllCharactersCharactersGet: get_all_characters
   getCharacterCharactersNameGet: get_character
+  getCharacterAchievementsCharactersNameAchievementsGet: get_character_achievements
   getAllMapsMapsGet: get_all_maps
   getMapMapsXYGet: get_map
   getAllItemsItemsGet: get_all_items
@@ -41,6 +44,9 @@ operationIdNameMappings:
   getAllEventsEventsGet: get_all_events
   getAllGeItemsGeGet: get_all_ge_items
   getGeItemGeCodeGet: get_ge_item
+  getAllAchievementsAchievementsGet: get_all_achievements
+  getAchievementAchievementsCodeGet: get_achievement
+  getLeaderboardLeaderboardGet: get_leaderboard
   createAccountAccountsCreatePost: create_account
   generateTokenTokenPost: generate_token
   getStatusGet: get_status

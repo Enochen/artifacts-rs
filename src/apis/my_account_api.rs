@@ -43,12 +43,12 @@ impl TryFrom<StatusCode> for ChangePasswordError {
     }
 }
 
-/// struct for typed errors of method [`get_bank_details_my_bank_get`]
+/// struct for typed errors of method [`get_bank_details`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetBankDetailsMyBankGetError {}
+pub enum GetBankDetailsError {}
 
-impl TryFrom<StatusCode> for GetBankDetailsMyBankGetError {
+impl TryFrom<StatusCode> for GetBankDetailsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -118,9 +118,9 @@ pub async fn change_password(
 }
 
 /// Fetch bank details.
-pub async fn get_bank_details_my_bank_get(
+pub async fn get_bank_details(
     configuration: &configuration::Configuration,
-) -> Result<models::BankResponseSchema, Error<GetBankDetailsMyBankGetError>> {
+) -> Result<models::BankResponseSchema, Error<GetBankDetailsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -146,8 +146,7 @@ pub async fn get_bank_details_my_bank_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankDetailsMyBankGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetBankDetailsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

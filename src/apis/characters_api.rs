@@ -35,9 +35,9 @@ pub struct GetCharacterParams {
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`get_character_achievements_characters_name_achievements_get`]
+/// struct for passing parameters to the method [`get_character_achievements`]
 #[derive(Clone, Debug)]
-pub struct GetCharacterAchievementsCharactersNameAchievementsGetParams {
+pub struct GetCharacterAchievementsParams {
     /// The character name.
     pub name: String,
     /// Type of achievements.
@@ -125,15 +125,15 @@ impl TryFrom<StatusCode> for GetCharacterError {
     }
 }
 
-/// struct for typed errors of method [`get_character_achievements_characters_name_achievements_get`]
+/// struct for typed errors of method [`get_character_achievements`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetCharacterAchievementsCharactersNameAchievementsGetError {
+pub enum GetCharacterAchievementsError {
     /// Character not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetCharacterAchievementsCharactersNameAchievementsGetError {
+impl TryFrom<StatusCode> for GetCharacterAchievementsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -327,13 +327,10 @@ pub async fn get_character(
 }
 
 /// Retrieve the details of a character.
-pub async fn get_character_achievements_characters_name_achievements_get(
+pub async fn get_character_achievements(
     configuration: &configuration::Configuration,
-    params: GetCharacterAchievementsCharactersNameAchievementsGetParams,
-) -> Result<
-    models::DataPageAchievementSchema,
-    Error<GetCharacterAchievementsCharactersNameAchievementsGetError>,
-> {
+    params: GetCharacterAchievementsParams,
+) -> Result<models::DataPageAchievementSchema, Error<GetCharacterAchievementsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -387,7 +384,7 @@ pub async fn get_character_achievements_characters_name_achievements_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharacterAchievementsCharactersNameAchievementsGetError> =
+        let local_var_entity: Option<GetCharacterAchievementsError> =
             local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

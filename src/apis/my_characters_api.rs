@@ -14,16 +14,16 @@ pub struct AcceptNewTaskParams {
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_buy_bank_expansion_my_name_action_bank_buy_expansion_post`]
+/// struct for passing parameters to the method [`buy_bank_expansion`]
 #[derive(Clone, Debug)]
-pub struct ActionBuyBankExpansionMyNameActionBankBuyExpansionPostParams {
+pub struct BuyBankExpansionParams {
     /// Name of your character.
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_task_cancel_my_name_action_task_cancel_post`]
+/// struct for passing parameters to the method [`cancel_task`]
 #[derive(Clone, Debug)]
-pub struct ActionTaskCancelMyNameActionTaskCancelPostParams {
+pub struct CancelTaskParams {
     /// Name of your character.
     pub name: String,
 }
@@ -192,10 +192,10 @@ impl TryFrom<StatusCode> for AcceptNewTaskError {
     }
 }
 
-/// struct for typed errors of method [`action_buy_bank_expansion_my_name_action_bank_buy_expansion_post`]
+/// struct for typed errors of method [`buy_bank_expansion`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionBuyBankExpansionMyNameActionBankBuyExpansionPostError {
+pub enum BuyBankExpansionError {
     /// Bank not found on this map.
     Status598,
     /// Character not found.
@@ -208,7 +208,7 @@ pub enum ActionBuyBankExpansionMyNameActionBankBuyExpansionPostError {
     Status492,
 }
 
-impl TryFrom<StatusCode> for ActionBuyBankExpansionMyNameActionBankBuyExpansionPostError {
+impl TryFrom<StatusCode> for BuyBankExpansionError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -223,10 +223,10 @@ impl TryFrom<StatusCode> for ActionBuyBankExpansionMyNameActionBankBuyExpansionP
     }
 }
 
-/// struct for typed errors of method [`action_task_cancel_my_name_action_task_cancel_post`]
+/// struct for typed errors of method [`cancel_task`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ActionTaskCancelMyNameActionTaskCancelPostError {
+pub enum CancelTaskError {
     /// Character not found.
     Status498,
     /// Character in cooldown.
@@ -239,7 +239,7 @@ pub enum ActionTaskCancelMyNameActionTaskCancelPostError {
     Status478,
 }
 
-impl TryFrom<StatusCode> for ActionTaskCancelMyNameActionTaskCancelPostError {
+impl TryFrom<StatusCode> for CancelTaskError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -934,13 +934,10 @@ pub async fn accept_new_task(
 }
 
 /// Buy a 20 slots bank expansion.
-pub async fn action_buy_bank_expansion_my_name_action_bank_buy_expansion_post(
+pub async fn buy_bank_expansion(
     configuration: &configuration::Configuration,
-    params: ActionBuyBankExpansionMyNameActionBankBuyExpansionPostParams,
-) -> Result<
-    models::BankExtensionTransactionResponseSchema,
-    Error<ActionBuyBankExpansionMyNameActionBankBuyExpansionPostError>,
-> {
+    params: BuyBankExpansionParams,
+) -> Result<models::BankExtensionTransactionResponseSchema, Error<BuyBankExpansionError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -973,8 +970,7 @@ pub async fn action_buy_bank_expansion_my_name_action_bank_buy_expansion_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionBuyBankExpansionMyNameActionBankBuyExpansionPostError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<BuyBankExpansionError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -985,13 +981,10 @@ pub async fn action_buy_bank_expansion_my_name_action_bank_buy_expansion_post(
 }
 
 /// Cancel a task for 1 tasks coin.
-pub async fn action_task_cancel_my_name_action_task_cancel_post(
+pub async fn cancel_task(
     configuration: &configuration::Configuration,
-    params: ActionTaskCancelMyNameActionTaskCancelPostParams,
-) -> Result<
-    models::TaskCancelledResponseSchema,
-    Error<ActionTaskCancelMyNameActionTaskCancelPostError>,
-> {
+    params: CancelTaskParams,
+) -> Result<models::TaskCancelledResponseSchema, Error<CancelTaskError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -1024,8 +1017,7 @@ pub async fn action_task_cancel_my_name_action_task_cancel_post(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ActionTaskCancelMyNameActionTaskCancelPostError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<CancelTaskError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

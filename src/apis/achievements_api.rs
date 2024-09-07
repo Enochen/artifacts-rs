@@ -7,16 +7,16 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_achievement_achievements_code_get`]
+/// struct for passing parameters to the method [`get_achievement`]
 #[derive(Clone, Debug)]
-pub struct GetAchievementAchievementsCodeGetParams {
+pub struct GetAchievementParams {
     /// The code of the achievement.
     pub code: String,
 }
 
-/// struct for passing parameters to the method [`get_all_achievements_achievements_get`]
+/// struct for passing parameters to the method [`get_all_achievements`]
 #[derive(Clone, Debug)]
-pub struct GetAllAchievementsAchievementsGetParams {
+pub struct GetAllAchievementsParams {
     /// Type of achievements.
     pub r#type: Option<String>,
     /// Page number
@@ -25,15 +25,15 @@ pub struct GetAllAchievementsAchievementsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`get_achievement_achievements_code_get`]
+/// struct for typed errors of method [`get_achievement`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAchievementAchievementsCodeGetError {
+pub enum GetAchievementError {
     /// achievement not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetAchievementAchievementsCodeGetError {
+impl TryFrom<StatusCode> for GetAchievementError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -44,12 +44,12 @@ impl TryFrom<StatusCode> for GetAchievementAchievementsCodeGetError {
     }
 }
 
-/// struct for typed errors of method [`get_all_achievements_achievements_get`]
+/// struct for typed errors of method [`get_all_achievements`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllAchievementsAchievementsGetError {}
+pub enum GetAllAchievementsError {}
 
-impl TryFrom<StatusCode> for GetAllAchievementsAchievementsGetError {
+impl TryFrom<StatusCode> for GetAllAchievementsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -60,10 +60,10 @@ impl TryFrom<StatusCode> for GetAllAchievementsAchievementsGetError {
 }
 
 /// Retrieve the details of a achievement.
-pub async fn get_achievement_achievements_code_get(
+pub async fn get_achievement(
     configuration: &configuration::Configuration,
-    params: GetAchievementAchievementsCodeGetParams,
-) -> Result<models::BaseachievementResponseSchema, Error<GetAchievementAchievementsCodeGetError>> {
+    params: GetAchievementParams,
+) -> Result<models::BaseachievementResponseSchema, Error<GetAchievementError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -93,8 +93,7 @@ pub async fn get_achievement_achievements_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAchievementAchievementsCodeGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAchievementError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -105,10 +104,10 @@ pub async fn get_achievement_achievements_code_get(
 }
 
 /// List of all achievements.
-pub async fn get_all_achievements_achievements_get(
+pub async fn get_all_achievements(
     configuration: &configuration::Configuration,
-    params: GetAllAchievementsAchievementsGetParams,
-) -> Result<models::DataPageBaseAchievementSchema, Error<GetAllAchievementsAchievementsGetError>> {
+    params: GetAllAchievementsParams,
+) -> Result<models::DataPageBaseAchievementSchema, Error<GetAllAchievementsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -150,8 +149,7 @@ pub async fn get_all_achievements_achievements_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllAchievementsAchievementsGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllAchievementsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
