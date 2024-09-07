@@ -96,11 +96,13 @@ pub fn parse_deep_object(prefix: &str, value: &serde_json::Value) -> Vec<(String
 }
 
 pub mod accounts_api;
+pub mod achievements_api;
 pub mod characters_api;
 pub mod default_api;
 pub mod events_api;
 pub mod grand_exchange_api;
 pub mod items_api;
+pub mod leaderboard_api;
 pub mod maps_api;
 pub mod monsters_api;
 pub mod my_account_api;
