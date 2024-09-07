@@ -17,7 +17,7 @@ async fn main() {
     let mut config = Configuration::new();
     config.bearer_access_token = Some("YOUR_TOKEN".to_owned());
 
-    match my_account_api::get_bank_details_my_bank_get(&config).await {
+    match my_account_api::get_bank_details(&config).await {
         Ok(BankResponseSchema { data }) => println!("{:?}", data),
         Err(err) => panic!("{}", err),
     }
