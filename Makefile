@@ -26,4 +26,7 @@ clean:
 	rm -rf $(SRC_DIR)
 	rm -rf $(SPEC_DIR)
 
+print-op-ids:
+	deno run --allow-read scripts/print_op_ids.ts
+
 .PHONY: all fetch generate lint-fix build clean
