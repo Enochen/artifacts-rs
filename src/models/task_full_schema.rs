@@ -20,6 +20,9 @@ pub struct TaskFullSchema {
     pub max_quantity: i32,
     #[serde(rename = "skill", deserialize_with = "Option::deserialize")]
     pub skill: Option<String>,
+    /// Rewards.
+    #[serde(rename = "rewards")]
+    pub rewards: Box<models::TaskRewardsSchema>,
 }
 
 impl TaskFullSchema {
@@ -30,6 +33,7 @@ impl TaskFullSchema {
         min_quantity: i32,
         max_quantity: i32,
         skill: Option<String>,
+        rewards: models::TaskRewardsSchema,
     ) -> TaskFullSchema {
         TaskFullSchema {
             code,
@@ -38,6 +42,7 @@ impl TaskFullSchema {
             min_quantity,
             max_quantity,
             skill,
+            rewards: Box::new(rewards),
         }
     }
 }
