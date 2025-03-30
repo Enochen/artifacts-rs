@@ -8,33 +8,11 @@ pub struct AddCharacterSchema {
     pub name: String,
     /// Your desired skin.
     #[serde(rename = "skin")]
-    pub skin: Skin,
+    pub skin: models::CharacterSkin,
 }
 
 impl AddCharacterSchema {
-    pub fn new(name: String, skin: Skin) -> AddCharacterSchema {
+    pub fn new(name: String, skin: models::CharacterSkin) -> AddCharacterSchema {
         AddCharacterSchema { name, skin }
-    }
-}
-/// Your desired skin.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Skin {
-    #[serde(rename = "men1")]
-    Men1,
-    #[serde(rename = "men2")]
-    Men2,
-    #[serde(rename = "men3")]
-    Men3,
-    #[serde(rename = "women1")]
-    Women1,
-    #[serde(rename = "women2")]
-    Women2,
-    #[serde(rename = "women3")]
-    Women3,
-}
-
-impl Default for Skin {
-    fn default() -> Skin {
-        Self::Men1
     }
 }

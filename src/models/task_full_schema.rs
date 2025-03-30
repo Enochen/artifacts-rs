@@ -11,7 +11,7 @@ pub struct TaskFullSchema {
     pub level: i32,
     /// The type of task.
     #[serde(rename = "type")]
-    pub r#type: Type,
+    pub r#type: models::TaskType,
     /// Minimum amount of task.
     #[serde(rename = "min_quantity")]
     pub min_quantity: i32,
@@ -22,18 +22,18 @@ pub struct TaskFullSchema {
     pub skill: Option<String>,
     /// Rewards.
     #[serde(rename = "rewards")]
-    pub rewards: Box<models::TaskRewardsSchema>,
+    pub rewards: Box<models::RewardsSchema>,
 }
 
 impl TaskFullSchema {
     pub fn new(
         code: String,
         level: i32,
-        r#type: Type,
+        r#type: models::TaskType,
         min_quantity: i32,
         max_quantity: i32,
         skill: Option<String>,
-        rewards: models::TaskRewardsSchema,
+        rewards: models::RewardsSchema,
     ) -> TaskFullSchema {
         TaskFullSchema {
             code,
@@ -44,19 +44,5 @@ impl TaskFullSchema {
             skill,
             rewards: Box::new(rewards),
         }
-    }
-}
-/// The type of task.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "monsters")]
-    Monsters,
-    #[serde(rename = "items")]
-    Items,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Monsters
     }
 }

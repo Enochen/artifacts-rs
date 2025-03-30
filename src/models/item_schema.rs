@@ -23,7 +23,7 @@ pub struct ItemSchema {
     pub description: String,
     /// List of object effects. For equipment, it will include item stats.
     #[serde(rename = "effects", skip_serializing_if = "Option::is_none")]
-    pub effects: Option<Vec<models::ItemEffectSchema>>,
+    pub effects: Option<Vec<models::SimpleEffectSchema>>,
     #[serde(
         rename = "craft",
         default,
@@ -31,6 +31,9 @@ pub struct ItemSchema {
         skip_serializing_if = "Option::is_none"
     )]
     pub craft: Option<Option<Box<models::CraftSchema>>>,
+    /// Item tradeable status. A non-tradeable item cannot be exchanged or sold.
+    #[serde(rename = "tradeable")]
+    pub tradeable: bool,
 }
 
 impl ItemSchema {
@@ -41,6 +44,7 @@ impl ItemSchema {
         r#type: String,
         subtype: String,
         description: String,
+        tradeable: bool,
     ) -> ItemSchema {
         ItemSchema {
             name,
@@ -51,6 +55,7 @@ impl ItemSchema {
             description,
             effects: None,
             craft: None,
+            tradeable,
         }
     }
 }

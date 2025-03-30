@@ -39,6 +39,12 @@ pub struct MonsterSchema {
     /// Monster % air resistance.
     #[serde(rename = "res_air")]
     pub res_air: i32,
+    /// Monster % critical strike.
+    #[serde(rename = "critical_strike")]
+    pub critical_strike: i32,
+    /// List of effects.
+    #[serde(rename = "effects", skip_serializing_if = "Option::is_none")]
+    pub effects: Option<Vec<models::SimpleEffectSchema>>,
     /// Monster minimum gold drop.
     #[serde(rename = "min_gold")]
     pub min_gold: i32,
@@ -64,6 +70,7 @@ impl MonsterSchema {
         res_earth: i32,
         res_water: i32,
         res_air: i32,
+        critical_strike: i32,
         min_gold: i32,
         max_gold: i32,
         drops: Vec<models::DropRateSchema>,
@@ -81,6 +88,8 @@ impl MonsterSchema {
             res_earth,
             res_water,
             res_air,
+            critical_strike,
+            effects: None,
             min_gold,
             max_gold,
             drops,

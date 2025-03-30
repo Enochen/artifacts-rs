@@ -6,6 +6,9 @@ pub struct ActiveEventSchema {
     /// Name of the event.
     #[serde(rename = "name")]
     pub name: String,
+    /// Code of the event.
+    #[serde(rename = "code")]
+    pub code: String,
     /// Map of the event.
     #[serde(rename = "map")]
     pub map: Box<models::MapSchema>,
@@ -26,6 +29,7 @@ pub struct ActiveEventSchema {
 impl ActiveEventSchema {
     pub fn new(
         name: String,
+        code: String,
         map: models::MapSchema,
         previous_skin: String,
         duration: i32,
@@ -34,6 +38,7 @@ impl ActiveEventSchema {
     ) -> ActiveEventSchema {
         ActiveEventSchema {
             name,
+            code,
             map: Box::new(map),
             previous_skin,
             duration,

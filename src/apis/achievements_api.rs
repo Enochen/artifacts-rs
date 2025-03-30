@@ -14,7 +14,7 @@ pub struct GetAchievementParams {
 #[derive(Clone, Debug)]
 pub struct GetAllAchievementsParams {
     /// Type of achievements.
-    pub r#type: Option<String>,
+    pub r#type: Option<models::AchievementType>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -25,7 +25,7 @@ pub struct GetAllAchievementsParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetAchievementError {
-    /// achievement not found.
+    /// Achievement not found.
     Status404,
 }
 
@@ -59,7 +59,7 @@ impl TryFrom<StatusCode> for GetAllAchievementsError {
 pub async fn get_achievement(
     configuration: &configuration::Configuration,
     params: GetAchievementParams,
-) -> Result<models::BaseachievementResponseSchema, Error<GetAchievementError>> {
+) -> Result<models::AchievementResponseSchema, Error<GetAchievementError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -103,7 +103,7 @@ pub async fn get_achievement(
 pub async fn get_all_achievements(
     configuration: &configuration::Configuration,
     params: GetAllAchievementsParams,
-) -> Result<models::DataPageBaseAchievementSchema, Error<GetAllAchievementsError>> {
+) -> Result<models::DataPageAchievementSchema, Error<GetAllAchievementsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

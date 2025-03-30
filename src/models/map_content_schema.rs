@@ -5,14 +5,14 @@ use serde::{Deserialize, Serialize};
 pub struct MapContentSchema {
     /// Type of the content.
     #[serde(rename = "type")]
-    pub r#type: String,
+    pub r#type: models::MapContentType,
     /// Code of the content.
     #[serde(rename = "code")]
     pub code: String,
 }
 
 impl MapContentSchema {
-    pub fn new(r#type: String, code: String) -> MapContentSchema {
+    pub fn new(r#type: models::MapContentType, code: String) -> MapContentSchema {
         MapContentSchema { r#type, code }
     }
 }

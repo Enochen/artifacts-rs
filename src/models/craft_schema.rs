@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct CraftSchema {
     /// Skill required to craft the item.
     #[serde(rename = "skill", skip_serializing_if = "Option::is_none")]
-    pub skill: Option<Skill>,
+    pub skill: Option<models::CraftSkill>,
     /// The skill level required to craft the item.
     #[serde(rename = "level", skip_serializing_if = "Option::is_none")]
     pub level: Option<i32>,
@@ -25,27 +25,5 @@ impl CraftSchema {
             items: None,
             quantity: None,
         }
-    }
-}
-/// Skill required to craft the item.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Skill {
-    #[serde(rename = "weaponcrafting")]
-    Weaponcrafting,
-    #[serde(rename = "gearcrafting")]
-    Gearcrafting,
-    #[serde(rename = "jewelrycrafting")]
-    Jewelrycrafting,
-    #[serde(rename = "cooking")]
-    Cooking,
-    #[serde(rename = "woodcutting")]
-    Woodcutting,
-    #[serde(rename = "mining")]
-    Mining,
-}
-
-impl Default for Skill {
-    fn default() -> Skill {
-        Self::Weaponcrafting
     }
 }

@@ -11,7 +11,7 @@ pub struct GetAllResourcesParams {
     /// Skill maximum level.
     pub max_level: Option<u32>,
     /// The code of the skill.
-    pub skill: Option<String>,
+    pub skill: Option<models::GatheringSkill>,
     /// Item code of the drop.
     pub drop: Option<String>,
     /// Page number

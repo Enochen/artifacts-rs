@@ -3,6 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GeTransactionSchema {
+    /// Order id.
+    #[serde(rename = "id")]
+    pub id: String,
     /// Item code.
     #[serde(rename = "code")]
     pub code: String,
@@ -18,8 +21,15 @@ pub struct GeTransactionSchema {
 }
 
 impl GeTransactionSchema {
-    pub fn new(code: String, quantity: i32, price: i32, total_price: i32) -> GeTransactionSchema {
+    pub fn new(
+        id: String,
+        code: String,
+        quantity: i32,
+        price: i32,
+        total_price: i32,
+    ) -> GeTransactionSchema {
         GeTransactionSchema {
+            id,
             code,
             quantity,
             price,

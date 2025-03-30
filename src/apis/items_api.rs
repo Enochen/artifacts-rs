@@ -13,9 +13,9 @@ pub struct GetAllItemsParams {
     /// Name of the item.
     pub name: Option<String>,
     /// Type of items.
-    pub r#type: Option<String>,
+    pub r#type: Option<models::ItemType>,
     /// Skill to craft items.
-    pub craft_skill: Option<String>,
+    pub craft_skill: Option<models::CraftSkill>,
     /// Item code of items used as material for crafting.
     pub craft_material: Option<String>,
     /// Page number

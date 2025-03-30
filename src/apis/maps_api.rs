@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug)]
 pub struct GetAllMapsParams {
     /// Type of content on the map.
-    pub content_type: Option<String>,
+    pub content_type: Option<models::MapContentType>,
     /// Content code on the map.
     pub content_code: Option<String>,
     /// Page number

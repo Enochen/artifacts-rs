@@ -11,7 +11,7 @@ pub struct LogSchema {
     pub account: String,
     /// Type of action.
     #[serde(rename = "type")]
-    pub r#type: String,
+    pub r#type: models::LogType,
     /// Description of action.
     #[serde(rename = "description")]
     pub description: String,
@@ -34,7 +34,7 @@ impl LogSchema {
     pub fn new(
         character: String,
         account: String,
-        r#type: String,
+        r#type: models::LogType,
         description: String,
         content: Option<serde_json::Value>,
         cooldown: i32,

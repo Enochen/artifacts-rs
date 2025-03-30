@@ -17,7 +17,7 @@ pub struct CooldownSchema {
     pub expiration: String,
     /// The reason of the cooldown.
     #[serde(rename = "reason")]
-    pub reason: Reason,
+    pub reason: models::ActionType,
 }
 
 impl CooldownSchema {
@@ -26,7 +26,7 @@ impl CooldownSchema {
         remaining_seconds: i32,
         started_at: String,
         expiration: String,
-        reason: Reason,
+        reason: models::ActionType,
     ) -> CooldownSchema {
         CooldownSchema {
             total_seconds,
@@ -35,41 +35,5 @@ impl CooldownSchema {
             expiration,
             reason,
         }
-    }
-}
-/// The reason of the cooldown.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Reason {
-    #[serde(rename = "movement")]
-    Movement,
-    #[serde(rename = "fight")]
-    Fight,
-    #[serde(rename = "crafting")]
-    Crafting,
-    #[serde(rename = "gathering")]
-    Gathering,
-    #[serde(rename = "buy_ge")]
-    BuyGe,
-    #[serde(rename = "sell_ge")]
-    SellGe,
-    #[serde(rename = "delete_item")]
-    DeleteItem,
-    #[serde(rename = "deposit_bank")]
-    DepositBank,
-    #[serde(rename = "withdraw_bank")]
-    WithdrawBank,
-    #[serde(rename = "equip")]
-    Equip,
-    #[serde(rename = "unequip")]
-    Unequip,
-    #[serde(rename = "task")]
-    Task,
-    #[serde(rename = "recycling")]
-    Recycling,
-}
-
-impl Default for Reason {
-    fn default() -> Reason {
-        Self::Movement
     }
 }

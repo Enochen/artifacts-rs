@@ -11,7 +11,7 @@ pub struct ResourceSchema {
     pub code: String,
     /// The skill required to gather this resource.
     #[serde(rename = "skill")]
-    pub skill: Skill,
+    pub skill: models::GatheringSkill,
     /// The skill level required to gather this resource.
     #[serde(rename = "level")]
     pub level: i32,
@@ -24,7 +24,7 @@ impl ResourceSchema {
     pub fn new(
         name: String,
         code: String,
-        skill: Skill,
+        skill: models::GatheringSkill,
         level: i32,
         drops: Vec<models::DropRateSchema>,
     ) -> ResourceSchema {
@@ -35,21 +35,5 @@ impl ResourceSchema {
             level,
             drops,
         }
-    }
-}
-/// The skill required to gather this resource.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Skill {
-    #[serde(rename = "mining")]
-    Mining,
-    #[serde(rename = "woodcutting")]
-    Woodcutting,
-    #[serde(rename = "fishing")]
-    Fishing,
-}
-
-impl Default for Skill {
-    fn default() -> Skill {
-        Self::Mining
     }
 }

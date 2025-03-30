@@ -9,6 +9,35 @@ pub struct CreateAccountParams {
     pub add_account_schema: models::AddAccountSchema,
 }
 
+/// struct for passing parameters to the method [`get_account_accounts_account_get`]
+#[derive(Clone, Debug)]
+pub struct GetAccountAccountsAccountGetParams {
+    /// The account name.
+    pub account: String,
+}
+
+/// struct for passing parameters to the method [`get_account_achievements_accounts_account_achievements_get`]
+#[derive(Clone, Debug)]
+pub struct GetAccountAchievementsAccountsAccountAchievementsGetParams {
+    /// The character name.
+    pub account: String,
+    /// Type of achievements.
+    pub r#type: Option<String>,
+    /// Filter by completed achievements.
+    pub completed: Option<bool>,
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+/// struct for passing parameters to the method [`get_account_characters_accounts_account_characters_get`]
+#[derive(Clone, Debug)]
+pub struct GetAccountCharactersAccountsAccountCharactersGetParams {
+    /// The character name.
+    pub account: String,
+}
+
 /// struct for typed errors of method [`create_account`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -31,7 +60,59 @@ impl TryFrom<StatusCode> for CreateAccountError {
     }
 }
 
-/// Create an account.
+/// struct for typed errors of method [`get_account_accounts_account_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAccountAccountsAccountGetError {
+    /// Account not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAccountAccountsAccountGetError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`get_account_achievements_accounts_account_achievements_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAccountAchievementsAccountsAccountAchievementsGetError {
+    /// Account not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GetAccountAchievementsAccountsAccountAchievementsGetError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`get_account_characters_accounts_account_characters_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAccountCharactersAccountsAccountCharactersGetError {}
+
+impl TryFrom<StatusCode> for GetAccountCharactersAccountsAccountCharactersGetError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 pub async fn create_account(
     configuration: &configuration::Configuration,
     params: CreateAccountParams,
@@ -63,6 +144,171 @@ pub async fn create_account(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<CreateAccountError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Retrieve the details of a character.
+pub async fn get_account_accounts_account_get(
+    configuration: &configuration::Configuration,
+    params: GetAccountAccountsAccountGetParams,
+) -> Result<models::AccountDetailsSchema, Error<GetAccountAccountsAccountGetError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let account = params.account;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/accounts/{account}",
+        local_var_configuration.base_path,
+        account = crate::apis::urlencode(account)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetAccountAccountsAccountGetError> =
+            local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Retrieve the achievements of a account.
+pub async fn get_account_achievements_accounts_account_achievements_get(
+    configuration: &configuration::Configuration,
+    params: GetAccountAchievementsAccountsAccountAchievementsGetParams,
+) -> Result<
+    models::DataPageAccountAchievementSchema,
+    Error<GetAccountAchievementsAccountsAccountAchievementsGetError>,
+> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let account = params.account;
+    // unbox the parameters
+    let r#type = params.r#type;
+    // unbox the parameters
+    let completed = params.completed;
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/accounts/{account}/achievements",
+        local_var_configuration.base_path,
+        account = crate::apis::urlencode(account)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = r#type {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = completed {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("completed", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetAccountAchievementsAccountsAccountAchievementsGetError> =
+            local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Account character lists.
+pub async fn get_account_characters_accounts_account_characters_get(
+    configuration: &configuration::Configuration,
+    params: GetAccountCharactersAccountsAccountCharactersGetParams,
+) -> Result<
+    models::CharactersListSchema,
+    Error<GetAccountCharactersAccountsAccountCharactersGetError>,
+> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let account = params.account;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/accounts/{account}/characters",
+        local_var_configuration.base_path,
+        account = crate::apis::urlencode(account)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetAccountCharactersAccountsAccountCharactersGetError> =
+            local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

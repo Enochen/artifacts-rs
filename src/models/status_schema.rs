@@ -6,8 +6,9 @@ pub struct StatusSchema {
     /// Server status
     #[serde(rename = "status")]
     pub status: String,
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<String>,
+    /// Game version.
+    #[serde(rename = "version")]
+    pub version: String,
     /// Maximum level.
     #[serde(rename = "max_level")]
     pub max_level: i32,
@@ -31,6 +32,7 @@ pub struct StatusSchema {
 impl StatusSchema {
     pub fn new(
         status: String,
+        version: String,
         max_level: i32,
         characters_online: i32,
         server_time: String,
@@ -40,7 +42,7 @@ impl StatusSchema {
     ) -> StatusSchema {
         StatusSchema {
             status,
-            version: None,
+            version,
             max_level,
             characters_online,
             server_time,

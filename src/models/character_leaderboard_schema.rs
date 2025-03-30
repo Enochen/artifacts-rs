@@ -3,15 +3,21 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CharacterLeaderboardSchema {
+    /// Position in the leaderboard.
+    #[serde(rename = "position")]
+    pub position: i32,
     /// Character name.
     #[serde(rename = "name")]
     pub name: String,
+    /// Account name.
+    #[serde(rename = "account")]
+    pub account: String,
+    /// Member status.
+    #[serde(rename = "status")]
+    pub status: models::AccountStatus,
     /// Character skin code.
     #[serde(rename = "skin")]
     pub skin: String,
-    /// Achievements points.
-    #[serde(rename = "achievements_points")]
-    pub achievements_points: i32,
     /// Combat level.
     #[serde(rename = "level")]
     pub level: i32,
@@ -60,16 +66,24 @@ pub struct CharacterLeaderboardSchema {
     /// Cooking total xp.
     #[serde(rename = "cooking_total_xp")]
     pub cooking_total_xp: i32,
-    /// The numbers of golds on this character.
+    /// Alchemy level.
+    #[serde(rename = "alchemy_level")]
+    pub alchemy_level: i32,
+    /// Alchemy total xp.
+    #[serde(rename = "alchemy_total_xp")]
+    pub alchemy_total_xp: i32,
+    /// The numbers of gold on this character.
     #[serde(rename = "gold")]
     pub gold: i32,
 }
 
 impl CharacterLeaderboardSchema {
     pub fn new(
+        position: i32,
         name: String,
+        account: String,
+        status: models::AccountStatus,
         skin: String,
-        achievements_points: i32,
         level: i32,
         total_xp: i32,
         mining_level: i32,
@@ -86,12 +100,16 @@ impl CharacterLeaderboardSchema {
         jewelrycrafting_total_xp: i32,
         cooking_level: i32,
         cooking_total_xp: i32,
+        alchemy_level: i32,
+        alchemy_total_xp: i32,
         gold: i32,
     ) -> CharacterLeaderboardSchema {
         CharacterLeaderboardSchema {
+            position,
             name,
+            account,
+            status,
             skin,
-            achievements_points,
             level,
             total_xp,
             mining_level,
@@ -108,6 +126,8 @@ impl CharacterLeaderboardSchema {
             jewelrycrafting_total_xp,
             cooking_level,
             cooking_total_xp,
+            alchemy_level,
+            alchemy_total_xp,
             gold,
         }
     }

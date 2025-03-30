@@ -1,0 +1,47 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct AccountDetails {
+    /// Username.
+    #[serde(rename = "username")]
+    pub username: String,
+    /// Subscribed for the current season.
+    #[serde(rename = "subscribed")]
+    pub subscribed: bool,
+    /// Member status.
+    #[serde(rename = "status")]
+    pub status: models::AccountStatus,
+    /// Account badges.
+    #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
+    pub badges: Option<Vec<serde_json::Value>>,
+    /// Achievement points.
+    #[serde(rename = "achievements_points")]
+    pub achievements_points: i32,
+    /// Banned.
+    #[serde(rename = "banned")]
+    pub banned: bool,
+    /// Ban reason.
+    #[serde(rename = "ban_reason", skip_serializing_if = "Option::is_none")]
+    pub ban_reason: Option<String>,
+}
+
+impl AccountDetails {
+    pub fn new(
+        username: String,
+        subscribed: bool,
+        status: models::AccountStatus,
+        achievements_points: i32,
+        banned: bool,
+    ) -> AccountDetails {
+        AccountDetails {
+            username,
+            subscribed,
+            status,
+            badges: None,
+            achievements_points,
+            banned,
+            ban_reason: None,
+        }
+    }
+}

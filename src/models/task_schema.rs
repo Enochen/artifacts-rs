@@ -8,32 +8,27 @@ pub struct TaskSchema {
     pub code: String,
     /// The type of task.
     #[serde(rename = "type")]
-    pub r#type: Type,
+    pub r#type: models::TaskType,
     /// The total required to complete the task.
     #[serde(rename = "total")]
     pub total: i32,
+    /// Rewards for completing the task.
+    #[serde(rename = "rewards")]
+    pub rewards: Box<models::RewardsSchema>,
 }
 
 impl TaskSchema {
-    pub fn new(code: String, r#type: Type, total: i32) -> TaskSchema {
+    pub fn new(
+        code: String,
+        r#type: models::TaskType,
+        total: i32,
+        rewards: models::RewardsSchema,
+    ) -> TaskSchema {
         TaskSchema {
             code,
             r#type,
             total,
+            rewards: Box::new(rewards),
         }
-    }
-}
-/// The type of task.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "monsters")]
-    Monsters,
-    #[serde(rename = "items")]
-    Items,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::Monsters
     }
 }

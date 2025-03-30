@@ -3,13 +3,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FightSchema {
-    /// The amount of xp gained by the fight.
+    /// The amount of xp gained from the fight.
     #[serde(rename = "xp")]
     pub xp: i32,
-    /// The amount of gold gained by the fight.
+    /// The amount of gold gained from the fight.
     #[serde(rename = "gold")]
     pub gold: i32,
-    /// The items dropped by the fight.
+    /// The items dropped from the fight.
     #[serde(rename = "drops")]
     pub drops: Vec<models::DropSchema>,
     /// Numbers of the turns of the combat.
@@ -26,7 +26,7 @@ pub struct FightSchema {
     pub logs: Vec<String>,
     /// The result of the fight.
     #[serde(rename = "result")]
-    pub result: Result,
+    pub result: models::FightResult,
 }
 
 impl FightSchema {
@@ -38,7 +38,7 @@ impl FightSchema {
         monster_blocked_hits: models::BlockedHitsSchema,
         player_blocked_hits: models::BlockedHitsSchema,
         logs: Vec<String>,
-        result: Result,
+        result: models::FightResult,
     ) -> FightSchema {
         FightSchema {
             xp,
@@ -50,19 +50,5 @@ impl FightSchema {
             logs,
             result,
         }
-    }
-}
-/// The result of the fight.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Result {
-    #[serde(rename = "win")]
-    Win,
-    #[serde(rename = "lose")]
-    Lose,
-}
-
-impl Default for Result {
-    fn default() -> Result {
-        Self::Win
     }
 }

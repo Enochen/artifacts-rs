@@ -6,9 +6,12 @@ pub struct CharacterSchema {
     /// Name of the character.
     #[serde(rename = "name")]
     pub name: String,
+    /// Account name.
+    #[serde(rename = "account")]
+    pub account: String,
     /// Character skin code.
     #[serde(rename = "skin")]
-    pub skin: Skin,
+    pub skin: models::CharacterSkin,
     /// Combat level.
     #[serde(rename = "level")]
     pub level: i32,
@@ -18,10 +21,7 @@ pub struct CharacterSchema {
     /// XP required to level up the character.
     #[serde(rename = "max_xp")]
     pub max_xp: i32,
-    /// achievements points.
-    #[serde(rename = "achievements_points")]
-    pub achievements_points: i32,
-    /// The numbers of golds on this character.
+    /// The numbers of gold on this character.
     #[serde(rename = "gold")]
     pub gold: i32,
     /// *Not available, on the roadmap. Character movement speed.
@@ -90,18 +90,33 @@ pub struct CharacterSchema {
     /// Cooking XP required to level up the skill.
     #[serde(rename = "cooking_max_xp")]
     pub cooking_max_xp: i32,
-    /// Character HP.
+    /// Alchemy level.
+    #[serde(rename = "alchemy_level")]
+    pub alchemy_level: i32,
+    /// Alchemy XP.
+    #[serde(rename = "alchemy_xp")]
+    pub alchemy_xp: i32,
+    /// Alchemy XP required to level up the skill.
+    #[serde(rename = "alchemy_max_xp")]
+    pub alchemy_max_xp: i32,
+    /// Character actual HP.
     #[serde(rename = "hp")]
     pub hp: i32,
-    /// *Character Haste. Increase speed attack (reduce fight cooldown)
+    /// Character max HP.
+    #[serde(rename = "max_hp")]
+    pub max_hp: i32,
+    /// *Increase speed attack (reduce fight cooldown)
     #[serde(rename = "haste")]
     pub haste: i32,
-    /// *Not available, on the roadmap. Character Critical   Strike. Critical strikes increase the attack's damage.
+    /// % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
     #[serde(rename = "critical_strike")]
     pub critical_strike: i32,
-    /// *Not available, on the roadmap. Regenerates life at the start of each turn.
-    #[serde(rename = "stamina")]
-    pub stamina: i32,
+    /// Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
+    #[serde(rename = "wisdom")]
+    pub wisdom: i32,
+    /// Prospecting increases the chances of getting better loot (1% extra per 10 PP).
+    #[serde(rename = "prospecting")]
+    pub prospecting: i32,
     /// Fire attack.
     #[serde(rename = "attack_fire")]
     pub attack_fire: i32,
@@ -114,28 +129,31 @@ pub struct CharacterSchema {
     /// Air attack.
     #[serde(rename = "attack_air")]
     pub attack_air: i32,
-    /// % Fire damage.
+    /// % Damage. Damage increases your attack in all elements.
+    #[serde(rename = "dmg")]
+    pub dmg: i32,
+    /// % Fire damage. Damage increases your fire attack.
     #[serde(rename = "dmg_fire")]
     pub dmg_fire: i32,
-    /// % Earth damage.
+    /// % Earth damage. Damage increases your earth attack.
     #[serde(rename = "dmg_earth")]
     pub dmg_earth: i32,
-    /// % Water damage.
+    /// % Water damage. Damage increases your water attack.
     #[serde(rename = "dmg_water")]
     pub dmg_water: i32,
-    /// % Air damage.
+    /// % Air damage. Damage increases your air attack.
     #[serde(rename = "dmg_air")]
     pub dmg_air: i32,
-    /// % Fire resistance.
+    /// % Fire resistance. Reduces fire attack.
     #[serde(rename = "res_fire")]
     pub res_fire: i32,
-    /// % Earth resistance.
+    /// % Earth resistance. Reduces earth attack.
     #[serde(rename = "res_earth")]
     pub res_earth: i32,
-    /// % Water resistance.
+    /// % Water resistance. Reduces water attack.
     #[serde(rename = "res_water")]
     pub res_water: i32,
-    /// % Air resistance.
+    /// % Air resistance. Reduces air attack.
     #[serde(rename = "res_air")]
     pub res_air: i32,
     /// Character x coordinate.
@@ -156,6 +174,9 @@ pub struct CharacterSchema {
     /// Weapon slot.
     #[serde(rename = "weapon_slot")]
     pub weapon_slot: String,
+    /// Rune slot.
+    #[serde(rename = "rune_slot")]
+    pub rune_slot: String,
     /// Shield slot.
     #[serde(rename = "shield_slot")]
     pub shield_slot: String,
@@ -189,18 +210,21 @@ pub struct CharacterSchema {
     /// Artifact 3 slot.
     #[serde(rename = "artifact3_slot")]
     pub artifact3_slot: String,
-    /// Consumable 1 slot.
-    #[serde(rename = "consumable1_slot")]
-    pub consumable1_slot: String,
-    /// Consumable 1 quantity.
-    #[serde(rename = "consumable1_slot_quantity")]
-    pub consumable1_slot_quantity: u32,
-    /// Consumable 2 slot.
-    #[serde(rename = "consumable2_slot")]
-    pub consumable2_slot: String,
-    /// Consumable 2 quantity.
-    #[serde(rename = "consumable2_slot_quantity")]
-    pub consumable2_slot_quantity: u32,
+    /// Utility 1 slot.
+    #[serde(rename = "utility1_slot")]
+    pub utility1_slot: String,
+    /// Utility 1 quantity.
+    #[serde(rename = "utility1_slot_quantity")]
+    pub utility1_slot_quantity: u32,
+    /// Utility 2 slot.
+    #[serde(rename = "utility2_slot")]
+    pub utility2_slot: String,
+    /// Utility 2 quantity.
+    #[serde(rename = "utility2_slot_quantity")]
+    pub utility2_slot_quantity: u32,
+    /// Bag slot.
+    #[serde(rename = "bag_slot")]
+    pub bag_slot: String,
     /// Task in progress.
     #[serde(rename = "task")]
     pub task: String,
@@ -224,11 +248,11 @@ pub struct CharacterSchema {
 impl CharacterSchema {
     pub fn new(
         name: String,
-        skin: Skin,
+        account: String,
+        skin: models::CharacterSkin,
         level: i32,
         xp: i32,
         max_xp: i32,
-        achievements_points: i32,
         gold: i32,
         speed: i32,
         mining_level: i32,
@@ -252,14 +276,20 @@ impl CharacterSchema {
         cooking_level: i32,
         cooking_xp: i32,
         cooking_max_xp: i32,
+        alchemy_level: i32,
+        alchemy_xp: i32,
+        alchemy_max_xp: i32,
         hp: i32,
+        max_hp: i32,
         haste: i32,
         critical_strike: i32,
-        stamina: i32,
+        wisdom: i32,
+        prospecting: i32,
         attack_fire: i32,
         attack_earth: i32,
         attack_water: i32,
         attack_air: i32,
+        dmg: i32,
         dmg_fire: i32,
         dmg_earth: i32,
         dmg_water: i32,
@@ -272,6 +302,7 @@ impl CharacterSchema {
         y: i32,
         cooldown: i32,
         weapon_slot: String,
+        rune_slot: String,
         shield_slot: String,
         helmet_slot: String,
         body_armor_slot: String,
@@ -283,10 +314,11 @@ impl CharacterSchema {
         artifact1_slot: String,
         artifact2_slot: String,
         artifact3_slot: String,
-        consumable1_slot: String,
-        consumable1_slot_quantity: u32,
-        consumable2_slot: String,
-        consumable2_slot_quantity: u32,
+        utility1_slot: String,
+        utility1_slot_quantity: u32,
+        utility2_slot: String,
+        utility2_slot_quantity: u32,
+        bag_slot: String,
         task: String,
         task_type: String,
         task_progress: i32,
@@ -295,11 +327,11 @@ impl CharacterSchema {
     ) -> CharacterSchema {
         CharacterSchema {
             name,
+            account,
             skin,
             level,
             xp,
             max_xp,
-            achievements_points,
             gold,
             speed,
             mining_level,
@@ -323,14 +355,20 @@ impl CharacterSchema {
             cooking_level,
             cooking_xp,
             cooking_max_xp,
+            alchemy_level,
+            alchemy_xp,
+            alchemy_max_xp,
             hp,
+            max_hp,
             haste,
             critical_strike,
-            stamina,
+            wisdom,
+            prospecting,
             attack_fire,
             attack_earth,
             attack_water,
             attack_air,
+            dmg,
             dmg_fire,
             dmg_earth,
             dmg_water,
@@ -344,6 +382,7 @@ impl CharacterSchema {
             cooldown,
             cooldown_expiration: None,
             weapon_slot,
+            rune_slot,
             shield_slot,
             helmet_slot,
             body_armor_slot,
@@ -355,10 +394,11 @@ impl CharacterSchema {
             artifact1_slot,
             artifact2_slot,
             artifact3_slot,
-            consumable1_slot,
-            consumable1_slot_quantity,
-            consumable2_slot,
-            consumable2_slot_quantity,
+            utility1_slot,
+            utility1_slot_quantity,
+            utility2_slot,
+            utility2_slot_quantity,
+            bag_slot,
             task,
             task_type,
             task_progress,
@@ -366,27 +406,5 @@ impl CharacterSchema {
             inventory_max_items,
             inventory: None,
         }
-    }
-}
-/// Character skin code.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Skin {
-    #[serde(rename = "men1")]
-    Men1,
-    #[serde(rename = "men2")]
-    Men2,
-    #[serde(rename = "men3")]
-    Men3,
-    #[serde(rename = "women1")]
-    Women1,
-    #[serde(rename = "women2")]
-    Women2,
-    #[serde(rename = "women3")]
-    Women3,
-}
-
-impl Default for Skin {
-    fn default() -> Skin {
-        Self::Men1
     }
 }

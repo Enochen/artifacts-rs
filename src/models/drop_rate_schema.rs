@@ -6,7 +6,7 @@ pub struct DropRateSchema {
     /// Item code.
     #[serde(rename = "code")]
     pub code: String,
-    /// Chance rate.
+    /// Chance rate. (1/rate)
     #[serde(rename = "rate")]
     pub rate: u32,
     /// Minimum quantity.

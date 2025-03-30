@@ -1,0 +1,32 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct NpcItem {
+    /// The code of the NPC. This is the NPC's unique identifier (ID).
+    #[serde(rename = "code")]
+    pub code: String,
+    /// Code of the NPC that sells/buys the item.
+    #[serde(rename = "npc")]
+    pub npc: String,
+    #[serde(rename = "buy_price", deserialize_with = "Option::deserialize")]
+    pub buy_price: Option<i32>,
+    #[serde(rename = "sell_price", deserialize_with = "Option::deserialize")]
+    pub sell_price: Option<i32>,
+}
+
+impl NpcItem {
+    pub fn new(
+        code: String,
+        npc: String,
+        buy_price: Option<i32>,
+        sell_price: Option<i32>,
+    ) -> NpcItem {
+        NpcItem {
+            code,
+            npc,
+            buy_price,
+            sell_price,
+        }
+    }
+}

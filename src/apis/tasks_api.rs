@@ -20,9 +20,9 @@ pub struct GetAllTasksTasksListGetParams {
     /// Maximum level.
     pub max_level: Option<u32>,
     /// The code of the skill.
-    pub skill: Option<String>,
+    pub skill: Option<models::Skill>,
     /// The type of tasks.
-    pub r#type: Option<String>,
+    pub r#type: Option<models::TaskType>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -115,7 +115,7 @@ impl TryFrom<StatusCode> for GetTasksRewardTasksRewardsCodeGetError {
 pub async fn get_all_tasks_rewards_tasks_rewards_get(
     configuration: &configuration::Configuration,
     params: GetAllTasksRewardsTasksRewardsGetParams,
-) -> Result<models::DataPageTasksRewardFullSchema, Error<GetAllTasksRewardsTasksRewardsGetError>> {
+) -> Result<models::DataPageDropRateSchema, Error<GetAllTasksRewardsTasksRewardsGetError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -286,7 +286,7 @@ pub async fn get_task_tasks_list_code_get(
 pub async fn get_tasks_reward_tasks_rewards_code_get(
     configuration: &configuration::Configuration,
     params: GetTasksRewardTasksRewardsCodeGetParams,
-) -> Result<models::TasksRewardFullResponseSchema, Error<GetTasksRewardTasksRewardsCodeGetError>> {
+) -> Result<models::RewardResponseSchema, Error<GetTasksRewardTasksRewardsCodeGetError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
