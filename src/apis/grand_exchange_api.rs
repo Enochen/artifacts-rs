@@ -3,9 +3,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_ge_sell_history_grandexchange_history_code_get`]
+/// struct for passing parameters to the method [`get_ge_sell_history_by_code`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellHistoryGrandexchangeHistoryCodeGetParams {
+pub struct GetGeSellHistoryByCodeParams {
     /// The code of the item.
     pub code: String,
     /// The seller (account name) of the item.
@@ -18,16 +18,16 @@ pub struct GetGeSellHistoryGrandexchangeHistoryCodeGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_order_grandexchange_orders_id_get`]
+/// struct for passing parameters to the method [`get_ge_sell_order_by_id`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrderGrandexchangeOrdersIdGetParams {
+pub struct GetGeSellOrderByIdParams {
     /// The id of the order.
     pub id: String,
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_orders_grandexchange_orders_get`]
+/// struct for passing parameters to the method [`get_ge_sell_orders`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrdersGrandexchangeOrdersGetParams {
+pub struct GetGeSellOrdersParams {
     /// The code of the item.
     pub code: Option<String>,
     /// The seller (account name) of the item.
@@ -38,15 +38,15 @@ pub struct GetGeSellOrdersGrandexchangeOrdersGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`get_ge_sell_history_grandexchange_history_code_get`]
+/// struct for typed errors of method [`get_ge_sell_history_by_code`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeSellHistoryGrandexchangeHistoryCodeGetError {
+pub enum GetGeSellHistoryByCodeError {
     /// Item not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetGeSellHistoryGrandexchangeHistoryCodeGetError {
+impl TryFrom<StatusCode> for GetGeSellHistoryByCodeError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -57,15 +57,15 @@ impl TryFrom<StatusCode> for GetGeSellHistoryGrandexchangeHistoryCodeGetError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_order_grandexchange_orders_id_get`]
+/// struct for typed errors of method [`get_ge_sell_order_by_id`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrderGrandexchangeOrdersIdGetError {
+pub enum GetGeSellOrderByIdError {
     /// Order not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetGeSellOrderGrandexchangeOrdersIdGetError {
+impl TryFrom<StatusCode> for GetGeSellOrderByIdError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -76,12 +76,12 @@ impl TryFrom<StatusCode> for GetGeSellOrderGrandexchangeOrdersIdGetError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_orders_grandexchange_orders_get`]
+/// struct for typed errors of method [`get_ge_sell_orders`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrdersGrandexchangeOrdersGetError {}
+pub enum GetGeSellOrdersError {}
 
-impl TryFrom<StatusCode> for GetGeSellOrdersGrandexchangeOrdersGetError {
+impl TryFrom<StatusCode> for GetGeSellOrdersError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -92,13 +92,10 @@ impl TryFrom<StatusCode> for GetGeSellOrdersGrandexchangeOrdersGetError {
 }
 
 /// Fetch the sales history of the item for the last 7 days.
-pub async fn get_ge_sell_history_grandexchange_history_code_get(
+pub async fn get_ge_sell_history_by_code(
     configuration: &configuration::Configuration,
-    params: GetGeSellHistoryGrandexchangeHistoryCodeGetParams,
-) -> Result<
-    models::DataPageGeOrderHistorySchema,
-    Error<GetGeSellHistoryGrandexchangeHistoryCodeGetError>,
-> {
+    params: GetGeSellHistoryByCodeParams,
+) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeSellHistoryByCodeError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -152,7 +149,7 @@ pub async fn get_ge_sell_history_grandexchange_history_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellHistoryGrandexchangeHistoryCodeGetError> =
+        let local_var_entity: Option<GetGeSellHistoryByCodeError> =
             local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -164,10 +161,10 @@ pub async fn get_ge_sell_history_grandexchange_history_code_get(
 }
 
 /// Retrieve the sell order of a item.
-pub async fn get_ge_sell_order_grandexchange_orders_id_get(
+pub async fn get_ge_sell_order_by_id(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrderGrandexchangeOrdersIdGetParams,
-) -> Result<models::GeOrderReponseSchema, Error<GetGeSellOrderGrandexchangeOrdersIdGetError>> {
+    params: GetGeSellOrderByIdParams,
+) -> Result<models::GeOrderReponseSchema, Error<GetGeSellOrderByIdError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -197,8 +194,7 @@ pub async fn get_ge_sell_order_grandexchange_orders_id_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrderGrandexchangeOrdersIdGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrderByIdError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -209,10 +205,10 @@ pub async fn get_ge_sell_order_grandexchange_orders_id_get(
 }
 
 /// Fetch all sell orders.
-pub async fn get_ge_sell_orders_grandexchange_orders_get(
+pub async fn get_ge_sell_orders(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrdersGrandexchangeOrdersGetParams,
-) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersGrandexchangeOrdersGetError>> {
+    params: GetGeSellOrdersParams,
+) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -260,8 +256,7 @@ pub async fn get_ge_sell_orders_grandexchange_orders_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersGrandexchangeOrdersGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrdersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

@@ -3,28 +3,28 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_effects_effects_get`]
+/// struct for passing parameters to the method [`get_all_effects`]
 #[derive(Clone, Debug)]
-pub struct GetAllEffectsEffectsGetParams {
+pub struct GetAllEffectsParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_effect_effects_code_get`]
+/// struct for passing parameters to the method [`get_effect`]
 #[derive(Clone, Debug)]
-pub struct GetEffectEffectsCodeGetParams {
+pub struct GetEffectParams {
     /// The code of the achievement.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_effects_effects_get`]
+/// struct for typed errors of method [`get_all_effects`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllEffectsEffectsGetError {}
+pub enum GetAllEffectsError {}
 
-impl TryFrom<StatusCode> for GetAllEffectsEffectsGetError {
+impl TryFrom<StatusCode> for GetAllEffectsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -34,15 +34,15 @@ impl TryFrom<StatusCode> for GetAllEffectsEffectsGetError {
     }
 }
 
-/// struct for typed errors of method [`get_effect_effects_code_get`]
+/// struct for typed errors of method [`get_effect`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetEffectEffectsCodeGetError {
+pub enum GetEffectError {
     /// effect not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetEffectEffectsCodeGetError {
+impl TryFrom<StatusCode> for GetEffectError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -54,10 +54,10 @@ impl TryFrom<StatusCode> for GetEffectEffectsCodeGetError {
 }
 
 /// List of all effects. Effects are used by equipment, tools, runes, consumables and monsters. An effect is an action that produces an effect on the game.
-pub async fn get_all_effects_effects_get(
+pub async fn get_all_effects(
     configuration: &configuration::Configuration,
-    params: GetAllEffectsEffectsGetParams,
-) -> Result<models::DataPageEffectSchema, Error<GetAllEffectsEffectsGetError>> {
+    params: GetAllEffectsParams,
+) -> Result<models::DataPageEffectSchema, Error<GetAllEffectsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -93,8 +93,7 @@ pub async fn get_all_effects_effects_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllEffectsEffectsGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllEffectsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -105,10 +104,10 @@ pub async fn get_all_effects_effects_get(
 }
 
 /// Retrieve the details of a badge.
-pub async fn get_effect_effects_code_get(
+pub async fn get_effect(
     configuration: &configuration::Configuration,
-    params: GetEffectEffectsCodeGetParams,
-) -> Result<models::EffectResponseSchema, Error<GetEffectEffectsCodeGetError>> {
+    params: GetEffectParams,
+) -> Result<models::EffectResponseSchema, Error<GetEffectError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -138,8 +137,7 @@ pub async fn get_effect_effects_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetEffectEffectsCodeGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetEffectError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

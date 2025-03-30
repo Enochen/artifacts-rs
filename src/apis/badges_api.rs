@@ -3,28 +3,28 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_badges_badges_get`]
+/// struct for passing parameters to the method [`get_all_badges`]
 #[derive(Clone, Debug)]
-pub struct GetAllBadgesBadgesGetParams {
+pub struct GetAllBadgesParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_badge_badges_code_get`]
+/// struct for passing parameters to the method [`get_badge`]
 #[derive(Clone, Debug)]
-pub struct GetBadgeBadgesCodeGetParams {
+pub struct GetBadgeParams {
     /// The code of the achievement.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_badges_badges_get`]
+/// struct for typed errors of method [`get_all_badges`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllBadgesBadgesGetError {}
+pub enum GetAllBadgesError {}
 
-impl TryFrom<StatusCode> for GetAllBadgesBadgesGetError {
+impl TryFrom<StatusCode> for GetAllBadgesError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -34,15 +34,15 @@ impl TryFrom<StatusCode> for GetAllBadgesBadgesGetError {
     }
 }
 
-/// struct for typed errors of method [`get_badge_badges_code_get`]
+/// struct for typed errors of method [`get_badge`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetBadgeBadgesCodeGetError {
+pub enum GetBadgeError {
     /// badge not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetBadgeBadgesCodeGetError {
+impl TryFrom<StatusCode> for GetBadgeError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -54,10 +54,10 @@ impl TryFrom<StatusCode> for GetBadgeBadgesCodeGetError {
 }
 
 /// List of all badges.
-pub async fn get_all_badges_badges_get(
+pub async fn get_all_badges(
     configuration: &configuration::Configuration,
-    params: GetAllBadgesBadgesGetParams,
-) -> Result<models::DataPageBadgeSchema, Error<GetAllBadgesBadgesGetError>> {
+    params: GetAllBadgesParams,
+) -> Result<models::DataPageBadgeSchema, Error<GetAllBadgesError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -93,7 +93,7 @@ pub async fn get_all_badges_badges_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllBadgesBadgesGetError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllBadgesError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -104,10 +104,10 @@ pub async fn get_all_badges_badges_get(
 }
 
 /// Retrieve the details of a badge.
-pub async fn get_badge_badges_code_get(
+pub async fn get_badge(
     configuration: &configuration::Configuration,
-    params: GetBadgeBadgesCodeGetParams,
-) -> Result<models::BadgeResponseSchema, Error<GetBadgeBadgesCodeGetError>> {
+    params: GetBadgeParams,
+) -> Result<models::BadgeResponseSchema, Error<GetBadgeError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -137,7 +137,7 @@ pub async fn get_badge_badges_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBadgeBadgesCodeGetError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetBadgeError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

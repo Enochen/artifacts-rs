@@ -10,69 +10,6 @@ pub struct AcceptNewTaskParams {
     pub name: String,
 }
 
-/// struct for passing parameters to the method [`action_ge_buy_item_my_name_action_grandexchange_buy_post`]
-#[derive(Clone, Debug)]
-pub struct ActionGeBuyItemMyNameActionGrandexchangeBuyPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub ge_buy_order_schema: models::GeBuyOrderSchema,
-}
-
-/// struct for passing parameters to the method [`action_ge_cancel_sell_order_my_name_action_grandexchange_cancel_post`]
-#[derive(Clone, Debug)]
-pub struct ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub ge_cancel_order_schema: models::GeCancelOrderSchema,
-}
-
-/// struct for passing parameters to the method [`action_ge_create_sell_order_my_name_action_grandexchange_sell_post`]
-#[derive(Clone, Debug)]
-pub struct ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub ge_order_creationr_schema: models::GeOrderCreationrSchema,
-}
-
-/// struct for passing parameters to the method [`action_npc_buy_item_my_name_action_npc_buy_post`]
-#[derive(Clone, Debug)]
-pub struct ActionNpcBuyItemMyNameActionNpcBuyPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
-}
-
-/// struct for passing parameters to the method [`action_npc_sell_item_my_name_action_npc_sell_post`]
-#[derive(Clone, Debug)]
-pub struct ActionNpcSellItemMyNameActionNpcSellPostParams {
-    /// Name of your character.
-    pub name: String,
-    pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
-}
-
-/// struct for passing parameters to the method [`action_rest_my_name_action_rest_post`]
-#[derive(Clone, Debug)]
-pub struct ActionRestMyNameActionRestPostParams {
-    /// Name of your character.
-    pub name: String,
-}
-
-/// struct for passing parameters to the method [`action_task_trade_my_name_action_task_trade_post`]
-#[derive(Clone, Debug)]
-pub struct ActionTaskTradeMyNameActionTaskTradePostParams {
-    /// Name of your character.
-    pub name: String,
-    pub simple_item_schema: models::SimpleItemSchema,
-}
-
-/// struct for passing parameters to the method [`action_use_item_my_name_action_use_post`]
-#[derive(Clone, Debug)]
-pub struct ActionUseItemMyNameActionUsePostParams {
-    /// Name of your character.
-    pub name: String,
-    pub simple_item_schema: models::SimpleItemSchema,
-}
-
 /// struct for passing parameters to the method [`buy_bank_expansion`]
 #[derive(Clone, Debug)]
 pub struct BuyBankExpansionParams {
@@ -148,6 +85,30 @@ pub struct GatherParams {
     pub name: String,
 }
 
+/// struct for passing parameters to the method [`ge_buy_item`]
+#[derive(Clone, Debug)]
+pub struct GeBuyItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub ge_buy_order_schema: models::GeBuyOrderSchema,
+}
+
+/// struct for passing parameters to the method [`ge_cancel_sell_order`]
+#[derive(Clone, Debug)]
+pub struct GeCancelSellOrderParams {
+    /// Name of your character.
+    pub name: String,
+    pub ge_cancel_order_schema: models::GeCancelOrderSchema,
+}
+
+/// struct for passing parameters to the method [`ge_create_sell_order`]
+#[derive(Clone, Debug)]
+pub struct GeCreateSellOrderParams {
+    /// Name of your character.
+    pub name: String,
+    pub ge_order_creationr_schema: models::GeOrderCreationrSchema,
+}
+
 /// struct for passing parameters to the method [`get_all_characters_logs`]
 #[derive(Clone, Debug)]
 pub struct GetAllCharactersLogsParams {
@@ -165,12 +126,35 @@ pub struct MoveCharacterParams {
     pub destination_schema: models::DestinationSchema,
 }
 
+/// struct for passing parameters to the method [`npc_buy_item`]
+#[derive(Clone, Debug)]
+pub struct NpcBuyItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
+}
+
+/// struct for passing parameters to the method [`npc_sell_item`]
+#[derive(Clone, Debug)]
+pub struct NpcSellItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
+}
+
 /// struct for passing parameters to the method [`recycle`]
 #[derive(Clone, Debug)]
 pub struct RecycleParams {
     /// Name of your character.
     pub name: String,
     pub recycling_schema: models::RecyclingSchema,
+}
+
+/// struct for passing parameters to the method [`rest_character`]
+#[derive(Clone, Debug)]
+pub struct RestCharacterParams {
+    /// Name of your character.
+    pub name: String,
 }
 
 /// struct for passing parameters to the method [`task_exchange`]
@@ -180,12 +164,28 @@ pub struct TaskExchangeParams {
     pub name: String,
 }
 
+/// struct for passing parameters to the method [`task_trade`]
+#[derive(Clone, Debug)]
+pub struct TaskTradeParams {
+    /// Name of your character.
+    pub name: String,
+    pub simple_item_schema: models::SimpleItemSchema,
+}
+
 /// struct for passing parameters to the method [`unequip_item`]
 #[derive(Clone, Debug)]
 pub struct UnequipItemParams {
     /// Name of your character.
     pub name: String,
     pub unequip_schema: models::UnequipSchema,
+}
+
+/// struct for passing parameters to the method [`use_item`]
+#[derive(Clone, Debug)]
+pub struct UseItemParams {
+    /// Name of your character.
+    pub name: String,
+    pub simple_item_schema: models::SimpleItemSchema,
 }
 
 /// struct for passing parameters to the method [`withdraw_gold`]
@@ -230,314 +230,6 @@ impl TryFrom<StatusCode> for AcceptNewTaskError {
             486 => Ok(Self::Status486),
             598 => Ok(Self::Status598),
             489 => Ok(Self::Status489),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_ge_buy_item_my_name_action_grandexchange_buy_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionGeBuyItemMyNameActionGrandexchangeBuyPostError {
-    /// Grand Exchange not found on this map.
-    Status598,
-    /// Character not found.
-    Status498,
-    /// Character inventory is full.
-    Status497,
-    /// Character in cooldown.
-    Status499,
-    /// A transaction is already in progress on this order by a another character.
-    Status436,
-    /// An action is already in progress by your character.
-    Status486,
-    /// Insufficient gold on your character.
-    Status492,
-    /// This offer does not contain as many items.
-    Status434,
-    /// You can&#39;t buy to yourself.
-    Status435,
-    /// Order not found.
-    Status404,
-}
-
-impl TryFrom<StatusCode> for ActionGeBuyItemMyNameActionGrandexchangeBuyPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            436 => Ok(Self::Status436),
-            486 => Ok(Self::Status486),
-            492 => Ok(Self::Status492),
-            434 => Ok(Self::Status434),
-            435 => Ok(Self::Status435),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_ge_cancel_sell_order_my_name_action_grandexchange_cancel_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostError {
-    /// Grand Exchange not found on this map.
-    Status598,
-    /// Character not found.
-    Status498,
-    /// Character inventory is full.
-    Status497,
-    /// Character in cooldown.
-    Status499,
-    /// A transaction is already in progress on this order by a another character.
-    Status436,
-    /// An action is already in progress by your character.
-    Status486,
-    /// You can&#39;t cancel an order that is not yours.
-    Status438,
-    /// Order not found.
-    Status404,
-}
-
-impl TryFrom<StatusCode> for ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            436 => Ok(Self::Status436),
-            486 => Ok(Self::Status486),
-            438 => Ok(Self::Status438),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_ge_create_sell_order_my_name_action_grandexchange_sell_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostError {
-    /// Character not found.
-    Status498,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-    /// Item not found.
-    Status404,
-    /// Missing item or insufficient quantity.
-    Status478,
-    /// Insufficient gold on your character.
-    Status492,
-    /// You can&#39;t create more than 100 orders at the same time.
-    Status433,
-    /// This item cannot be sold.
-    Status437,
-    /// Grand Exchange not found on this map.
-    Status598,
-}
-
-impl TryFrom<StatusCode> for ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            404 => Ok(Self::Status404),
-            478 => Ok(Self::Status478),
-            492 => Ok(Self::Status492),
-            433 => Ok(Self::Status433),
-            437 => Ok(Self::Status437),
-            598 => Ok(Self::Status598),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_npc_buy_item_my_name_action_npc_buy_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionNpcBuyItemMyNameActionNpcBuyPostError {
-    /// NPC not found on this map.
-    Status598,
-    /// Character not found.
-    Status498,
-    /// Character inventory is full.
-    Status497,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-    /// Insufficient gold on your character.
-    Status492,
-    /// This item cannot be purchased.
-    Status441,
-    /// Item not found.
-    Status404,
-}
-
-impl TryFrom<StatusCode> for ActionNpcBuyItemMyNameActionNpcBuyPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            492 => Ok(Self::Status492),
-            441 => Ok(Self::Status441),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_npc_sell_item_my_name_action_npc_sell_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionNpcSellItemMyNameActionNpcSellPostError {
-    /// NPC not found on this map.
-    Status598,
-    /// Character not found.
-    Status498,
-    /// Character inventory is full.
-    Status497,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
-    /// This item cannot be sold.
-    Status442,
-    /// Item not found.
-    Status404,
-}
-
-impl TryFrom<StatusCode> for ActionNpcSellItemMyNameActionNpcSellPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            442 => Ok(Self::Status442),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_rest_my_name_action_rest_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionRestMyNameActionRestPostError {
-    /// Character not found.
-    Status498,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-}
-
-impl TryFrom<StatusCode> for ActionRestMyNameActionRestPostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_task_trade_my_name_action_task_trade_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionTaskTradeMyNameActionTaskTradePostError {
-    /// Character not found.
-    Status498,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-    /// Tasks Master not found on this map.
-    Status598,
-    /// Character have already completed the task or are trying to trade too many items.
-    Status475,
-    /// Character does not have this task.
-    Status474,
-    /// Missing item or insufficient quantity.
-    Status478,
-}
-
-impl TryFrom<StatusCode> for ActionTaskTradeMyNameActionTaskTradePostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            475 => Ok(Self::Status475),
-            474 => Ok(Self::Status474),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
-        }
-    }
-}
-
-/// struct for typed errors of method [`action_use_item_my_name_action_use_post`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ActionUseItemMyNameActionUsePostError {
-    /// Item not found.
-    Status404,
-    /// Character not found.
-    Status498,
-    /// Character in cooldown.
-    Status499,
-    /// An action is already in progress by your character.
-    Status486,
-    /// This item is not a consumable.
-    Status476,
-    /// Missing item or insufficient quantity.
-    Status478,
-    /// Character level is insufficient.
-    Status496,
-}
-
-impl TryFrom<StatusCode> for ActionUseItemMyNameActionUsePostError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            476 => Ok(Self::Status476),
-            478 => Ok(Self::Status478),
-            496 => Ok(Self::Status496),
             _ => Err("status code not in spec"),
         }
     }
@@ -895,6 +587,135 @@ impl TryFrom<StatusCode> for GatherError {
     }
 }
 
+/// struct for typed errors of method [`ge_buy_item`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GeBuyItemError {
+    /// Grand Exchange not found on this map.
+    Status598,
+    /// Character not found.
+    Status498,
+    /// Character inventory is full.
+    Status497,
+    /// Character in cooldown.
+    Status499,
+    /// A transaction is already in progress on this order by a another character.
+    Status436,
+    /// An action is already in progress by your character.
+    Status486,
+    /// Insufficient gold on your character.
+    Status492,
+    /// This offer does not contain as many items.
+    Status434,
+    /// You can&#39;t buy to yourself.
+    Status435,
+    /// Order not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GeBuyItemError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            436 => Ok(Self::Status436),
+            486 => Ok(Self::Status486),
+            492 => Ok(Self::Status492),
+            434 => Ok(Self::Status434),
+            435 => Ok(Self::Status435),
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`ge_cancel_sell_order`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GeCancelSellOrderError {
+    /// Grand Exchange not found on this map.
+    Status598,
+    /// Character not found.
+    Status498,
+    /// Character inventory is full.
+    Status497,
+    /// Character in cooldown.
+    Status499,
+    /// A transaction is already in progress on this order by a another character.
+    Status436,
+    /// An action is already in progress by your character.
+    Status486,
+    /// You can&#39;t cancel an order that is not yours.
+    Status438,
+    /// Order not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for GeCancelSellOrderError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            436 => Ok(Self::Status436),
+            486 => Ok(Self::Status486),
+            438 => Ok(Self::Status438),
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`ge_create_sell_order`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GeCreateSellOrderError {
+    /// Character not found.
+    Status498,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+    /// Item not found.
+    Status404,
+    /// Missing item or insufficient quantity.
+    Status478,
+    /// Insufficient gold on your character.
+    Status492,
+    /// You can&#39;t create more than 100 orders at the same time.
+    Status433,
+    /// This item cannot be sold.
+    Status437,
+    /// Grand Exchange not found on this map.
+    Status598,
+}
+
+impl TryFrom<StatusCode> for GeCreateSellOrderError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            404 => Ok(Self::Status404),
+            478 => Ok(Self::Status478),
+            492 => Ok(Self::Status492),
+            433 => Ok(Self::Status433),
+            437 => Ok(Self::Status437),
+            598 => Ok(Self::Status598),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 /// struct for typed errors of method [`get_all_characters_logs`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -963,6 +784,86 @@ impl TryFrom<StatusCode> for MoveCharacterError {
     }
 }
 
+/// struct for typed errors of method [`npc_buy_item`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum NpcBuyItemError {
+    /// NPC not found on this map.
+    Status598,
+    /// Character not found.
+    Status498,
+    /// Character inventory is full.
+    Status497,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+    /// Insufficient gold on your character.
+    Status492,
+    /// This item cannot be purchased.
+    Status441,
+    /// Item not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for NpcBuyItemError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            492 => Ok(Self::Status492),
+            441 => Ok(Self::Status441),
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`npc_sell_item`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum NpcSellItemError {
+    /// NPC not found on this map.
+    Status598,
+    /// Character not found.
+    Status498,
+    /// Character inventory is full.
+    Status497,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+    /// Missing item or insufficient quantity.
+    Status478,
+    /// This item cannot be sold.
+    Status442,
+    /// Item not found.
+    Status404,
+}
+
+impl TryFrom<StatusCode> for NpcSellItemError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            598 => Ok(Self::Status598),
+            498 => Ok(Self::Status498),
+            497 => Ok(Self::Status497),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            442 => Ok(Self::Status442),
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 /// struct for typed errors of method [`recycle`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1006,6 +907,31 @@ impl TryFrom<StatusCode> for RecycleError {
     }
 }
 
+/// struct for typed errors of method [`rest_character`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RestCharacterError {
+    /// Character not found.
+    Status498,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+}
+
+impl TryFrom<StatusCode> for RestCharacterError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 /// struct for typed errors of method [`task_exchange`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1035,6 +961,43 @@ impl TryFrom<StatusCode> for TaskExchangeError {
             598 => Ok(Self::Status598),
             478 => Ok(Self::Status478),
             497 => Ok(Self::Status497),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`task_trade`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum TaskTradeError {
+    /// Character not found.
+    Status498,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+    /// Tasks Master not found on this map.
+    Status598,
+    /// Character have already completed the task or are trying to trade too many items.
+    Status475,
+    /// Character does not have this task.
+    Status474,
+    /// Missing item or insufficient quantity.
+    Status478,
+}
+
+impl TryFrom<StatusCode> for TaskTradeError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            598 => Ok(Self::Status598),
+            475 => Ok(Self::Status475),
+            474 => Ok(Self::Status474),
+            478 => Ok(Self::Status478),
             _ => Err("status code not in spec"),
         }
     }
@@ -1075,6 +1038,43 @@ impl TryFrom<StatusCode> for UnequipItemError {
             478 => Ok(Self::Status478),
             483 => Ok(Self::Status483),
             499 => Ok(Self::Status499),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`use_item`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UseItemError {
+    /// Item not found.
+    Status404,
+    /// Character not found.
+    Status498,
+    /// Character in cooldown.
+    Status499,
+    /// An action is already in progress by your character.
+    Status486,
+    /// This item is not a consumable.
+    Status476,
+    /// Missing item or insufficient quantity.
+    Status478,
+    /// Character level is insufficient.
+    Status496,
+}
+
+impl TryFrom<StatusCode> for UseItemError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            476 => Ok(Self::Status476),
+            478 => Ok(Self::Status478),
+            496 => Ok(Self::Status496),
             _ => Err("status code not in spec"),
         }
     }
@@ -1192,428 +1192,6 @@ pub async fn accept_new_task(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<AcceptNewTaskError> = local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Buy an item at the Grand Exchange on the character's map.
-pub async fn action_ge_buy_item_my_name_action_grandexchange_buy_post(
-    configuration: &configuration::Configuration,
-    params: ActionGeBuyItemMyNameActionGrandexchangeBuyPostParams,
-) -> Result<
-    models::GeTransactionResponseSchema,
-    Error<ActionGeBuyItemMyNameActionGrandexchangeBuyPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let ge_buy_order_schema = params.ge_buy_order_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/buy",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&ge_buy_order_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionGeBuyItemMyNameActionGrandexchangeBuyPostError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Cancel a sell order at the Grand Exchange on the character's map.
-pub async fn action_ge_cancel_sell_order_my_name_action_grandexchange_cancel_post(
-    configuration: &configuration::Configuration,
-    params: ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostParams,
-) -> Result<
-    models::GeTransactionResponseSchema,
-    Error<ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let ge_cancel_order_schema = params.ge_cancel_order_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/cancel",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&ge_cancel_order_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<
-            ActionGeCancelSellOrderMyNameActionGrandexchangeCancelPostError,
-        > = local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Create a sell order at the Grand Exchange on the character's map. Please note there is a 3% listing tax, charged at the time of posting, on the total price.
-pub async fn action_ge_create_sell_order_my_name_action_grandexchange_sell_post(
-    configuration: &configuration::Configuration,
-    params: ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostParams,
-) -> Result<
-    models::GeCreateOrderTransactionResponseSchema,
-    Error<ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let ge_order_creationr_schema = params.ge_order_creationr_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/sell",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&ge_order_creationr_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<
-            ActionGeCreateSellOrderMyNameActionGrandexchangeSellPostError,
-        > = local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Buy an item from an NPC on the character's map.
-pub async fn action_npc_buy_item_my_name_action_npc_buy_post(
-    configuration: &configuration::Configuration,
-    params: ActionNpcBuyItemMyNameActionNpcBuyPostParams,
-) -> Result<
-    models::NpcMerchantTransactionResponseSchema,
-    Error<ActionNpcBuyItemMyNameActionNpcBuyPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let npc_merchant_buy_schema = params.npc_merchant_buy_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/npc/buy",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&npc_merchant_buy_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionNpcBuyItemMyNameActionNpcBuyPostError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Sell an item to an NPC on the character's map.
-pub async fn action_npc_sell_item_my_name_action_npc_sell_post(
-    configuration: &configuration::Configuration,
-    params: ActionNpcSellItemMyNameActionNpcSellPostParams,
-) -> Result<
-    models::NpcMerchantTransactionResponseSchema,
-    Error<ActionNpcSellItemMyNameActionNpcSellPostError>,
-> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let npc_merchant_buy_schema = params.npc_merchant_buy_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/npc/sell",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&npc_merchant_buy_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionNpcSellItemMyNameActionNpcSellPostError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Recovers hit points by resting. (1 second per 5 HP, minimum 3 seconds)
-pub async fn action_rest_my_name_action_rest_post(
-    configuration: &configuration::Configuration,
-    params: ActionRestMyNameActionRestPostParams,
-) -> Result<models::CharacterRestResponseSchema, Error<ActionRestMyNameActionRestPostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/rest",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionRestMyNameActionRestPostError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Trading items with a Tasks Master.
-pub async fn action_task_trade_my_name_action_task_trade_post(
-    configuration: &configuration::Configuration,
-    params: ActionTaskTradeMyNameActionTaskTradePostParams,
-) -> Result<models::TaskTradeResponseSchema, Error<ActionTaskTradeMyNameActionTaskTradePostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let simple_item_schema = params.simple_item_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/task/trade",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionTaskTradeMyNameActionTaskTradePostError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
-/// Use an item as a consumable.
-pub async fn action_use_item_my_name_action_use_post(
-    configuration: &configuration::Configuration,
-    params: ActionUseItemMyNameActionUsePostParams,
-) -> Result<models::UseItemResponseSchema, Error<ActionUseItemMyNameActionUsePostError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let name = params.name;
-    // unbox the parameters
-    let simple_item_schema = params.simple_item_schema;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!(
-        "{}/my/{name}/action/use",
-        local_var_configuration.base_path,
-        name = crate::apis::urlencode(name)
-    );
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
-    };
-    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<ActionUseItemMyNameActionUsePostError> =
-            local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2108,6 +1686,156 @@ pub async fn gather(
     }
 }
 
+/// Buy an item at the Grand Exchange on the character's map.
+pub async fn ge_buy_item(
+    configuration: &configuration::Configuration,
+    params: GeBuyItemParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeBuyItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let ge_buy_order_schema = params.ge_buy_order_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/grandexchange/buy",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&ge_buy_order_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GeBuyItemError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Cancel a sell order at the Grand Exchange on the character's map.
+pub async fn ge_cancel_sell_order(
+    configuration: &configuration::Configuration,
+    params: GeCancelSellOrderParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeCancelSellOrderError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let ge_cancel_order_schema = params.ge_cancel_order_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/grandexchange/cancel",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&ge_cancel_order_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GeCancelSellOrderError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Create a sell order at the Grand Exchange on the character's map. Please note there is a 3% listing tax, charged at the time of posting, on the total price.
+pub async fn ge_create_sell_order(
+    configuration: &configuration::Configuration,
+    params: GeCreateSellOrderParams,
+) -> Result<models::GeCreateOrderTransactionResponseSchema, Error<GeCreateSellOrderError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let ge_order_creationr_schema = params.ge_order_creationr_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/grandexchange/sell",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&ge_order_creationr_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GeCreateSellOrderError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// History of the last 100 actions of all your characters.
 pub async fn get_all_characters_logs(
     configuration: &configuration::Configuration,
@@ -2250,6 +1978,106 @@ pub async fn move_character(
     }
 }
 
+/// Buy an item from an NPC on the character's map.
+pub async fn npc_buy_item(
+    configuration: &configuration::Configuration,
+    params: NpcBuyItemParams,
+) -> Result<models::NpcMerchantTransactionResponseSchema, Error<NpcBuyItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let npc_merchant_buy_schema = params.npc_merchant_buy_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/npc/buy",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&npc_merchant_buy_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<NpcBuyItemError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Sell an item to an NPC on the character's map.
+pub async fn npc_sell_item(
+    configuration: &configuration::Configuration,
+    params: NpcSellItemParams,
+) -> Result<models::NpcMerchantTransactionResponseSchema, Error<NpcSellItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let npc_merchant_buy_schema = params.npc_merchant_buy_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/npc/sell",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&npc_merchant_buy_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<NpcSellItemError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// Recycling an item. The character must be on a map with a workshop (only for equipments and weapons).
 pub async fn recycle(
     configuration: &configuration::Configuration,
@@ -2291,6 +2119,53 @@ pub async fn recycle(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<RecycleError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Recovers hit points by resting. (1 second per 5 HP, minimum 3 seconds)
+pub async fn rest_character(
+    configuration: &configuration::Configuration,
+    params: RestCharacterParams,
+) -> Result<models::CharacterRestResponseSchema, Error<RestCharacterError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/rest",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<RestCharacterError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2347,6 +2222,56 @@ pub async fn task_exchange(
     }
 }
 
+/// Trading items with a Tasks Master.
+pub async fn task_trade(
+    configuration: &configuration::Configuration,
+    params: TaskTradeParams,
+) -> Result<models::TaskTradeResponseSchema, Error<TaskTradeError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let simple_item_schema = params.simple_item_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/task/trade",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<TaskTradeError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// Unequip an item on your character.
 pub async fn unequip_item(
     configuration: &configuration::Configuration,
@@ -2388,6 +2313,56 @@ pub async fn unequip_item(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<UnequipItemError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Use an item as a consumable.
+pub async fn use_item(
+    configuration: &configuration::Configuration,
+    params: UseItemParams,
+) -> Result<models::UseItemResponseSchema, Error<UseItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let simple_item_schema = params.simple_item_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/use",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&simple_item_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<UseItemError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

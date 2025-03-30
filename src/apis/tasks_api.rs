@@ -3,18 +3,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_tasks_rewards_tasks_rewards_get`]
+/// struct for passing parameters to the method [`get_all_tasks`]
 #[derive(Clone, Debug)]
-pub struct GetAllTasksRewardsTasksRewardsGetParams {
-    /// Page number
-    pub page: Option<u32>,
-    /// Page size
-    pub size: Option<u32>,
-}
-
-/// struct for passing parameters to the method [`get_all_tasks_tasks_list_get`]
-#[derive(Clone, Debug)]
-pub struct GetAllTasksTasksListGetParams {
+pub struct GetAllTasksParams {
     /// Minimum level.
     pub min_level: Option<u32>,
     /// Maximum level.
@@ -29,26 +20,35 @@ pub struct GetAllTasksTasksListGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_task_tasks_list_code_get`]
+/// struct for passing parameters to the method [`get_all_tasks_rewards`]
 #[derive(Clone, Debug)]
-pub struct GetTaskTasksListCodeGetParams {
+pub struct GetAllTasksRewardsParams {
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+/// struct for passing parameters to the method [`get_task`]
+#[derive(Clone, Debug)]
+pub struct GetTaskParams {
     /// The code of the task.
     pub code: String,
 }
 
-/// struct for passing parameters to the method [`get_tasks_reward_tasks_rewards_code_get`]
+/// struct for passing parameters to the method [`get_tasks_reward`]
 #[derive(Clone, Debug)]
-pub struct GetTasksRewardTasksRewardsCodeGetParams {
+pub struct GetTasksRewardParams {
     /// The code of the tasks reward.
     pub code: String,
 }
 
-/// struct for typed errors of method [`get_all_tasks_rewards_tasks_rewards_get`]
+/// struct for typed errors of method [`get_all_tasks`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllTasksRewardsTasksRewardsGetError {}
+pub enum GetAllTasksError {}
 
-impl TryFrom<StatusCode> for GetAllTasksRewardsTasksRewardsGetError {
+impl TryFrom<StatusCode> for GetAllTasksError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -58,12 +58,12 @@ impl TryFrom<StatusCode> for GetAllTasksRewardsTasksRewardsGetError {
     }
 }
 
-/// struct for typed errors of method [`get_all_tasks_tasks_list_get`]
+/// struct for typed errors of method [`get_all_tasks_rewards`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllTasksTasksListGetError {}
+pub enum GetAllTasksRewardsError {}
 
-impl TryFrom<StatusCode> for GetAllTasksTasksListGetError {
+impl TryFrom<StatusCode> for GetAllTasksRewardsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -73,15 +73,15 @@ impl TryFrom<StatusCode> for GetAllTasksTasksListGetError {
     }
 }
 
-/// struct for typed errors of method [`get_task_tasks_list_code_get`]
+/// struct for typed errors of method [`get_task`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetTaskTasksListCodeGetError {
+pub enum GetTaskError {
     /// Task not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetTaskTasksListCodeGetError {
+impl TryFrom<StatusCode> for GetTaskError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -92,15 +92,15 @@ impl TryFrom<StatusCode> for GetTaskTasksListCodeGetError {
     }
 }
 
-/// struct for typed errors of method [`get_tasks_reward_tasks_rewards_code_get`]
+/// struct for typed errors of method [`get_tasks_reward`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetTasksRewardTasksRewardsCodeGetError {
+pub enum GetTasksRewardError {
     /// Tasks reward not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetTasksRewardTasksRewardsCodeGetError {
+impl TryFrom<StatusCode> for GetTasksRewardError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -111,62 +111,11 @@ impl TryFrom<StatusCode> for GetTasksRewardTasksRewardsCodeGetError {
     }
 }
 
-/// Fetch the list of all tasks rewards. To obtain these rewards, you must exchange 6 task coins with a tasks master.
-pub async fn get_all_tasks_rewards_tasks_rewards_get(
-    configuration: &configuration::Configuration,
-    params: GetAllTasksRewardsTasksRewardsGetParams,
-) -> Result<models::DataPageDropRateSchema, Error<GetAllTasksRewardsTasksRewardsGetError>> {
-    let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let page = params.page;
-    // unbox the parameters
-    let size = params.size;
-
-    let local_var_client = &local_var_configuration.client;
-
-    let local_var_uri_str = format!("{}/tasks/rewards", local_var_configuration.base_path);
-    let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = page {
-        local_var_req_builder =
-            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
-    }
-    if let Some(ref local_var_str) = size {
-        local_var_req_builder =
-            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
-    }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder =
-            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
-    }
-
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
-
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
-
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
-    } else {
-        let local_var_entity: Option<GetAllTasksRewardsTasksRewardsGetError> =
-            local_var_status.try_into().ok();
-        let local_var_error = ResponseContent {
-            status: local_var_status,
-            content: local_var_content,
-            entity: local_var_entity,
-        };
-        Err(Error::ResponseError(local_var_error))
-    }
-}
-
 /// Fetch the list of all tasks.
-pub async fn get_all_tasks_tasks_list_get(
+pub async fn get_all_tasks(
     configuration: &configuration::Configuration,
-    params: GetAllTasksTasksListGetParams,
-) -> Result<models::DataPageTaskFullSchema, Error<GetAllTasksTasksListGetError>> {
+    params: GetAllTasksParams,
+) -> Result<models::DataPageTaskFullSchema, Error<GetAllTasksError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -226,8 +175,57 @@ pub async fn get_all_tasks_tasks_list_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllTasksTasksListGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllTasksError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Fetch the list of all tasks rewards. To obtain these rewards, you must exchange 6 task coins with a tasks master.
+pub async fn get_all_tasks_rewards(
+    configuration: &configuration::Configuration,
+    params: GetAllTasksRewardsParams,
+) -> Result<models::DataPageDropRateSchema, Error<GetAllTasksRewardsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!("{}/tasks/rewards", local_var_configuration.base_path);
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetAllTasksRewardsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -238,10 +236,10 @@ pub async fn get_all_tasks_tasks_list_get(
 }
 
 /// Retrieve the details of a task.
-pub async fn get_task_tasks_list_code_get(
+pub async fn get_task(
     configuration: &configuration::Configuration,
-    params: GetTaskTasksListCodeGetParams,
-) -> Result<models::TaskFullResponseSchema, Error<GetTaskTasksListCodeGetError>> {
+    params: GetTaskParams,
+) -> Result<models::TaskFullResponseSchema, Error<GetTaskError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -271,8 +269,7 @@ pub async fn get_task_tasks_list_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetTaskTasksListCodeGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetTaskError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -283,10 +280,10 @@ pub async fn get_task_tasks_list_code_get(
 }
 
 /// Retrieve the details of a tasks reward.
-pub async fn get_tasks_reward_tasks_rewards_code_get(
+pub async fn get_tasks_reward(
     configuration: &configuration::Configuration,
-    params: GetTasksRewardTasksRewardsCodeGetParams,
-) -> Result<models::RewardResponseSchema, Error<GetTasksRewardTasksRewardsCodeGetError>> {
+    params: GetTasksRewardParams,
+) -> Result<models::RewardResponseSchema, Error<GetTasksRewardError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -316,8 +313,7 @@ pub async fn get_tasks_reward_tasks_rewards_code_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetTasksRewardTasksRewardsCodeGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetTasksRewardError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

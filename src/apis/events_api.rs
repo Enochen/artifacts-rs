@@ -3,9 +3,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_all_active_events_events_active_get`]
+/// struct for passing parameters to the method [`get_all_active_events`]
 #[derive(Clone, Debug)]
-pub struct GetAllActiveEventsEventsActiveGetParams {
+pub struct GetAllActiveEventsParams {
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -23,12 +23,12 @@ pub struct GetAllEventsParams {
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`get_all_active_events_events_active_get`]
+/// struct for typed errors of method [`get_all_active_events`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAllActiveEventsEventsActiveGetError {}
+pub enum GetAllActiveEventsError {}
 
-impl TryFrom<StatusCode> for GetAllActiveEventsEventsActiveGetError {
+impl TryFrom<StatusCode> for GetAllActiveEventsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -54,10 +54,10 @@ impl TryFrom<StatusCode> for GetAllEventsError {
 }
 
 /// Fetch active events details.
-pub async fn get_all_active_events_events_active_get(
+pub async fn get_all_active_events(
     configuration: &configuration::Configuration,
-    params: GetAllActiveEventsEventsActiveGetParams,
-) -> Result<models::DataPageActiveEventSchema, Error<GetAllActiveEventsEventsActiveGetError>> {
+    params: GetAllActiveEventsParams,
+) -> Result<models::DataPageActiveEventSchema, Error<GetAllActiveEventsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -93,8 +93,7 @@ pub async fn get_all_active_events_events_active_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllActiveEventsEventsActiveGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllActiveEventsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

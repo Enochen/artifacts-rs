@@ -9,16 +9,16 @@ pub struct CreateAccountParams {
     pub add_account_schema: models::AddAccountSchema,
 }
 
-/// struct for passing parameters to the method [`get_account_accounts_account_get`]
+/// struct for passing parameters to the method [`get_account`]
 #[derive(Clone, Debug)]
-pub struct GetAccountAccountsAccountGetParams {
+pub struct GetAccountParams {
     /// The account name.
     pub account: String,
 }
 
-/// struct for passing parameters to the method [`get_account_achievements_accounts_account_achievements_get`]
+/// struct for passing parameters to the method [`get_account_achievements`]
 #[derive(Clone, Debug)]
-pub struct GetAccountAchievementsAccountsAccountAchievementsGetParams {
+pub struct GetAccountAchievementsParams {
     /// The character name.
     pub account: String,
     /// Type of achievements.
@@ -31,9 +31,9 @@ pub struct GetAccountAchievementsAccountsAccountAchievementsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_account_characters_accounts_account_characters_get`]
+/// struct for passing parameters to the method [`get_account_characters`]
 #[derive(Clone, Debug)]
-pub struct GetAccountCharactersAccountsAccountCharactersGetParams {
+pub struct GetAccountCharactersParams {
     /// The character name.
     pub account: String,
 }
@@ -60,15 +60,15 @@ impl TryFrom<StatusCode> for CreateAccountError {
     }
 }
 
-/// struct for typed errors of method [`get_account_accounts_account_get`]
+/// struct for typed errors of method [`get_account`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAccountAccountsAccountGetError {
+pub enum GetAccountError {
     /// Account not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetAccountAccountsAccountGetError {
+impl TryFrom<StatusCode> for GetAccountError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -79,15 +79,15 @@ impl TryFrom<StatusCode> for GetAccountAccountsAccountGetError {
     }
 }
 
-/// struct for typed errors of method [`get_account_achievements_accounts_account_achievements_get`]
+/// struct for typed errors of method [`get_account_achievements`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAccountAchievementsAccountsAccountAchievementsGetError {
+pub enum GetAccountAchievementsError {
     /// Account not found.
     Status404,
 }
 
-impl TryFrom<StatusCode> for GetAccountAchievementsAccountsAccountAchievementsGetError {
+impl TryFrom<StatusCode> for GetAccountAchievementsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -98,12 +98,12 @@ impl TryFrom<StatusCode> for GetAccountAchievementsAccountsAccountAchievementsGe
     }
 }
 
-/// struct for typed errors of method [`get_account_characters_accounts_account_characters_get`]
+/// struct for typed errors of method [`get_account_characters`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAccountCharactersAccountsAccountCharactersGetError {}
+pub enum GetAccountCharactersError {}
 
-impl TryFrom<StatusCode> for GetAccountCharactersAccountsAccountCharactersGetError {
+impl TryFrom<StatusCode> for GetAccountCharactersError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -154,10 +154,10 @@ pub async fn create_account(
 }
 
 /// Retrieve the details of a character.
-pub async fn get_account_accounts_account_get(
+pub async fn get_account(
     configuration: &configuration::Configuration,
-    params: GetAccountAccountsAccountGetParams,
-) -> Result<models::AccountDetailsSchema, Error<GetAccountAccountsAccountGetError>> {
+    params: GetAccountParams,
+) -> Result<models::AccountDetailsSchema, Error<GetAccountError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -187,8 +187,7 @@ pub async fn get_account_accounts_account_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountAccountsAccountGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -199,13 +198,10 @@ pub async fn get_account_accounts_account_get(
 }
 
 /// Retrieve the achievements of a account.
-pub async fn get_account_achievements_accounts_account_achievements_get(
+pub async fn get_account_achievements(
     configuration: &configuration::Configuration,
-    params: GetAccountAchievementsAccountsAccountAchievementsGetParams,
-) -> Result<
-    models::DataPageAccountAchievementSchema,
-    Error<GetAccountAchievementsAccountsAccountAchievementsGetError>,
-> {
+    params: GetAccountAchievementsParams,
+) -> Result<models::DataPageAccountAchievementSchema, Error<GetAccountAchievementsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -259,7 +255,7 @@ pub async fn get_account_achievements_accounts_account_achievements_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountAchievementsAccountsAccountAchievementsGetError> =
+        let local_var_entity: Option<GetAccountAchievementsError> =
             local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -271,13 +267,10 @@ pub async fn get_account_achievements_accounts_account_achievements_get(
 }
 
 /// Account character lists.
-pub async fn get_account_characters_accounts_account_characters_get(
+pub async fn get_account_characters(
     configuration: &configuration::Configuration,
-    params: GetAccountCharactersAccountsAccountCharactersGetParams,
-) -> Result<
-    models::CharactersListSchema,
-    Error<GetAccountCharactersAccountsAccountCharactersGetError>,
-> {
+    params: GetAccountCharactersParams,
+) -> Result<models::CharactersListSchema, Error<GetAccountCharactersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -307,8 +300,7 @@ pub async fn get_account_characters_accounts_account_characters_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountCharactersAccountsAccountCharactersGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountCharactersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

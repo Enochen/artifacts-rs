@@ -3,9 +3,9 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-/// struct for passing parameters to the method [`get_accounts_leaderboard_leaderboard_accounts_get`]
+/// struct for passing parameters to the method [`get_accounts_leaderboard`]
 #[derive(Clone, Debug)]
-pub struct GetAccountsLeaderboardLeaderboardAccountsGetParams {
+pub struct GetAccountsLeaderboardParams {
     /// Default sort by achievements points.
     pub sort: Option<models::AccountLeaderboardType>,
     /// Find a account by name.
@@ -16,9 +16,9 @@ pub struct GetAccountsLeaderboardLeaderboardAccountsGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_characters_leaderboard_leaderboard_characters_get`]
+/// struct for passing parameters to the method [`get_characters_leaderboard`]
 #[derive(Clone, Debug)]
-pub struct GetCharactersLeaderboardLeaderboardCharactersGetParams {
+pub struct GetCharactersLeaderboardParams {
     /// Default sort by combat total XP.
     pub sort: Option<models::CharacterLeaderboardType>,
     /// Find a character by name.
@@ -29,12 +29,12 @@ pub struct GetCharactersLeaderboardLeaderboardCharactersGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for typed errors of method [`get_accounts_leaderboard_leaderboard_accounts_get`]
+/// struct for typed errors of method [`get_accounts_leaderboard`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAccountsLeaderboardLeaderboardAccountsGetError {}
+pub enum GetAccountsLeaderboardError {}
 
-impl TryFrom<StatusCode> for GetAccountsLeaderboardLeaderboardAccountsGetError {
+impl TryFrom<StatusCode> for GetAccountsLeaderboardError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -44,12 +44,12 @@ impl TryFrom<StatusCode> for GetAccountsLeaderboardLeaderboardAccountsGetError {
     }
 }
 
-/// struct for typed errors of method [`get_characters_leaderboard_leaderboard_characters_get`]
+/// struct for typed errors of method [`get_characters_leaderboard`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetCharactersLeaderboardLeaderboardCharactersGetError {}
+pub enum GetCharactersLeaderboardError {}
 
-impl TryFrom<StatusCode> for GetCharactersLeaderboardLeaderboardCharactersGetError {
+impl TryFrom<StatusCode> for GetCharactersLeaderboardError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -60,13 +60,10 @@ impl TryFrom<StatusCode> for GetCharactersLeaderboardLeaderboardCharactersGetErr
 }
 
 /// Fetch leaderboard details.
-pub async fn get_accounts_leaderboard_leaderboard_accounts_get(
+pub async fn get_accounts_leaderboard(
     configuration: &configuration::Configuration,
-    params: GetAccountsLeaderboardLeaderboardAccountsGetParams,
-) -> Result<
-    models::DataPageAccountLeaderboardSchema,
-    Error<GetAccountsLeaderboardLeaderboardAccountsGetError>,
-> {
+    params: GetAccountsLeaderboardParams,
+) -> Result<models::DataPageAccountLeaderboardSchema, Error<GetAccountsLeaderboardError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -114,7 +111,7 @@ pub async fn get_accounts_leaderboard_leaderboard_accounts_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountsLeaderboardLeaderboardAccountsGetError> =
+        let local_var_entity: Option<GetAccountsLeaderboardError> =
             local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -126,13 +123,10 @@ pub async fn get_accounts_leaderboard_leaderboard_accounts_get(
 }
 
 /// Fetch leaderboard details.
-pub async fn get_characters_leaderboard_leaderboard_characters_get(
+pub async fn get_characters_leaderboard(
     configuration: &configuration::Configuration,
-    params: GetCharactersLeaderboardLeaderboardCharactersGetParams,
-) -> Result<
-    models::DataPageCharacterLeaderboardSchema,
-    Error<GetCharactersLeaderboardLeaderboardCharactersGetError>,
-> {
+    params: GetCharactersLeaderboardParams,
+) -> Result<models::DataPageCharacterLeaderboardSchema, Error<GetCharactersLeaderboardError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -183,7 +177,7 @@ pub async fn get_characters_leaderboard_leaderboard_characters_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharactersLeaderboardLeaderboardCharactersGetError> =
+        let local_var_entity: Option<GetCharactersLeaderboardError> =
             local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

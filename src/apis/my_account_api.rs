@@ -20,9 +20,9 @@ pub struct GetBankItemsParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_history_my_grandexchange_history_get`]
+/// struct for passing parameters to the method [`get_ge_sell_history`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellHistoryMyGrandexchangeHistoryGetParams {
+pub struct GetGeSellHistoryParams {
     /// Order ID to search in your history.
     pub id: Option<String>,
     /// Item to search in your history.
@@ -33,9 +33,9 @@ pub struct GetGeSellHistoryMyGrandexchangeHistoryGetParams {
     pub size: Option<u32>,
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_orders_my_grandexchange_orders_get`]
+/// struct for passing parameters to the method [`get_ge_sell_orders`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrdersMyGrandexchangeOrdersGetParams {
+pub struct GetGeSellOrdersParams {
     /// The code of the item.
     pub code: Option<String>,
     /// Page number
@@ -63,12 +63,12 @@ impl TryFrom<StatusCode> for ChangePasswordError {
     }
 }
 
-/// struct for typed errors of method [`get_account_details_my_details_get`]
+/// struct for typed errors of method [`get_account_details`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetAccountDetailsMyDetailsGetError {}
+pub enum GetAccountDetailsError {}
 
-impl TryFrom<StatusCode> for GetAccountDetailsMyDetailsGetError {
+impl TryFrom<StatusCode> for GetAccountDetailsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -108,12 +108,12 @@ impl TryFrom<StatusCode> for GetBankItemsError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_history_my_grandexchange_history_get`]
+/// struct for typed errors of method [`get_ge_sell_history`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeSellHistoryMyGrandexchangeHistoryGetError {}
+pub enum GetGeSellHistoryError {}
 
-impl TryFrom<StatusCode> for GetGeSellHistoryMyGrandexchangeHistoryGetError {
+impl TryFrom<StatusCode> for GetGeSellHistoryError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -123,12 +123,12 @@ impl TryFrom<StatusCode> for GetGeSellHistoryMyGrandexchangeHistoryGetError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_orders_my_grandexchange_orders_get`]
+/// struct for typed errors of method [`get_ge_sell_orders`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrdersMyGrandexchangeOrdersGetError {}
+pub enum GetGeSellOrdersError {}
 
-impl TryFrom<StatusCode> for GetGeSellOrdersMyGrandexchangeOrdersGetError {
+impl TryFrom<StatusCode> for GetGeSellOrdersError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -183,9 +183,9 @@ pub async fn change_password(
 }
 
 /// Fetch account details.
-pub async fn get_account_details_my_details_get(
+pub async fn get_account_details(
     configuration: &configuration::Configuration,
-) -> Result<models::MyAccountDetailsSchema, Error<GetAccountDetailsMyDetailsGetError>> {
+) -> Result<models::MyAccountDetailsSchema, Error<GetAccountDetailsError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -211,8 +211,7 @@ pub async fn get_account_details_my_details_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountDetailsMyDetailsGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountDetailsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -321,13 +320,10 @@ pub async fn get_bank_items(
 }
 
 /// Fetch your sales history of the last 7 days.
-pub async fn get_ge_sell_history_my_grandexchange_history_get(
+pub async fn get_ge_sell_history(
     configuration: &configuration::Configuration,
-    params: GetGeSellHistoryMyGrandexchangeHistoryGetParams,
-) -> Result<
-    models::DataPageGeOrderHistorySchema,
-    Error<GetGeSellHistoryMyGrandexchangeHistoryGetError>,
-> {
+    params: GetGeSellHistoryParams,
+) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeSellHistoryError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -380,8 +376,7 @@ pub async fn get_ge_sell_history_my_grandexchange_history_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellHistoryMyGrandexchangeHistoryGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellHistoryError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -392,10 +387,10 @@ pub async fn get_ge_sell_history_my_grandexchange_history_get(
 }
 
 /// Fetch your sell orders details.
-pub async fn get_ge_sell_orders_my_grandexchange_orders_get(
+pub async fn get_ge_sell_orders(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrdersMyGrandexchangeOrdersGetParams,
-) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersMyGrandexchangeOrdersGetError>> {
+    params: GetGeSellOrdersParams,
+) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -443,8 +438,7 @@ pub async fn get_ge_sell_orders_my_grandexchange_orders_get(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersMyGrandexchangeOrdersGetError> =
-            local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrdersError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

@@ -4,49 +4,73 @@ useSingleRequestParameter: true
 preferUnsignedInt: true
 basePathCustom: https://api.artifactsmmo.com
 operationIdNameMappings:
+  getBankDetailsMyBankGet: get_bank_details
+  getBankItemsMyBankItemsGet: get_bank_items
+  getGeSellOrdersMyGrandexchangeOrdersGet: get_ge_sell_orders
+  getGeSellHistoryMyGrandexchangeHistoryGet: get_ge_sell_history
+  getAccountDetailsMyDetailsGet: get_account_details
+  changePasswordMyChangePasswordPost: change_password
   actionMoveMyNameActionMovePost: move_character
+  actionRestMyNameActionRestPost: rest_character
   actionEquipItemMyNameActionEquipPost: equip_item
   actionUnequipItemMyNameActionUnequipPost: unequip_item
+  actionUseItemMyNameActionUsePost: use_item
   actionFightMyNameActionFightPost: fight
   actionGatheringMyNameActionGatheringPost: gather
   actionCraftingMyNameActionCraftingPost: craft
-  actionDepositBankMyNameActionBankDepositPost: deposit_item
   actionDepositBankGoldMyNameActionBankDepositGoldPost: deposit_gold
-  actionRecyclingMyNameActionRecyclingPost: recycle
+  actionDepositBankMyNameActionBankDepositPost: deposit_item
   actionWithdrawBankMyNameActionBankWithdrawPost: withdraw_item
   actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost: withdraw_gold
-  actionGeBuyItemMyNameActionGeBuyPost: ge_buy_item
-  actionGeSellItemMyNameActionGeSellPost: ge_sell_item
   actionBuyBankExpansionMyNameActionBankBuyExpansionPost: buy_bank_expansion
-  actionAcceptNewTaskMyNameActionTaskNewPost: accept_new_task
+  actionNpcBuyItemMyNameActionNpcBuyPost: npc_buy_item
+  actionNpcSellItemMyNameActionNpcSellPost: npc_sell_item
+  actionRecyclingMyNameActionRecyclingPost: recycle
+  actionGeBuyItemMyNameActionGrandexchangeBuyPost: ge_buy_item
+  actionGeCreateSellOrderMyNameActionGrandexchangeSellPost: ge_create_sell_order
+  actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost: ge_cancel_sell_order
   actionCompleteTaskMyNameActionTaskCompletePost: complete_task
   actionTaskExchangeMyNameActionTaskExchangePost: task_exchange
+  actionAcceptNewTaskMyNameActionTaskNewPost: accept_new_task
+  actionTaskTradeMyNameActionTaskTradePost: task_trade
   actionTaskCancelMyNameActionTaskCancelPost: cancel_task
   actionDeleteItemMyNameActionDeletePost: delete_item
   getAllCharactersLogsMyLogsGet: get_all_characters_logs
   getMyCharactersMyCharactersGet: get_my_characters
-  getBankDetailsMyBankGet: get_bank_details
-  getBankItemsMyBankItemsGet: get_bank_items
-  changePasswordMyChangePasswordPost: change_password
-  createCharacterCharactersCreatePost: create_character
-  deleteCharacterCharactersDeletePost: delete_character
-  getAllCharactersCharactersGet: get_all_characters
-  getCharacterCharactersNameGet: get_character
-  getCharacterAchievementsCharactersNameAchievementsGet: get_character_achievements
-  getAllMapsMapsGet: get_all_maps
-  getMapMapsXYGet: get_map
-  getAllItemsItemsGet: get_all_items
-  getItemItemsCodeGet: get_item
-  getAllMonstersMonstersGet: get_all_monsters
-  getMonsterMonstersCodeGet: get_monster
-  getAllResourcesResourcesGet: get_all_resources
-  getResourceResourcesCodeGet: get_resource
-  getAllEventsEventsGet: get_all_events
-  getAllGeItemsGeGet: get_all_ge_items
-  getGeItemGeCodeGet: get_ge_item
+  createAccountAccountsCreatePost: create_account
+  getAccountAchievementsAccountsAccountAchievementsGet: get_account_achievements
+  getAccountCharactersAccountsAccountCharactersGet: get_account_characters
+  getAccountAccountsAccountGet: get_account
   getAllAchievementsAchievementsGet: get_all_achievements
   getAchievementAchievementsCodeGet: get_achievement
-  getLeaderboardLeaderboardGet: get_leaderboard
-  createAccountAccountsCreatePost: create_account
+  getAllBadgesBadgesGet: get_all_badges
+  getBadgeBadgesCodeGet: get_badge
+  createCharacterCharactersCreatePost: create_character
+  deleteCharacterCharactersDeletePost: delete_character
+  getCharacterCharactersNameGet: get_character
+  getAllEffectsEffectsGet: get_all_effects
+  getEffectEffectsCodeGet: get_effect
+  getAllActiveEventsEventsActiveGet: get_all_active_events
+  getAllEventsEventsGet: get_all_events
+  getGeSellHistoryGrandexchangeHistoryCodeGet: get_ge_sell_history_by_code
+  getGeSellOrdersGrandexchangeOrdersGet: get_ge_sell_orders
+  getGeSellOrderGrandexchangeOrdersIdGet: get_ge_sell_order_by_id
+  getAllItemsItemsGet: get_all_items
+  getItemItemsCodeGet: get_item
+  getCharactersLeaderboardLeaderboardCharactersGet: get_characters_leaderboard
+  getAccountsLeaderboardLeaderboardAccountsGet: get_accounts_leaderboard
+  getAllMapsMapsGet: get_all_maps
+  getMapMapsXYGet: get_map
+  getAllMonstersMonstersGet: get_all_monsters
+  getMonsterMonstersCodeGet: get_monster
+  getAllNpcsNpcsGet: get_all_npcs
+  getNpcNpcsCodeGet: get_npc
+  getNpcItemsNpcsCodeItemsGet: get_npc_items
+  getAllResourcesResourcesGet: get_all_resources
+  getResourceResourcesCodeGet: get_resource
+  getAllTasksTasksListGet: get_all_tasks
+  getTaskTasksListCodeGet: get_task
+  getAllTasksRewardsTasksRewardsGet: get_all_tasks_rewards
+  getTasksRewardTasksRewardsCodeGet: get_tasks_reward
   generateTokenTokenPost: generate_token
   getStatusGet: get_status
