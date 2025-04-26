@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct EffectSchema {
-    /// Name of the monster.
+    /// Name of the effect.
     #[serde(rename = "name")]
     pub name: String,
     /// The code of the effect. This is the effect's unique identifier (ID).
