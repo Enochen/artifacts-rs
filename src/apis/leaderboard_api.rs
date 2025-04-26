@@ -16,6 +16,22 @@ pub struct GetAccountsLeaderboardParams {
     pub size: Option<u32>,
 }
 
+impl GetAccountsLeaderboardParams {
+    pub fn new(
+        sort: Option<models::AccountLeaderboardType>,
+        name: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            sort,
+            name,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_characters_leaderboard`]
 #[derive(Clone, Debug)]
 pub struct GetCharactersLeaderboardParams {
@@ -27,6 +43,22 @@ pub struct GetCharactersLeaderboardParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetCharactersLeaderboardParams {
+    pub fn new(
+        sort: Option<models::CharacterLeaderboardType>,
+        name: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            sort,
+            name,
+            page,
+            size,
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_accounts_leaderboard`]

@@ -18,11 +18,35 @@ pub struct GetGeSellHistoryByCodeParams {
     pub size: Option<u32>,
 }
 
+impl GetGeSellHistoryByCodeParams {
+    pub fn new(
+        code: String,
+        seller: Option<String>,
+        buyer: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            code,
+            seller,
+            buyer,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_ge_sell_order_by_id`]
 #[derive(Clone, Debug)]
 pub struct GetGeSellOrderByIdParams {
     /// The id of the order.
     pub id: String,
+}
+
+impl GetGeSellOrderByIdParams {
+    pub fn new(id: String) -> Self {
+        Self { id }
+    }
 }
 
 /// struct for passing parameters to the method [`get_ge_sell_orders`]
@@ -36,6 +60,22 @@ pub struct GetGeSellOrdersParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetGeSellOrdersParams {
+    pub fn new(
+        code: Option<String>,
+        seller: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            code,
+            seller,
+            page,
+            size,
+        }
+    }
 }
 
 /// struct for typed errors of method [`get_ge_sell_history_by_code`]

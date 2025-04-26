@@ -16,6 +16,22 @@ pub struct GetAllMapsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllMapsParams {
+    pub fn new(
+        content_type: Option<models::MapContentType>,
+        content_code: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            content_type,
+            content_code,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_map`]
 #[derive(Clone, Debug)]
 pub struct GetMapParams {
@@ -23,6 +39,12 @@ pub struct GetMapParams {
     pub x: i32,
     /// The position X of the map.
     pub y: i32,
+}
+
+impl GetMapParams {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
 }
 
 /// struct for typed errors of method [`get_all_maps`]

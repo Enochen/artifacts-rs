@@ -9,10 +9,26 @@ pub struct CreateCharacterParams {
     pub add_character_schema: models::AddCharacterSchema,
 }
 
+impl CreateCharacterParams {
+    pub fn new(add_character_schema: models::AddCharacterSchema) -> Self {
+        Self {
+            add_character_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`delete_character`]
 #[derive(Clone, Debug)]
 pub struct DeleteCharacterParams {
     pub delete_character_schema: models::DeleteCharacterSchema,
+}
+
+impl DeleteCharacterParams {
+    pub fn new(delete_character_schema: models::DeleteCharacterSchema) -> Self {
+        Self {
+            delete_character_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`get_character`]
@@ -20,6 +36,12 @@ pub struct DeleteCharacterParams {
 pub struct GetCharacterParams {
     /// The character name.
     pub name: String,
+}
+
+impl GetCharacterParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
 }
 
 /// struct for typed errors of method [`create_character`]

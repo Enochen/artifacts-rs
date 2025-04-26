@@ -20,6 +20,26 @@ pub struct GetAllTasksParams {
     pub size: Option<u32>,
 }
 
+impl GetAllTasksParams {
+    pub fn new(
+        min_level: Option<u32>,
+        max_level: Option<u32>,
+        skill: Option<models::Skill>,
+        r#type: Option<models::TaskType>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            min_level,
+            max_level,
+            skill,
+            r#type,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_all_tasks_rewards`]
 #[derive(Clone, Debug)]
 pub struct GetAllTasksRewardsParams {
@@ -29,6 +49,12 @@ pub struct GetAllTasksRewardsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllTasksRewardsParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_task`]
 #[derive(Clone, Debug)]
 pub struct GetTaskParams {
@@ -36,11 +62,23 @@ pub struct GetTaskParams {
     pub code: String,
 }
 
+impl GetTaskParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
+}
+
 /// struct for passing parameters to the method [`get_tasks_reward`]
 #[derive(Clone, Debug)]
 pub struct GetTasksRewardParams {
     /// The code of the tasks reward.
     pub code: String,
+}
+
+impl GetTasksRewardParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for typed errors of method [`get_all_tasks`]

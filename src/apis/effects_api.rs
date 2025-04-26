@@ -12,11 +12,23 @@ pub struct GetAllEffectsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllEffectsParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_effect`]
 #[derive(Clone, Debug)]
 pub struct GetEffectParams {
     /// The code of the achievement.
     pub code: String,
+}
+
+impl GetEffectParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for typed errors of method [`get_all_effects`]

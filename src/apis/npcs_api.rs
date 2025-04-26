@@ -14,11 +14,23 @@ pub struct GetAllNpcsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllNpcsParams {
+    pub fn new(r#type: Option<models::NpcType>, page: Option<u32>, size: Option<u32>) -> Self {
+        Self { r#type, page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_npc`]
 #[derive(Clone, Debug)]
 pub struct GetNpcParams {
     /// The code of the NPC.
     pub code: String,
+}
+
+impl GetNpcParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for passing parameters to the method [`get_npc_items`]
@@ -30,6 +42,12 @@ pub struct GetNpcItemsParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetNpcItemsParams {
+    pub fn new(code: String, page: Option<u32>, size: Option<u32>) -> Self {
+        Self { code, page, size }
+    }
 }
 
 /// struct for typed errors of method [`get_all_npcs`]

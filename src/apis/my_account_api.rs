@@ -9,6 +9,12 @@ pub struct ChangePasswordParams {
     pub change_password: models::ChangePassword,
 }
 
+impl ChangePasswordParams {
+    pub fn new(change_password: models::ChangePassword) -> Self {
+        Self { change_password }
+    }
+}
+
 /// struct for passing parameters to the method [`get_bank_items`]
 #[derive(Clone, Debug)]
 pub struct GetBankItemsParams {
@@ -18,6 +24,16 @@ pub struct GetBankItemsParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetBankItemsParams {
+    pub fn new(item_code: Option<String>, page: Option<u32>, size: Option<u32>) -> Self {
+        Self {
+            item_code,
+            page,
+            size,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`get_ge_sell_history`]
@@ -33,6 +49,22 @@ pub struct GetGeSellHistoryParams {
     pub size: Option<u32>,
 }
 
+impl GetGeSellHistoryParams {
+    pub fn new(
+        id: Option<String>,
+        code: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            id,
+            code,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_ge_sell_orders`]
 #[derive(Clone, Debug)]
 pub struct GetGeSellOrdersParams {
@@ -42,6 +74,12 @@ pub struct GetGeSellOrdersParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetGeSellOrdersParams {
+    pub fn new(code: Option<String>, page: Option<u32>, size: Option<u32>) -> Self {
+        Self { code, page, size }
+    }
 }
 
 /// struct for typed errors of method [`change_password`]

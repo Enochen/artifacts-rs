@@ -18,11 +18,35 @@ pub struct GetAllMonstersParams {
     pub size: Option<u32>,
 }
 
+impl GetAllMonstersParams {
+    pub fn new(
+        min_level: Option<u32>,
+        max_level: Option<u32>,
+        drop: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            min_level,
+            max_level,
+            drop,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_monster`]
 #[derive(Clone, Debug)]
 pub struct GetMonsterParams {
     /// The code of the monster.
     pub code: String,
+}
+
+impl GetMonsterParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for typed errors of method [`get_all_monsters`]

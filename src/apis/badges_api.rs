@@ -12,11 +12,23 @@ pub struct GetAllBadgesParams {
     pub size: Option<u32>,
 }
 
+impl GetAllBadgesParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_badge`]
 #[derive(Clone, Debug)]
 pub struct GetBadgeParams {
     /// The code of the achievement.
     pub code: String,
+}
+
+impl GetBadgeParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for typed errors of method [`get_all_badges`]

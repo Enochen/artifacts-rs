@@ -12,6 +12,12 @@ pub struct GetAllActiveEventsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllActiveEventsParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_all_events`]
 #[derive(Clone, Debug)]
 pub struct GetAllEventsParams {
@@ -21,6 +27,16 @@ pub struct GetAllEventsParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetAllEventsParams {
+    pub fn new(
+        r#type: Option<models::MapContentType>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self { r#type, page, size }
+    }
 }
 
 /// struct for typed errors of method [`get_all_active_events`]

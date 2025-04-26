@@ -10,11 +10,23 @@ pub struct AcceptNewTaskParams {
     pub name: String,
 }
 
+impl AcceptNewTaskParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
 /// struct for passing parameters to the method [`buy_bank_expansion`]
 #[derive(Clone, Debug)]
 pub struct BuyBankExpansionParams {
     /// Name of your character.
     pub name: String,
+}
+
+impl BuyBankExpansionParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
 }
 
 /// struct for passing parameters to the method [`cancel_task`]
@@ -24,11 +36,23 @@ pub struct CancelTaskParams {
     pub name: String,
 }
 
+impl CancelTaskParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
 /// struct for passing parameters to the method [`complete_task`]
 #[derive(Clone, Debug)]
 pub struct CompleteTaskParams {
     /// Name of your character.
     pub name: String,
+}
+
+impl CompleteTaskParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
 }
 
 /// struct for passing parameters to the method [`craft`]
@@ -39,12 +63,30 @@ pub struct CraftParams {
     pub crafting_schema: models::CraftingSchema,
 }
 
+impl CraftParams {
+    pub fn new(name: String, crafting_schema: models::CraftingSchema) -> Self {
+        Self {
+            name,
+            crafting_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`delete_item`]
 #[derive(Clone, Debug)]
 pub struct DeleteItemParams {
     /// Name of your character.
     pub name: String,
     pub simple_item_schema: models::SimpleItemSchema,
+}
+
+impl DeleteItemParams {
+    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+        Self {
+            name,
+            simple_item_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`deposit_gold`]
@@ -55,12 +97,33 @@ pub struct DepositGoldParams {
     pub deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
 }
 
+impl DepositGoldParams {
+    pub fn new(
+        name: String,
+        deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
+    ) -> Self {
+        Self {
+            name,
+            deposit_withdraw_gold_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`deposit_item`]
 #[derive(Clone, Debug)]
 pub struct DepositItemParams {
     /// Name of your character.
     pub name: String,
     pub simple_item_schema: models::SimpleItemSchema,
+}
+
+impl DepositItemParams {
+    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+        Self {
+            name,
+            simple_item_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`equip_item`]
@@ -71,6 +134,12 @@ pub struct EquipItemParams {
     pub equip_schema: models::EquipSchema,
 }
 
+impl EquipItemParams {
+    pub fn new(name: String, equip_schema: models::EquipSchema) -> Self {
+        Self { name, equip_schema }
+    }
+}
+
 /// struct for passing parameters to the method [`fight`]
 #[derive(Clone, Debug)]
 pub struct FightParams {
@@ -78,11 +147,23 @@ pub struct FightParams {
     pub name: String,
 }
 
+impl FightParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
 /// struct for passing parameters to the method [`gather`]
 #[derive(Clone, Debug)]
 pub struct GatherParams {
     /// Name of your character.
     pub name: String,
+}
+
+impl GatherParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
 }
 
 /// struct for passing parameters to the method [`ge_buy_item`]
@@ -93,6 +174,15 @@ pub struct GeBuyItemParams {
     pub ge_buy_order_schema: models::GeBuyOrderSchema,
 }
 
+impl GeBuyItemParams {
+    pub fn new(name: String, ge_buy_order_schema: models::GeBuyOrderSchema) -> Self {
+        Self {
+            name,
+            ge_buy_order_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`ge_cancel_sell_order`]
 #[derive(Clone, Debug)]
 pub struct GeCancelSellOrderParams {
@@ -101,12 +191,30 @@ pub struct GeCancelSellOrderParams {
     pub ge_cancel_order_schema: models::GeCancelOrderSchema,
 }
 
+impl GeCancelSellOrderParams {
+    pub fn new(name: String, ge_cancel_order_schema: models::GeCancelOrderSchema) -> Self {
+        Self {
+            name,
+            ge_cancel_order_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`ge_create_sell_order`]
 #[derive(Clone, Debug)]
 pub struct GeCreateSellOrderParams {
     /// Name of your character.
     pub name: String,
     pub ge_order_creationr_schema: models::GeOrderCreationrSchema,
+}
+
+impl GeCreateSellOrderParams {
+    pub fn new(name: String, ge_order_creationr_schema: models::GeOrderCreationrSchema) -> Self {
+        Self {
+            name,
+            ge_order_creationr_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`get_all_characters_logs`]
@@ -118,12 +226,27 @@ pub struct GetAllCharactersLogsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllCharactersLogsParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`move_character`]
 #[derive(Clone, Debug)]
 pub struct MoveCharacterParams {
     /// Name of your character.
     pub name: String,
     pub destination_schema: models::DestinationSchema,
+}
+
+impl MoveCharacterParams {
+    pub fn new(name: String, destination_schema: models::DestinationSchema) -> Self {
+        Self {
+            name,
+            destination_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`npc_buy_item`]
@@ -134,12 +257,30 @@ pub struct NpcBuyItemParams {
     pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
 }
 
+impl NpcBuyItemParams {
+    pub fn new(name: String, npc_merchant_buy_schema: models::NpcMerchantBuySchema) -> Self {
+        Self {
+            name,
+            npc_merchant_buy_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`npc_sell_item`]
 #[derive(Clone, Debug)]
 pub struct NpcSellItemParams {
     /// Name of your character.
     pub name: String,
     pub npc_merchant_buy_schema: models::NpcMerchantBuySchema,
+}
+
+impl NpcSellItemParams {
+    pub fn new(name: String, npc_merchant_buy_schema: models::NpcMerchantBuySchema) -> Self {
+        Self {
+            name,
+            npc_merchant_buy_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`recycle`]
@@ -150,6 +291,15 @@ pub struct RecycleParams {
     pub recycling_schema: models::RecyclingSchema,
 }
 
+impl RecycleParams {
+    pub fn new(name: String, recycling_schema: models::RecyclingSchema) -> Self {
+        Self {
+            name,
+            recycling_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`rest_character`]
 #[derive(Clone, Debug)]
 pub struct RestCharacterParams {
@@ -157,11 +307,23 @@ pub struct RestCharacterParams {
     pub name: String,
 }
 
+impl RestCharacterParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
 /// struct for passing parameters to the method [`task_exchange`]
 #[derive(Clone, Debug)]
 pub struct TaskExchangeParams {
     /// Name of your character.
     pub name: String,
+}
+
+impl TaskExchangeParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
 }
 
 /// struct for passing parameters to the method [`task_trade`]
@@ -172,12 +334,30 @@ pub struct TaskTradeParams {
     pub simple_item_schema: models::SimpleItemSchema,
 }
 
+impl TaskTradeParams {
+    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+        Self {
+            name,
+            simple_item_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`unequip_item`]
 #[derive(Clone, Debug)]
 pub struct UnequipItemParams {
     /// Name of your character.
     pub name: String,
     pub unequip_schema: models::UnequipSchema,
+}
+
+impl UnequipItemParams {
+    pub fn new(name: String, unequip_schema: models::UnequipSchema) -> Self {
+        Self {
+            name,
+            unequip_schema,
+        }
+    }
 }
 
 /// struct for passing parameters to the method [`use_item`]
@@ -188,6 +368,15 @@ pub struct UseItemParams {
     pub simple_item_schema: models::SimpleItemSchema,
 }
 
+impl UseItemParams {
+    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+        Self {
+            name,
+            simple_item_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`withdraw_gold`]
 #[derive(Clone, Debug)]
 pub struct WithdrawGoldParams {
@@ -196,12 +385,33 @@ pub struct WithdrawGoldParams {
     pub deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
 }
 
+impl WithdrawGoldParams {
+    pub fn new(
+        name: String,
+        deposit_withdraw_gold_schema: models::DepositWithdrawGoldSchema,
+    ) -> Self {
+        Self {
+            name,
+            deposit_withdraw_gold_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`withdraw_item`]
 #[derive(Clone, Debug)]
 pub struct WithdrawItemParams {
     /// Name of your character.
     pub name: String,
     pub simple_item_schema: models::SimpleItemSchema,
+}
+
+impl WithdrawItemParams {
+    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+        Self {
+            name,
+            simple_item_schema,
+        }
+    }
 }
 
 /// struct for typed errors of method [`accept_new_task`]

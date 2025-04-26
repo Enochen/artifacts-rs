@@ -9,11 +9,23 @@ pub struct CreateAccountParams {
     pub add_account_schema: models::AddAccountSchema,
 }
 
+impl CreateAccountParams {
+    pub fn new(add_account_schema: models::AddAccountSchema) -> Self {
+        Self { add_account_schema }
+    }
+}
+
 /// struct for passing parameters to the method [`get_account`]
 #[derive(Clone, Debug)]
 pub struct GetAccountParams {
     /// The account name.
     pub account: String,
+}
+
+impl GetAccountParams {
+    pub fn new(account: String) -> Self {
+        Self { account }
+    }
 }
 
 /// struct for passing parameters to the method [`get_account_achievements`]
@@ -31,11 +43,35 @@ pub struct GetAccountAchievementsParams {
     pub size: Option<u32>,
 }
 
+impl GetAccountAchievementsParams {
+    pub fn new(
+        account: String,
+        r#type: Option<String>,
+        completed: Option<bool>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            account,
+            r#type,
+            completed,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_account_characters`]
 #[derive(Clone, Debug)]
 pub struct GetAccountCharactersParams {
     /// The character name.
     pub account: String,
+}
+
+impl GetAccountCharactersParams {
+    pub fn new(account: String) -> Self {
+        Self { account }
+    }
 }
 
 /// struct for typed errors of method [`create_account`]

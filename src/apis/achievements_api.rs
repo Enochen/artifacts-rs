@@ -10,6 +10,12 @@ pub struct GetAchievementParams {
     pub code: String,
 }
 
+impl GetAchievementParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
+}
+
 /// struct for passing parameters to the method [`get_all_achievements`]
 #[derive(Clone, Debug)]
 pub struct GetAllAchievementsParams {
@@ -19,6 +25,16 @@ pub struct GetAllAchievementsParams {
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
+}
+
+impl GetAllAchievementsParams {
+    pub fn new(
+        r#type: Option<models::AchievementType>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self { r#type, page, size }
+    }
 }
 
 /// struct for typed errors of method [`get_achievement`]

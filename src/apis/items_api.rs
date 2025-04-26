@@ -24,11 +24,41 @@ pub struct GetAllItemsParams {
     pub size: Option<u32>,
 }
 
+impl GetAllItemsParams {
+    pub fn new(
+        min_level: Option<u32>,
+        max_level: Option<u32>,
+        name: Option<String>,
+        r#type: Option<models::ItemType>,
+        craft_skill: Option<models::CraftSkill>,
+        craft_material: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            min_level,
+            max_level,
+            name,
+            r#type,
+            craft_skill,
+            craft_material,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_item`]
 #[derive(Clone, Debug)]
 pub struct GetItemParams {
     /// The code of the item.
     pub code: String,
+}
+
+impl GetItemParams {
+    pub fn new(code: String) -> Self {
+        Self { code }
+    }
 }
 
 /// struct for typed errors of method [`get_all_items`]

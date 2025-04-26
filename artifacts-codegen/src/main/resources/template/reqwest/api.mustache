@@ -19,6 +19,14 @@ pub struct {{{operationIdCamelCase}}}Params {
 {{#-last}}
 }
 
+impl {{{operationIdCamelCase}}}Params {
+    pub fn new({{#allParams}}{{{paramName}}}: {{^required}}Option<{{/required}}{{#required}}{{#isNullable}}Option<{{/isNullable}}{{/required}}{{^isUuid}}{{#isString}}{{#isArray}}Vec<{{/isArray}}String{{#isArray}}>{{/isArray}}{{/isString}}{{/isUuid}}{{#isUuid}}{{#isArray}}Vec<{{/isArray}}String{{#isArray}}>{{/isArray}}{{/isUuid}}{{^isString}}{{^isUuid}}{{#required}}{{^isPrimitiveType}}{{^isContainer}}models::{{/isContainer}}{{/isPrimitiveType}}{{/required}}{{{dataType}}}{{/isUuid}}{{/isString}}{{^required}}>{{/required}}{{#required}}{{#isNullable}}>{{/isNullable}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}) -> Self {
+        Self {
+            {{#allParams}}{{{paramName}}}{{^-last}}, {{/-last}}{{/allParams}}
+        }
+    }
+}
+
 {{/-last}}
 {{/allParams}}
 {{/vendorExtensions.x-group-parameters}}
