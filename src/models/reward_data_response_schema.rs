@@ -14,3 +14,10 @@ impl RewardDataResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for RewardDataResponseSchema {
+    type Data = Box<models::RewardDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

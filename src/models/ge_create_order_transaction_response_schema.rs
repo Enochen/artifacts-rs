@@ -14,3 +14,10 @@ impl GeCreateOrderTransactionResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for GeCreateOrderTransactionResponseSchema {
+    type Data = Box<models::GeOrderTransactionSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

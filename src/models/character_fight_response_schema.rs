@@ -14,3 +14,10 @@ impl CharacterFightResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for CharacterFightResponseSchema {
+    type Data = Box<models::CharacterFightDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

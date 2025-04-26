@@ -14,3 +14,10 @@ impl StatusResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for StatusResponseSchema {
+    type Data = Box<models::StatusSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

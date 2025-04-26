@@ -14,3 +14,10 @@ impl EffectResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for EffectResponseSchema {
+    type Data = Box<models::EffectSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

@@ -14,3 +14,10 @@ impl TaskResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for TaskResponseSchema {
+    type Data = Box<models::TaskDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

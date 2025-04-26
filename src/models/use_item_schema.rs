@@ -27,3 +27,15 @@ impl UseItemSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for UseItemSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for UseItemSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

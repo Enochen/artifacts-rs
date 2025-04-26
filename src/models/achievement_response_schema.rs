@@ -14,3 +14,10 @@ impl AchievementResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for AchievementResponseSchema {
+    type Data = Box<models::AchievementSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

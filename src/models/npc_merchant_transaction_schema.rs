@@ -27,3 +27,15 @@ impl NpcMerchantTransactionSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for NpcMerchantTransactionSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for NpcMerchantTransactionSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

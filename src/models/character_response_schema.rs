@@ -14,3 +14,16 @@ impl CharacterResponseSchema {
         }
     }
 }
+
+impl crate::traits::GetCharacter for CharacterResponseSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.data
+    }
+}
+
+impl crate::traits::IntoData for CharacterResponseSchema {
+    type Data = Box<models::CharacterSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

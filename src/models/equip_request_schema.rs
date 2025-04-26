@@ -32,3 +32,15 @@ impl EquipRequestSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for EquipRequestSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for EquipRequestSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

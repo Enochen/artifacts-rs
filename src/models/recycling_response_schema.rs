@@ -14,3 +14,10 @@ impl RecyclingResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for RecyclingResponseSchema {
+    type Data = Box<models::RecyclingDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

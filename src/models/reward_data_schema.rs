@@ -27,3 +27,15 @@ impl RewardDataSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for RewardDataSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for RewardDataSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

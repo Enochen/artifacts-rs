@@ -14,3 +14,10 @@ impl CharacterMovementResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for CharacterMovementResponseSchema {
+    type Data = Box<models::CharacterMovementDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

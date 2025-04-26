@@ -14,3 +14,10 @@ impl SkillResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for SkillResponseSchema {
+    type Data = Box<models::SkillDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

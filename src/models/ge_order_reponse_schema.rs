@@ -14,3 +14,10 @@ impl GeOrderReponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for GeOrderReponseSchema {
+    type Data = Box<models::GeOrderSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

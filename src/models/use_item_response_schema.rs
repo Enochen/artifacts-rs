@@ -14,3 +14,10 @@ impl UseItemResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for UseItemResponseSchema {
+    type Data = Box<models::UseItemSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

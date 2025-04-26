@@ -1,5 +1,4 @@
-generatorName: rust
-templateDir: template
+generatorName: artifacts-codegen
 useSingleRequestParameter: true
 preferUnsignedInt: true
 basePathCustom: https://api.artifactsmmo.com

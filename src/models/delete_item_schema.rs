@@ -27,3 +27,15 @@ impl DeleteItemSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for DeleteItemSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for DeleteItemSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

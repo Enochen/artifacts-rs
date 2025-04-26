@@ -14,3 +14,10 @@ impl AccountDetailsSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for AccountDetailsSchema {
+    type Data = Box<models::AccountDetails>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

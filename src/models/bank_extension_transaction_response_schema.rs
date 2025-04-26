@@ -16,3 +16,10 @@ impl BankExtensionTransactionResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for BankExtensionTransactionResponseSchema {
+    type Data = Box<models::BankExtensionTransactionSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

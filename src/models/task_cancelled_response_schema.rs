@@ -14,3 +14,10 @@ impl TaskCancelledResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for TaskCancelledResponseSchema {
+    type Data = Box<models::TaskCancelledSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

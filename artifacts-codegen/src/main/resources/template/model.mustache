@@ -5,6 +5,14 @@ use serde::{Deserialize, Serialize};
 {{^isEnum}}{{#vendorExtensions.x-rust-has-byte-array}}
 use serde_with::serde_as;
 {{/vendorExtensions.x-rust-has-byte-array}}{{/isEnum}}
+
+{{#vendorExtensions.x-has-cooldown}}
+use crate::traits::HasCooldown;
+{{/vendorExtensions.x-has-cooldown}}
+{{#vendorExtensions.x-has-character}}
+use crate::traits::HasCharacter;
+{{/vendorExtensions.x-has-character}}
+
 {{#description}}
 /// {{{classname}}} : {{{description}}}
 {{/description}}
@@ -164,6 +172,31 @@ impl Default for {{{enumName}}} {
 }
 {{/isEnum}}
 {{/vars}}
+
+{{#vendorExtensions.x-cooldown-field}}
+impl crate::traits::GetCooldown for {{{classname}}} {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.{{{vendorExtensions.x-cooldown-field}}}
+    }
+}
+{{/vendorExtensions.x-cooldown-field}}
+
+{{#vendorExtensions.x-character-field}}
+impl crate::traits::GetCharacter for {{{classname}}} {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.{{{vendorExtensions.x-character-field}}}
+    }
+}
+{{/vendorExtensions.x-character-field}}
+
+{{#vendorExtensions.x-data-type}}
+impl crate::traits::IntoData for {{{classname}}} {
+    type Data = {{#isNullable}}Option<{{/isNullable}}{{^required}}Option<{{/required}}{{#isEnum}}{{#isArray}}{{#uniqueItems}}std::collections::HashSet<{{/uniqueItems}}{{^uniqueItems}}Vec<{{/uniqueItems}}{{/isArray}}{{{enumName}}}{{#isArray}}>{{/isArray}}{{/isEnum}}{{^isEnum}}{{#isModel}}{{^avoidBoxedModels}}Box<{{/avoidBoxedModels}}{{{dataType}}}{{^avoidBoxedModels}}>{{/avoidBoxedModels}}{{/isModel}}{{^isModel}}{{#isByteArray}}Vec<u8>{{/isByteArray}}{{^isByteArray}}{{{dataType}}}{{/isByteArray}}{{/isModel}}{{/isEnum}}{{#isNullable}}>{{/isNullable}}{{^required}}>{{/required}};
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}
+{{/vendorExtensions.x-data-type}}
 
 {{/model}}
 {{/models}}

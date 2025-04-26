@@ -14,3 +14,10 @@ impl ResourceResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for ResourceResponseSchema {
+    type Data = Box<models::ResourceSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

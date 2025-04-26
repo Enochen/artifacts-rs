@@ -14,3 +14,10 @@ impl NpcMerchantTransactionResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for NpcMerchantTransactionResponseSchema {
+    type Data = Box<models::NpcMerchantTransactionSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

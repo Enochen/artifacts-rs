@@ -14,3 +14,10 @@ impl CharacterRestResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for CharacterRestResponseSchema {
+    type Data = Box<models::CharacterRestDataSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

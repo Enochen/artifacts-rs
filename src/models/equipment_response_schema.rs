@@ -14,3 +14,10 @@ impl EquipmentResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for EquipmentResponseSchema {
+    type Data = Box<models::EquipRequestSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

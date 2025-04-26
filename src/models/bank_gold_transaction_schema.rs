@@ -27,3 +27,15 @@ impl BankGoldTransactionSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for BankGoldTransactionSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for BankGoldTransactionSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

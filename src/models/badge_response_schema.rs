@@ -14,3 +14,10 @@ impl BadgeResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for BadgeResponseSchema {
+    type Data = Box<models::BadgeSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

@@ -27,3 +27,15 @@ impl SkillDataSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for SkillDataSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for SkillDataSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

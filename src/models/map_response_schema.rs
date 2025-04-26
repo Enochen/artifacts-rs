@@ -14,3 +14,10 @@ impl MapResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for MapResponseSchema {
+    type Data = Box<models::MapSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

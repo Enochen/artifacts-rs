@@ -13,3 +13,10 @@ impl MyCharactersListSchema {
         MyCharactersListSchema { data }
     }
 }
+
+impl crate::traits::IntoData for MyCharactersListSchema {
+    type Data = Vec<models::CharacterSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

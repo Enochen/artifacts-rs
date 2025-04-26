@@ -27,3 +27,15 @@ impl GeTransactionListSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for GeTransactionListSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for GeTransactionListSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

@@ -27,3 +27,15 @@ impl TaskTradeDataSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for TaskTradeDataSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for TaskTradeDataSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

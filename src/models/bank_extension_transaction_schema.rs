@@ -27,3 +27,15 @@ impl BankExtensionTransactionSchema {
         }
     }
 }
+
+impl crate::traits::GetCooldown for BankExtensionTransactionSchema {
+    fn get_cooldown(&self) -> &crate::models::CooldownSchema {
+        &self.cooldown
+    }
+}
+
+impl crate::traits::GetCharacter for BankExtensionTransactionSchema {
+    fn get_character(&self) -> &crate::models::CharacterSchema {
+        &self.character
+    }
+}

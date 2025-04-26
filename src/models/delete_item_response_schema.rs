@@ -14,3 +14,10 @@ impl DeleteItemResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for DeleteItemResponseSchema {
+    type Data = Box<models::DeleteItemSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

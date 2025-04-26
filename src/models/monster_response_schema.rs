@@ -14,3 +14,10 @@ impl MonsterResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for MonsterResponseSchema {
+    type Data = Box<models::MonsterSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}

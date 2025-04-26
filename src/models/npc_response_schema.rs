@@ -14,3 +14,10 @@ impl NpcResponseSchema {
         }
     }
 }
+
+impl crate::traits::IntoData for NpcResponseSchema {
+    type Data = Box<models::NpcSchema>;
+    fn into_data(self) -> Self::Data {
+        self.data
+    }
+}
