@@ -42,6 +42,26 @@ impl CancelTaskParams {
     }
 }
 
+/// struct for passing parameters to the method [`change_skin`]
+#[derive(Clone, Debug)]
+pub struct ChangeSkinParams {
+    /// Name of your character.
+    pub name: String,
+    pub change_skin_character_schema: models::ChangeSkinCharacterSchema,
+}
+
+impl ChangeSkinParams {
+    pub fn new(
+        name: String,
+        change_skin_character_schema: models::ChangeSkinCharacterSchema,
+    ) -> Self {
+        Self {
+            name,
+            change_skin_character_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`complete_task`]
 #[derive(Clone, Debug)]
 pub struct CompleteTaskParams {
@@ -114,11 +134,11 @@ impl DepositGoldParams {
 pub struct DepositItemParams {
     /// Name of your character.
     pub name: String,
-    pub simple_item_schema: models::SimpleItemSchema,
+    pub simple_item_schema: Vec<models::SimpleItemSchema>,
 }
 
 impl DepositItemParams {
-    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+    pub fn new(name: String, simple_item_schema: Vec<models::SimpleItemSchema>) -> Self {
         Self {
             name,
             simple_item_schema,
@@ -229,6 +249,57 @@ pub struct GetAllCharactersLogsParams {
 impl GetAllCharactersLogsParams {
     pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
         Self { page, size }
+    }
+}
+
+/// struct for passing parameters to the method [`get_character_logs`]
+#[derive(Clone, Debug)]
+pub struct GetCharacterLogsParams {
+    /// Name of your character.
+    pub name: String,
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+impl GetCharacterLogsParams {
+    pub fn new(name: String, page: Option<u32>, size: Option<u32>) -> Self {
+        Self { name, page, size }
+    }
+}
+
+/// struct for passing parameters to the method [`give_gold`]
+#[derive(Clone, Debug)]
+pub struct GiveGoldParams {
+    /// Name of your character.
+    pub name: String,
+    pub give_gold_schema: models::GiveGoldSchema,
+}
+
+impl GiveGoldParams {
+    pub fn new(name: String, give_gold_schema: models::GiveGoldSchema) -> Self {
+        Self {
+            name,
+            give_gold_schema,
+        }
+    }
+}
+
+/// struct for passing parameters to the method [`give_items`]
+#[derive(Clone, Debug)]
+pub struct GiveItemsParams {
+    /// Name of your character.
+    pub name: String,
+    pub give_items_schema: models::GiveItemsSchema,
+}
+
+impl GiveItemsParams {
+    pub fn new(name: String, give_items_schema: models::GiveItemsSchema) -> Self {
+        Self {
+            name,
+            give_items_schema,
+        }
     }
 }
 
@@ -402,11 +473,11 @@ impl WithdrawGoldParams {
 pub struct WithdrawItemParams {
     /// Name of your character.
     pub name: String,
-    pub simple_item_schema: models::SimpleItemSchema,
+    pub simple_item_schema: Vec<models::SimpleItemSchema>,
 }
 
 impl WithdrawItemParams {
-    pub fn new(name: String, simple_item_schema: models::SimpleItemSchema) -> Self {
+    pub fn new(name: String, simple_item_schema: Vec<models::SimpleItemSchema>) -> Self {
         Self {
             name,
             simple_item_schema,
@@ -420,13 +491,13 @@ impl WithdrawItemParams {
 pub enum AcceptNewTaskError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Tasks Master not found on this map.
     Status598,
-    /// Character already has a task.
+    /// The character already has an assigned task.
     Status489,
 }
 
@@ -453,11 +524,11 @@ pub enum BuyBankExpansionError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Insufficient gold on your character.
+    /// The character does not have enough gold.
     Status492,
 }
 
@@ -482,9 +553,9 @@ impl TryFrom<StatusCode> for BuyBankExpansionError {
 pub enum CancelTaskError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Tasks Master not found on this map.
     Status598,
@@ -507,23 +578,48 @@ impl TryFrom<StatusCode> for CancelTaskError {
     }
 }
 
+/// struct for typed errors of method [`change_skin`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ChangeSkinError {
+    /// The character is in cooldown.
+    Status499,
+    /// An action is already in progress for this character.
+    Status486,
+    /// You cannot choose this skin because you do not own it.
+    Status550,
+}
+
+impl TryFrom<StatusCode> for ChangeSkinError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            499 => Ok(Self::Status499),
+            486 => Ok(Self::Status486),
+            550 => Ok(Self::Status550),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 /// struct for typed errors of method [`complete_task`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CompleteTaskError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Tasks Master not found on this map.
     Status598,
-    /// Character has not completed the task.
+    /// The character has not completed the task.
     Status488,
-    /// Character has no task.
+    /// The character has no task assigned.
     Status487,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
 }
 
@@ -554,13 +650,13 @@ pub enum CraftError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Not skill level required.
+    /// The character&#39;s skill level is too low.
     Status493,
     /// Missing item or insufficient quantity.
     Status478,
@@ -590,9 +686,9 @@ impl TryFrom<StatusCode> for CraftError {
 pub enum DeleteItemError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Missing item or insufficient quantity.
     Status478,
@@ -618,15 +714,15 @@ impl TryFrom<StatusCode> for DeleteItemError {
 pub enum DepositGoldError {
     /// Bank not found on this map.
     Status598,
-    /// Insufficient gold on your character.
+    /// The character does not have enough gold.
     Status492,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// A transaction is already in progress with this item/your gold in your bank.
+    /// Some of your items or your gold in the bank are already part of an ongoing transaction.
     Status461,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
 }
 
@@ -654,13 +750,13 @@ pub enum DepositItemError {
     Status598,
     /// Item not found.
     Status404,
-    /// A transaction is already in progress with this item/your gold in your bank.
+    /// Some of your items or your gold in the bank are already part of an ongoing transaction.
     Status461,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Missing item or insufficient quantity.
     Status478,
@@ -694,21 +790,21 @@ pub enum EquipItemError {
     Status404,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Missing item or insufficient quantity.
     Status478,
-    /// Character level is insufficient.
+    /// The character does not meet the required condition.
     Status496,
-    /// Slot is not empty.
+    /// The equipment slot is not empty.
     Status491,
     /// This item is already equipped.
     Status485,
-    /// Character can&#39;t equip more than 100 utilities in the same slot.
+    /// The character cannot equip more than 100 utilities in the same slot.
     Status484,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
 }
 
@@ -738,13 +834,13 @@ impl TryFrom<StatusCode> for EquipItemError {
 pub enum FightError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
     /// Monster not found on this map.
     Status598,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
 }
 
@@ -769,15 +865,15 @@ impl TryFrom<StatusCode> for FightError {
 pub enum GatherError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
     /// Resource not found on this map.
     Status598,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Not skill level required.
+    /// The character&#39;s skill level is too low.
     Status493,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
 }
 
@@ -805,19 +901,19 @@ pub enum GeBuyItemError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// A transaction is already in progress on this order by a another character.
+    /// A transaction is already in progress for this order by another character.
     Status436,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Insufficient gold on your character.
+    /// The character does not have enough gold.
     Status492,
-    /// This offer does not contain as many items.
+    /// This offer does not contain that many items.
     Status434,
-    /// You can&#39;t buy to yourself.
+    /// You cannot trade with yourself.
     Status435,
     /// Order not found.
     Status404,
@@ -851,15 +947,15 @@ pub enum GeCancelSellOrderError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// A transaction is already in progress on this order by a another character.
+    /// A transaction is already in progress for this order by another character.
     Status436,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// You can&#39;t cancel an order that is not yours.
+    /// You cannot cancel an order that is not yours.
     Status438,
     /// Order not found.
     Status404,
@@ -889,17 +985,17 @@ impl TryFrom<StatusCode> for GeCancelSellOrderError {
 pub enum GeCreateSellOrderError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Item not found.
     Status404,
     /// Missing item or insufficient quantity.
     Status478,
-    /// Insufficient gold on your character.
+    /// The character does not have enough gold.
     Status492,
-    /// You can&#39;t create more than 100 orders at the same time.
+    /// You cannot create more than 100 orders at the same time.
     Status433,
     /// This item cannot be sold.
     Status437,
@@ -932,11 +1028,30 @@ impl TryFrom<StatusCode> for GeCreateSellOrderError {
 pub enum GetAllCharactersLogsError {
     /// Logs not found.
     Status404,
+}
+
+impl TryFrom<StatusCode> for GetAllCharactersLogsError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`get_character_logs`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetCharacterLogsError {
+    /// Logs not found.
+    Status404,
     /// Character not found.
     Status498,
 }
 
-impl TryFrom<StatusCode> for GetAllCharactersLogsError {
+impl TryFrom<StatusCode> for GetCharacterLogsError {
     type Error = &'static str;
     #[allow(clippy::match_single_binding)]
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
@@ -963,19 +1078,81 @@ impl TryFrom<StatusCode> for GetMyCharactersError {
     }
 }
 
+/// struct for typed errors of method [`give_gold`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GiveGoldError {
+    /// Character not found.
+    Status498,
+    /// The character is in cooldown.
+    Status499,
+    /// The character does not have enough gold.
+    Status492,
+    /// An action is already in progress for this character.
+    Status486,
+}
+
+impl TryFrom<StatusCode> for GiveGoldError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            492 => Ok(Self::Status492),
+            486 => Ok(Self::Status486),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
+/// struct for typed errors of method [`give_items`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GiveItemsError {
+    /// Item not found.
+    Status404,
+    /// Character not found.
+    Status498,
+    /// The character is in cooldown.
+    Status499,
+    /// The character&#39;s inventory is full.
+    Status497,
+    /// An action is already in progress for this character.
+    Status486,
+    /// Missing item or insufficient quantity.
+    Status478,
+}
+
+impl TryFrom<StatusCode> for GiveItemsError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            404 => Ok(Self::Status404),
+            498 => Ok(Self::Status498),
+            499 => Ok(Self::Status499),
+            497 => Ok(Self::Status497),
+            486 => Ok(Self::Status486),
+            478 => Ok(Self::Status478),
+            _ => Err("status code not in spec"),
+        }
+    }
+}
+
 /// struct for typed errors of method [`move_character`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum MoveCharacterError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// Character already at destination.
+    /// The character is already at the destination.
     Status490,
     /// Map not found.
     Status404,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
 }
 
@@ -1002,16 +1179,18 @@ pub enum NpcBuyItemError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Insufficient gold on your character.
+    /// The character does not have enough gold.
     Status492,
-    /// This item cannot be purchased.
+    /// This item is not available for purchase.
     Status441,
+    /// Missing item or insufficient quantity.
+    Status478,
     /// Item not found.
     Status404,
 }
@@ -1028,6 +1207,7 @@ impl TryFrom<StatusCode> for NpcBuyItemError {
             486 => Ok(Self::Status486),
             492 => Ok(Self::Status492),
             441 => Ok(Self::Status441),
+            478 => Ok(Self::Status478),
             404 => Ok(Self::Status404),
             _ => Err("status code not in spec"),
         }
@@ -1042,11 +1222,11 @@ pub enum NpcSellItemError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Missing item or insufficient quantity.
     Status478,
@@ -1084,13 +1264,13 @@ pub enum RecycleError {
     Status598,
     /// Character not found.
     Status498,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Not skill level required.
+    /// The character&#39;s skill level is too low.
     Status493,
     /// Missing item or insufficient quantity.
     Status478,
@@ -1123,9 +1303,9 @@ impl TryFrom<StatusCode> for RecycleError {
 pub enum RestCharacterError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
 }
 
@@ -1148,15 +1328,15 @@ impl TryFrom<StatusCode> for RestCharacterError {
 pub enum TaskExchangeError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Tasks Master not found on this map.
     Status598,
     /// Missing item or insufficient quantity.
     Status478,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
 }
 
@@ -1182,15 +1362,15 @@ impl TryFrom<StatusCode> for TaskExchangeError {
 pub enum TaskTradeError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Tasks Master not found on this map.
     Status598,
-    /// Character have already completed the task or are trying to trade too many items.
+    /// Task already completed or too many items submitted.
     Status475,
-    /// Character does not have this task.
+    /// The character does not have this task.
     Status474,
     /// Missing item or insufficient quantity.
     Status478,
@@ -1221,17 +1401,17 @@ pub enum UnequipItemError {
     Status404,
     /// Character not found.
     Status498,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Slot is empty.
+    /// The equipment slot is empty.
     Status491,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
     /// Missing item or insufficient quantity.
     Status478,
-    /// Character has no enough HP to unequip this item.
+    /// The character does not have enough HP to unequip this item.
     Status483,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
 }
 
@@ -1261,15 +1441,15 @@ pub enum UseItemError {
     Status404,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// This item is not a consumable.
     Status476,
     /// Missing item or insufficient quantity.
     Status478,
-    /// Character level is insufficient.
+    /// The character does not meet the required condition.
     Status496,
 }
 
@@ -1296,11 +1476,11 @@ impl TryFrom<StatusCode> for UseItemError {
 pub enum WithdrawGoldError {
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// A transaction is already in progress with this item/your gold in your bank.
+    /// Some of your items or your gold in the bank are already part of an ongoing transaction.
     Status461,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
     /// Bank not found on this map.
     Status598,
@@ -1332,13 +1512,13 @@ pub enum WithdrawItemError {
     Status404,
     /// Character not found.
     Status498,
-    /// Character in cooldown.
+    /// The character is in cooldown.
     Status499,
-    /// A transaction is already in progress with this item/your gold in your bank.
+    /// Some of your items or your gold in the bank are already part of an ongoing transaction.
     Status461,
-    /// An action is already in progress by your character.
+    /// An action is already in progress for this character.
     Status486,
-    /// Character inventory is full.
+    /// The character&#39;s inventory is full.
     Status497,
     /// Bank not found on this map.
     Status598,
@@ -1411,7 +1591,7 @@ pub async fn accept_new_task(
     }
 }
 
-/// Buy a 20 slots bank expansion.
+/// Buy a 25 slots bank expansion.
 pub async fn buy_bank_expansion(
     configuration: &configuration::Configuration,
     params: BuyBankExpansionParams,
@@ -1496,6 +1676,56 @@ pub async fn cancel_task(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<CancelTaskError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Change the skin of your character.
+pub async fn change_skin(
+    configuration: &configuration::Configuration,
+    params: ChangeSkinParams,
+) -> Result<models::ChangeSkinResponseSchema, Error<ChangeSkinError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let change_skin_character_schema = params.change_skin_character_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/change_skin",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&change_skin_character_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<ChangeSkinError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1702,7 +1932,7 @@ pub async fn deposit_gold(
     }
 }
 
-/// Deposit an item in a bank on the character's map.
+/// Deposit multiple items in a bank on the character's map. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
 pub async fn deposit_item(
     configuration: &configuration::Configuration,
     params: DepositItemParams,
@@ -1717,7 +1947,7 @@ pub async fn deposit_item(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/my/{name}/action/bank/deposit",
+        "{}/my/{name}/action/bank/deposit/item",
         local_var_configuration.base_path,
         name = crate::apis::urlencode(name)
     );
@@ -2046,7 +2276,7 @@ pub async fn ge_create_sell_order(
     }
 }
 
-/// History of the last 100 actions of all your characters.
+/// History of the last 250 actions of all your characters.
 pub async fn get_all_characters_logs(
     configuration: &configuration::Configuration,
     params: GetAllCharactersLogsParams,
@@ -2099,6 +2329,65 @@ pub async fn get_all_characters_logs(
     }
 }
 
+/// History of the last actions of your character.
+pub async fn get_character_logs(
+    configuration: &configuration::Configuration,
+    params: GetCharacterLogsParams,
+) -> Result<models::DataPageLogSchema, Error<GetCharacterLogsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/logs/{name}",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetCharacterLogsError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// List of your characters. This endpoint is deprecated and will be removed in a future version. Please use accounts/{account}/characters.
 pub async fn get_my_characters(
     configuration: &configuration::Configuration,
@@ -2129,6 +2418,106 @@ pub async fn get_my_characters(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetMyCharactersError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Give gold to another character in your account on the same map.
+pub async fn give_gold(
+    configuration: &configuration::Configuration,
+    params: GiveGoldParams,
+) -> Result<models::GiveGoldReponseSchema, Error<GiveGoldError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let give_gold_schema = params.give_gold_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/give/gold",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&give_gold_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GiveGoldError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Give items to another character in your account on the same map. The cooldown will be 3 seconds multiplied by the number of different items given.
+pub async fn give_items(
+    configuration: &configuration::Configuration,
+    params: GiveItemsParams,
+) -> Result<models::GiveItemReponseSchema, Error<GiveItemsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let give_items_schema = params.give_items_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/give/item",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&give_items_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GiveItemsError> = local_var_status.try_into().ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2632,7 +3021,7 @@ pub async fn withdraw_gold(
     }
 }
 
-/// Take an item from your bank and put it in the character's inventory.
+/// Take items from your bank and put them in the character's inventory. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
 pub async fn withdraw_item(
     configuration: &configuration::Configuration,
     params: WithdrawItemParams,
@@ -2647,7 +3036,7 @@ pub async fn withdraw_item(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/my/{name}/action/bank/withdraw",
+        "{}/my/{name}/action/bank/withdraw/item",
         local_var_configuration.base_path,
         name = crate::apis::urlencode(name)
     );

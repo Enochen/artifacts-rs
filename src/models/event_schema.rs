@@ -15,9 +15,6 @@ pub struct EventSchema {
     /// Map list of the event.
     #[serde(rename = "maps")]
     pub maps: Vec<models::EventMapSchema>,
-    /// Map skin of the event.
-    #[serde(rename = "skin")]
-    pub skin: String,
     /// Duration in minutes.
     #[serde(rename = "duration")]
     pub duration: i32,
@@ -32,7 +29,6 @@ impl EventSchema {
         code: String,
         content: models::EventContentSchema,
         maps: Vec<models::EventMapSchema>,
-        skin: String,
         duration: i32,
         rate: i32,
     ) -> EventSchema {
@@ -41,7 +37,6 @@ impl EventSchema {
             code,
             content: Box::new(content),
             maps,
-            skin,
             duration,
             rate,
         }

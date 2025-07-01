@@ -111,10 +111,10 @@ pub struct CharacterSchema {
     /// % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
     #[serde(rename = "critical_strike")]
     pub critical_strike: i32,
-    /// Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
+    /// Wisdom increases the amount of XP gained from fights and skills (1% extra per 10 wisdom).
     #[serde(rename = "wisdom")]
     pub wisdom: i32,
-    /// Prospecting increases the chances of getting better loot (1% extra per 10 PP).
+    /// Prospecting increases the chances of getting drops from fights and skills (1% extra per 10 PP).
     #[serde(rename = "prospecting")]
     pub prospecting: i32,
     /// Fire attack.

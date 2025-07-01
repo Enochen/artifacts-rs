@@ -48,10 +48,12 @@ impl GetCharacterParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateCharacterError {
-    /// Name already used.
+    /// This name is already in use.
     Status494,
-    /// Maximum characters reached on your account.
+    /// You have reached the maximum number of characters on your account.
     Status495,
+    /// You cannot choose this skin because you do not own it.
+    Status550,
 }
 
 impl TryFrom<StatusCode> for CreateCharacterError {
@@ -61,6 +63,7 @@ impl TryFrom<StatusCode> for CreateCharacterError {
         match status.as_u16() {
             494 => Ok(Self::Status494),
             495 => Ok(Self::Status495),
+            550 => Ok(Self::Status550),
             _ => Err("status code not in spec"),
         }
     }

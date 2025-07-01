@@ -2,44 +2,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct BankItemTransactionSchema {
+pub struct ChangeSkinCharacterDataSchema {
     /// Cooldown details.
     #[serde(rename = "cooldown")]
     pub cooldown: Box<models::CooldownSchema>,
-    /// Items details.
-    #[serde(rename = "items")]
-    pub items: Vec<models::SimpleItemSchema>,
-    /// Items in your banks.
-    #[serde(rename = "bank")]
-    pub bank: Vec<models::SimpleItemSchema>,
+    /// Craft details.
+    #[serde(rename = "skin")]
+    pub skin: String,
     /// Player details.
     #[serde(rename = "character")]
     pub character: Box<models::CharacterSchema>,
 }
 
-impl BankItemTransactionSchema {
+impl ChangeSkinCharacterDataSchema {
     pub fn new(
         cooldown: models::CooldownSchema,
-        items: Vec<models::SimpleItemSchema>,
-        bank: Vec<models::SimpleItemSchema>,
+        skin: String,
         character: models::CharacterSchema,
-    ) -> BankItemTransactionSchema {
-        BankItemTransactionSchema {
+    ) -> ChangeSkinCharacterDataSchema {
+        ChangeSkinCharacterDataSchema {
             cooldown: Box::new(cooldown),
-            items,
-            bank,
+            skin,
             character: Box::new(character),
         }
     }
 }
 
-impl crate::traits::GetCooldown for BankItemTransactionSchema {
+impl crate::traits::GetCooldown for ChangeSkinCharacterDataSchema {
     fn get_cooldown(&self) -> &crate::models::CooldownSchema {
         &self.cooldown
     }
 }
 
-impl crate::traits::GetCharacter for BankItemTransactionSchema {
+impl crate::traits::GetCharacter for ChangeSkinCharacterDataSchema {
     fn get_character(&self) -> &crate::models::CharacterSchema {
         &self.character
     }

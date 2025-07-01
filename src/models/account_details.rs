@@ -6,15 +6,18 @@ pub struct AccountDetails {
     /// Username.
     #[serde(rename = "username")]
     pub username: String,
-    /// Subscribed for the current season.
-    #[serde(rename = "subscribed")]
-    pub subscribed: bool,
     /// Member status.
+    #[serde(rename = "member")]
+    pub member: bool,
+    /// Account status.
     #[serde(rename = "status")]
     pub status: models::AccountStatus,
     /// Account badges.
     #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
     pub badges: Option<Vec<serde_json::Value>>,
+    /// Skins owned.
+    #[serde(rename = "skins")]
+    pub skins: Vec<serde_json::Value>,
     /// Achievement points.
     #[serde(rename = "achievements_points")]
     pub achievements_points: i32,
@@ -29,16 +32,18 @@ pub struct AccountDetails {
 impl AccountDetails {
     pub fn new(
         username: String,
-        subscribed: bool,
+        member: bool,
         status: models::AccountStatus,
+        skins: Vec<serde_json::Value>,
         achievements_points: i32,
         banned: bool,
     ) -> AccountDetails {
         AccountDetails {
             username,
-            subscribed,
+            member,
             status,
             badges: None,
+            skins,
             achievements_points,
             banned,
             ban_reason: None,

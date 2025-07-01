@@ -15,12 +15,6 @@ pub struct FightSchema {
     /// Numbers of the turns of the combat.
     #[serde(rename = "turns")]
     pub turns: i32,
-    /// The amount of blocked hits by the monster.
-    #[serde(rename = "monster_blocked_hits")]
-    pub monster_blocked_hits: Box<models::BlockedHitsSchema>,
-    /// The amount of blocked hits by the player.
-    #[serde(rename = "player_blocked_hits")]
-    pub player_blocked_hits: Box<models::BlockedHitsSchema>,
     /// The fight logs.
     #[serde(rename = "logs")]
     pub logs: Vec<String>,
@@ -35,8 +29,6 @@ impl FightSchema {
         gold: i32,
         drops: Vec<models::DropSchema>,
         turns: i32,
-        monster_blocked_hits: models::BlockedHitsSchema,
-        player_blocked_hits: models::BlockedHitsSchema,
         logs: Vec<String>,
         result: models::FightResult,
     ) -> FightSchema {
@@ -45,8 +37,6 @@ impl FightSchema {
             gold,
             drops,
             turns,
-            monster_blocked_hits: Box::new(monster_blocked_hits),
-            player_blocked_hits: Box::new(player_blocked_hits),
             logs,
             result,
         }

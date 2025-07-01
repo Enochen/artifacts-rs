@@ -9,6 +9,9 @@ pub struct NpcItemTransactionSchema {
     /// Item quantity.
     #[serde(rename = "quantity")]
     pub quantity: i32,
+    /// Currency used for the transaction.
+    #[serde(rename = "currency")]
+    pub currency: String,
     /// Item price.
     #[serde(rename = "price")]
     pub price: i32,
@@ -21,12 +24,14 @@ impl NpcItemTransactionSchema {
     pub fn new(
         code: String,
         quantity: i32,
+        currency: String,
         price: i32,
         total_price: i32,
     ) -> NpcItemTransactionSchema {
         NpcItemTransactionSchema {
             code,
             quantity,
+            currency,
             price,
             total_price,
         }

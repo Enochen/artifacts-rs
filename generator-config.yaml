@@ -3,6 +3,7 @@ useSingleRequestParameter: true
 preferUnsignedInt: true
 basePathCustom: https://api.artifactsmmo.com
 operationIdNameMappings:
+  getServerDetailsGet: get_status
   getBankDetailsMyBankGet: get_bank_details
   getBankItemsMyBankItemsGet: get_bank_items
   getGeSellOrdersMyGrandexchangeOrdersGet: get_ge_sell_orders
@@ -18,8 +19,8 @@ operationIdNameMappings:
   actionGatheringMyNameActionGatheringPost: gather
   actionCraftingMyNameActionCraftingPost: craft
   actionDepositBankGoldMyNameActionBankDepositGoldPost: deposit_gold
-  actionDepositBankMyNameActionBankDepositPost: deposit_item
-  actionWithdrawBankMyNameActionBankWithdrawPost: withdraw_item
+  actionDepositBankItemMyNameActionBankDepositItemPost: deposit_item
+  actionWithdrawBankItemMyNameActionBankWithdrawItemPost: withdraw_item
   actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost: withdraw_gold
   actionBuyBankExpansionMyNameActionBankBuyExpansionPost: buy_bank_expansion
   actionNpcBuyItemMyNameActionNpcBuyPost: npc_buy_item
@@ -33,10 +34,16 @@ operationIdNameMappings:
   actionAcceptNewTaskMyNameActionTaskNewPost: accept_new_task
   actionTaskTradeMyNameActionTaskTradePost: task_trade
   actionTaskCancelMyNameActionTaskCancelPost: cancel_task
+  actionGiveGoldMyNameActionGiveGoldPost: give_gold
+  actionGiveItemsMyNameActionGiveItemPost: give_items
   actionDeleteItemMyNameActionDeletePost: delete_item
+  actionChangeSkinMyNameActionChangeSkinPost: change_skin
   getAllCharactersLogsMyLogsGet: get_all_characters_logs
+  getCharacterLogsMyLogsNameGet: get_character_logs
   getMyCharactersMyCharactersGet: get_my_characters
   createAccountAccountsCreatePost: create_account
+  forgotPasswordAccountsForgotPasswordPost: forgot_password
+  resetPasswordAccountsResetPasswordPost: reset_password
   getAccountAchievementsAccountsAccountAchievementsGet: get_account_achievements
   getAccountCharactersAccountsAccountCharactersGet: get_account_characters
   getAccountAccountsAccountGet: get_account
@@ -62,9 +69,10 @@ operationIdNameMappings:
   getMapMapsXYGet: get_map
   getAllMonstersMonstersGet: get_all_monsters
   getMonsterMonstersCodeGet: get_monster
-  getAllNpcsNpcsGet: get_all_npcs
-  getNpcNpcsCodeGet: get_npc
-  getNpcItemsNpcsCodeItemsGet: get_npc_items
+  getAllNpcsNpcsDetailsGet: get_all_npcs
+  getNpcNpcsDetailsCodeGet: get_npc
+  getNpcItemsNpcsItemsCodeGet: get_npc_items
+  getAllNpcsItemsNpcsItemsGet: get_all_npc_items
   getAllResourcesResourcesGet: get_all_resources
   getResourceResourcesCodeGet: get_resource
   getAllTasksTasksListGet: get_all_tasks
@@ -72,4 +80,3 @@ operationIdNameMappings:
   getAllTasksRewardsTasksRewardsGet: get_all_tasks_rewards
   getTasksRewardTasksRewardsCodeGet: get_tasks_reward
   generateTokenTokenPost: generate_token
-  getStatusGet: get_status

@@ -21,6 +21,9 @@ pub struct ItemSchema {
     /// Item description.
     #[serde(rename = "description")]
     pub description: String,
+    /// Item conditions. If applicable. Conditions for using or equipping the item.
+    #[serde(rename = "conditions", skip_serializing_if = "Option::is_none")]
+    pub conditions: Option<Vec<models::ConditionSchema>>,
     /// List of object effects. For equipment, it will include item stats.
     #[serde(rename = "effects", skip_serializing_if = "Option::is_none")]
     pub effects: Option<Vec<models::SimpleEffectSchema>>,
@@ -53,6 +56,7 @@ impl ItemSchema {
             r#type,
             subtype,
             description,
+            conditions: None,
             effects: None,
             craft: None,
             tradeable,

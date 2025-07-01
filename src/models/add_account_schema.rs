@@ -9,16 +9,17 @@ pub struct AddAccountSchema {
     /// Your password.
     #[serde(rename = "password")]
     pub password: String,
-    #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
-    pub email: Option<String>,
+    /// Your email.
+    #[serde(rename = "email")]
+    pub email: String,
 }
 
 impl AddAccountSchema {
-    pub fn new(username: String, password: String) -> AddAccountSchema {
+    pub fn new(username: String, password: String, email: String) -> AddAccountSchema {
         AddAccountSchema {
             username,
             password,
-            email: None,
+            email,
         }
     }
 }

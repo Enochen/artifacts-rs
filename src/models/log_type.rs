@@ -25,10 +25,10 @@ pub enum LogType {
     CancelGe,
     #[serde(rename = "delete_item")]
     DeleteItem,
-    #[serde(rename = "deposit")]
-    Deposit,
-    #[serde(rename = "withdraw")]
-    Withdraw,
+    #[serde(rename = "deposit_item")]
+    DepositItem,
+    #[serde(rename = "withdraw_item")]
+    WithdrawItem,
     #[serde(rename = "deposit_gold")]
     DepositGold,
     #[serde(rename = "withdraw_gold")]
@@ -59,6 +59,18 @@ pub enum LogType {
     BuyBankExpansion,
     #[serde(rename = "achievement")]
     Achievement,
+    #[serde(rename = "give_item")]
+    GiveItem,
+    #[serde(rename = "give_gold")]
+    GiveGold,
+    #[serde(rename = "receive_item")]
+    ReceiveItem,
+    #[serde(rename = "receive_gold")]
+    ReceiveGold,
+    #[serde(rename = "change_skin")]
+    ChangeSkin,
+    #[serde(rename = "rename")]
+    Rename,
 }
 
 impl std::fmt::Display for LogType {
@@ -75,8 +87,8 @@ impl std::fmt::Display for LogType {
             Self::SellNpc => write!(f, "sell_npc"),
             Self::CancelGe => write!(f, "cancel_ge"),
             Self::DeleteItem => write!(f, "delete_item"),
-            Self::Deposit => write!(f, "deposit"),
-            Self::Withdraw => write!(f, "withdraw"),
+            Self::DepositItem => write!(f, "deposit_item"),
+            Self::WithdrawItem => write!(f, "withdraw_item"),
             Self::DepositGold => write!(f, "deposit_gold"),
             Self::WithdrawGold => write!(f, "withdraw_gold"),
             Self::Equip => write!(f, "equip"),
@@ -92,6 +104,12 @@ impl std::fmt::Display for LogType {
             Self::Use => write!(f, "use"),
             Self::BuyBankExpansion => write!(f, "buy_bank_expansion"),
             Self::Achievement => write!(f, "achievement"),
+            Self::GiveItem => write!(f, "give_item"),
+            Self::GiveGold => write!(f, "give_gold"),
+            Self::ReceiveItem => write!(f, "receive_item"),
+            Self::ReceiveGold => write!(f, "receive_gold"),
+            Self::ChangeSkin => write!(f, "change_skin"),
+            Self::Rename => write!(f, "rename"),
         }
     }
 }

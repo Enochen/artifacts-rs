@@ -1,6 +1,5 @@
 package com.archaeologist.codegen;
 
-import org.openapitools.codegen.CodegenConfig;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.CodegenType;
@@ -10,9 +9,9 @@ import org.openapitools.codegen.languages.RustClientCodegen;
 import io.swagger.v3.oas.models.OpenAPI;
 
 import java.util.Set;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
-public class ArtifactsCodegen extends RustClientCodegen implements CodegenConfig {
+public class ArtifactsCodegen extends RustClientCodegen {
 
     protected String sourceFolder = "src";
     protected String apiVersion = "1.0.0";
@@ -52,7 +51,7 @@ public class ArtifactsCodegen extends RustClientCodegen implements CodegenConfig
         Set<String> specOperationIds = openAPI.getPaths().values().stream()
                 .flatMap(path -> path.readOperationsMap().values().stream())
                 .map(op -> removeNonNameElementToCamelCase(op.getOperationId()))
-                .collect(java.util.stream.Collectors.toSet());
+                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
 
         Set<String> mappedOperationIds = operationIdNameMapping.keySet();
 
@@ -60,20 +59,19 @@ public class ArtifactsCodegen extends RustClientCodegen implements CodegenConfig
     }
 
     private void assertSetsEqual(Set<String> expected, Set<String> actual) {
-        Set<String> missing = new HashSet<>(expected);
+        Set<String> missing = new LinkedHashSet<>(expected);
         missing.removeAll(actual);
 
-        Set<String> extra = new HashSet<>(actual);
+        Set<String> extra = new LinkedHashSet<>(actual);
         extra.removeAll(expected);
 
         if (!missing.isEmpty() || !extra.isEmpty()) {
             throw new RuntimeException(
                     String.format(
-                            "Set mismatch: missing=%s, extra=%s",
+                            "Set mismatch:\nmissing=%s\nextra=%s\nactual=%s",
                             missing,
-                            extra
-                    )
-            );
+                            extra,
+                            expected));
         }
     }
 

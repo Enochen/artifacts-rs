@@ -3,9 +3,44 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
+/// struct for passing parameters to the method [`get_all_npc_items`]
+#[derive(Clone, Debug)]
+pub struct GetAllNpcItemsParams {
+    /// The code of the item.
+    pub code: Option<String>,
+    /// The code of the npc.
+    pub npc: Option<String>,
+    /// The code of the currency.
+    pub currency: Option<String>,
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+impl GetAllNpcItemsParams {
+    pub fn new(
+        code: Option<String>,
+        npc: Option<String>,
+        currency: Option<String>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            code,
+            npc,
+            currency,
+            page,
+            size,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`get_all_npcs`]
 #[derive(Clone, Debug)]
 pub struct GetAllNpcsParams {
+    /// Name of the npc.
+    pub name: Option<String>,
     /// The type of the NPC.
     pub r#type: Option<models::NpcType>,
     /// Page number
@@ -15,8 +50,18 @@ pub struct GetAllNpcsParams {
 }
 
 impl GetAllNpcsParams {
-    pub fn new(r#type: Option<models::NpcType>, page: Option<u32>, size: Option<u32>) -> Self {
-        Self { r#type, page, size }
+    pub fn new(
+        name: Option<String>,
+        r#type: Option<models::NpcType>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            name,
+            r#type,
+            page,
+            size,
+        }
     }
 }
 
@@ -47,6 +92,21 @@ pub struct GetNpcItemsParams {
 impl GetNpcItemsParams {
     pub fn new(code: String, page: Option<u32>, size: Option<u32>) -> Self {
         Self { code, page, size }
+    }
+}
+
+/// struct for typed errors of method [`get_all_npc_items`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAllNpcItemsError {}
+
+impl TryFrom<StatusCode> for GetAllNpcItemsError {
+    type Error = &'static str;
+    #[allow(clippy::match_single_binding)]
+    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
+        match status.as_u16() {
+            _ => Err("status code not in spec"),
+        }
     }
 }
 
@@ -103,6 +163,73 @@ impl TryFrom<StatusCode> for GetNpcItemsError {
     }
 }
 
+/// Retrieve the list of all NPC items.
+pub async fn get_all_npc_items(
+    configuration: &configuration::Configuration,
+    params: GetAllNpcItemsParams,
+) -> Result<models::DataPageNpcItem, Error<GetAllNpcItemsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let code = params.code;
+    // unbox the parameters
+    let npc = params.npc;
+    // unbox the parameters
+    let currency = params.currency;
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!("{}/npcs/items", local_var_configuration.base_path);
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = code {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("code", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = npc {
+        local_var_req_builder = local_var_req_builder.query(&[("npc", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = currency {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("currency", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetAllNpcItemsError> = local_var_status.try_into().ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// Fetch NPCs details.
 pub async fn get_all_npcs(
     configuration: &configuration::Configuration,
@@ -110,6 +237,8 @@ pub async fn get_all_npcs(
 ) -> Result<models::DataPageNpcSchema, Error<GetAllNpcsError>> {
     let local_var_configuration = configuration;
 
+    // unbox the parameters
+    let name = params.name;
     // unbox the parameters
     let r#type = params.r#type;
     // unbox the parameters
@@ -119,10 +248,14 @@ pub async fn get_all_npcs(
 
     let local_var_client = &local_var_configuration.client;
 
-    let local_var_uri_str = format!("{}/npcs", local_var_configuration.base_path);
+    let local_var_uri_str = format!("{}/npcs/details", local_var_configuration.base_path);
     let mut local_var_req_builder =
         local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    if let Some(ref local_var_str) = name {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("name", &local_var_str.to_string())]);
+    }
     if let Some(ref local_var_str) = r#type {
         local_var_req_builder =
             local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
@@ -172,7 +305,7 @@ pub async fn get_npc(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/npcs/{code}",
+        "{}/npcs/details/{code}",
         local_var_configuration.base_path,
         code = crate::apis::urlencode(code)
     );
@@ -203,7 +336,7 @@ pub async fn get_npc(
     }
 }
 
-/// Retrieve the items list of a NPC. If the NPC has items to buy or sell, they will be displayed.
+/// Retrieve the items list of a NPC. If the NPC has items to buy, sell or trade, they will be displayed.
 pub async fn get_npc_items(
     configuration: &configuration::Configuration,
     params: GetNpcItemsParams,
@@ -220,7 +353,7 @@ pub async fn get_npc_items(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/npcs/{code}/items",
+        "{}/npcs/items/{code}",
         local_var_configuration.base_path,
         code = crate::apis::urlencode(code)
     );

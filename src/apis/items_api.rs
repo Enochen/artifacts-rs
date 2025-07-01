@@ -6,12 +6,12 @@ use serde::{Deserialize, Serialize};
 /// struct for passing parameters to the method [`get_all_items`]
 #[derive(Clone, Debug)]
 pub struct GetAllItemsParams {
+    /// Name of the item.
+    pub name: Option<String>,
     /// Minimum level items.
     pub min_level: Option<u32>,
     /// Maximum level items.
     pub max_level: Option<u32>,
-    /// Name of the item.
-    pub name: Option<String>,
     /// Type of items.
     pub r#type: Option<models::ItemType>,
     /// Skill to craft items.
@@ -26,9 +26,9 @@ pub struct GetAllItemsParams {
 
 impl GetAllItemsParams {
     pub fn new(
+        name: Option<String>,
         min_level: Option<u32>,
         max_level: Option<u32>,
-        name: Option<String>,
         r#type: Option<models::ItemType>,
         craft_skill: Option<models::CraftSkill>,
         craft_material: Option<String>,
@@ -36,9 +36,9 @@ impl GetAllItemsParams {
         size: Option<u32>,
     ) -> Self {
         Self {
+            name,
             min_level,
             max_level,
-            name,
             r#type,
             craft_skill,
             craft_material,
@@ -103,11 +103,11 @@ pub async fn get_all_items(
     let local_var_configuration = configuration;
 
     // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
     let min_level = params.min_level;
     // unbox the parameters
     let max_level = params.max_level;
-    // unbox the parameters
-    let name = params.name;
     // unbox the parameters
     let r#type = params.r#type;
     // unbox the parameters
@@ -125,6 +125,10 @@ pub async fn get_all_items(
     let mut local_var_req_builder =
         local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    if let Some(ref local_var_str) = name {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("name", &local_var_str.to_string())]);
+    }
     if let Some(ref local_var_str) = min_level {
         local_var_req_builder =
             local_var_req_builder.query(&[("min_level", &local_var_str.to_string())]);
@@ -132,10 +136,6 @@ pub async fn get_all_items(
     if let Some(ref local_var_str) = max_level {
         local_var_req_builder =
             local_var_req_builder.query(&[("max_level", &local_var_str.to_string())]);
-    }
-    if let Some(ref local_var_str) = name {
-        local_var_req_builder =
-            local_var_req_builder.query(&[("name", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = r#type {
         local_var_req_builder =

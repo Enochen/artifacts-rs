@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GenerateTokenError {
-    /// Token generation failed.
+    /// Failed to generate token.
     Status455,
 }
 

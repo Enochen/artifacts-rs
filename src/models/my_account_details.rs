@@ -9,15 +9,25 @@ pub struct MyAccountDetails {
     /// Email.
     #[serde(rename = "email")]
     pub email: String,
-    /// Subscribed for the current season.
-    #[serde(rename = "subscribed")]
-    pub subscribed: bool,
     /// Member status.
+    #[serde(rename = "member")]
+    pub member: bool,
+    #[serde(
+        rename = "member_expiration",
+        default,
+        with = "::serde_with::rust::double_option",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub member_expiration: Option<Option<String>>,
+    /// Account status.
     #[serde(rename = "status")]
     pub status: models::AccountStatus,
     /// Account badges.
     #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
     pub badges: Option<Vec<serde_json::Value>>,
+    /// Skins owned.
+    #[serde(rename = "skins")]
+    pub skins: Vec<serde_json::Value>,
     /// Gems.
     #[serde(rename = "gems")]
     pub gems: i32,
@@ -36,8 +46,9 @@ impl MyAccountDetails {
     pub fn new(
         username: String,
         email: String,
-        subscribed: bool,
+        member: bool,
         status: models::AccountStatus,
+        skins: Vec<serde_json::Value>,
         gems: i32,
         achievements_points: i32,
         banned: bool,
@@ -45,9 +56,11 @@ impl MyAccountDetails {
         MyAccountDetails {
             username,
             email,
-            subscribed,
+            member,
+            member_expiration: None,
             status,
             badges: None,
+            skins,
             gems,
             achievements_points,
             banned,

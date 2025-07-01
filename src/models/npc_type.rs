@@ -5,12 +5,15 @@ use serde::{Deserialize, Serialize};
 pub enum NpcType {
     #[serde(rename = "merchant")]
     Merchant,
+    #[serde(rename = "trader")]
+    Trader,
 }
 
 impl std::fmt::Display for NpcType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Merchant => write!(f, "merchant"),
+            Self::Trader => write!(f, "trader"),
         }
     }
 }

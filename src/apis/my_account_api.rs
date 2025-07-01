@@ -86,8 +86,10 @@ impl GetGeSellOrdersParams {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ChangePasswordError {
-    /// Use a different password.
+    /// Please use a different password.
     Status458,
+    /// The current password you entered is invalid.
+    Status459,
 }
 
 impl TryFrom<StatusCode> for ChangePasswordError {
@@ -96,6 +98,7 @@ impl TryFrom<StatusCode> for ChangePasswordError {
     fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
         match status.as_u16() {
             458 => Ok(Self::Status458),
+            459 => Ok(Self::Status459),
             _ => Err("status code not in spec"),
         }
     }
