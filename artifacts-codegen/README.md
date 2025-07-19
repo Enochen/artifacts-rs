@@ -22,7 +22,7 @@ At this point, you've likely generated a client setup.  It will include somethin
 |-- src
 |--- main
 |---- java
-|----- com.archaeologist.codegen.ArtifactsCodegenGenerator.java // generator file
+|----- com.artifacts.codegen.ArtifactsCodegenGenerator.java // generator file
 |---- resources
 |----- artifacts-codegen // template files
 |----- META-INF

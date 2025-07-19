@@ -1,4 +1,4 @@
-package com.archaeologist.codegen;
+package com.artifacts.codegen;
 
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenProperty;

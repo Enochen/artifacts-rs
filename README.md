@@ -1,13 +1,13 @@
-# archaeologist
+# artifacts-rs
 
-A Rust wrapper for [Artifacts](https://artifactsmmo.com/), an API-based sandbox MMO.
+A Rust client for [Artifacts](https://artifactsmmo.com/), an API-based sandbox MMO.
 
 Powered by [openapi-generator](https://openapi-generator.tech/).
 
 ## Example Usage
 
 ```rust
-use archaeologist::{
+use artifacts::{
     apis::{configuration::Configuration, my_account_api},
     models::BankResponseSchema,
 };

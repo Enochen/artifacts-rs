@@ -1,4 +1,4 @@
-package com.archaeologist.codegen;
+package com.artifacts.codegen;
 
 import org.junit.jupiter.api.Test;
 import org.openapitools.codegen.ClientOptInput;
