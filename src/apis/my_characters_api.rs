@@ -790,6 +790,8 @@ pub enum EquipItemError {
     Status404,
     /// Character not found.
     Status498,
+    /// The character does not have enough HP to unequip this item.
+    Status483,
     /// The character is in cooldown.
     Status499,
     /// An action is already in progress for this character.
@@ -815,6 +817,7 @@ impl TryFrom<StatusCode> for EquipItemError {
         match status.as_u16() {
             404 => Ok(Self::Status404),
             498 => Ok(Self::Status498),
+            483 => Ok(Self::Status483),
             499 => Ok(Self::Status499),
             486 => Ok(Self::Status486),
             478 => Ok(Self::Status478),
@@ -2388,7 +2391,7 @@ pub async fn get_character_logs(
     }
 }
 
-/// List of your characters. This endpoint is deprecated and will be removed in a future version. Please use accounts/{account}/characters.
+/// List of your characters.
 pub async fn get_my_characters(
     configuration: &configuration::Configuration,
 ) -> Result<models::MyCharactersListSchema, Error<GetMyCharactersError>> {
