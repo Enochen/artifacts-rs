@@ -2,6 +2,7 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct CraftSchema {
     /// Skill required to craft the item.
     #[serde(rename = "skill", skip_serializing_if = "Option::is_none")]
