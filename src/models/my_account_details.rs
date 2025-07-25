@@ -25,9 +25,11 @@ pub struct MyAccountDetails {
     pub status: models::AccountStatus,
     /// Account badges.
     #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "specta", specta(type = Option<Vec<specta_util::Unknown>>))]
     pub badges: Option<Vec<serde_json::Value>>,
     /// Skins owned.
     #[serde(rename = "skins")]
+    #[cfg_attr(feature = "specta", specta(type = Vec<specta_util::Unknown>))]
     pub skins: Vec<serde_json::Value>,
     /// Gems.
     #[serde(rename = "gems")]

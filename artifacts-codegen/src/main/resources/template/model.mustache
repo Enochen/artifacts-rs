@@ -22,6 +22,7 @@ use crate::traits::HasCharacter;
 /// {{{description}}}
 {{/description}}
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum {{{classname}}} {
 {{#allowableValues}}
 {{#enumVars}}
@@ -53,6 +54,7 @@ impl Default for {{{classname}}} {
 {{!-- for schemas that have a discriminator --}}
 {{#discriminator}}
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(tag = "{{{propertyBaseName}}}")]
 pub enum {{{classname}}} {
     {{^oneOf}}
@@ -108,7 +110,8 @@ pub struct {{{classname}}} {
     {{#isByteArray}}
     {{#required}}#[serde_as(as = "serde_with::base64::Base64")]{{/required}}{{^required}}#[serde_as(as = "Option<serde_with::base64::Base64>")]{{/required}}
     {{/isByteArray}}
-    #[serde(rename = "{{{baseName}}}"{{^required}}{{#isNullable}}, default, with = "::serde_with::rust::double_option"{{/isNullable}}{{/required}}{{^required}}, skip_serializing_if = "Option::is_none"{{/required}}{{#required}}{{#isNullable}}, deserialize_with = "Option::deserialize"{{/isNullable}}{{/required}})]
+    #[serde(rename = "{{{baseName}}}"{{^required}}{{#isNullable}}, default, with = "::serde_with::rust::double_option"{{/isNullable}}{{/required}}{{^required}}, skip_serializing_if = "Option::is_none"{{/required}}{{#required}}{{#isNullable}}, deserialize_with = "Option::deserialize"{{/isNullable}}{{/required}})]{{#vendorExtensions.x-unknown-value}}
+    #[cfg_attr(feature = "specta", specta(type = {{#isNullable}}Option<{{/isNullable}}{{^required}}Option<{{/required}}{{#isArray}}Vec<{{/isArray}}specta_util::Unknown{{#isArray}}>{{/isArray}}{{#isNullable}}>{{/isNullable}}{{^required}}>{{/required}}))]{{/vendorExtensions.x-unknown-value}}
     pub {{{name}}}: {{#isNullable}}Option<{{/isNullable}}{{^required}}Option<{{/required}}{{#isEnum}}{{#isArray}}{{#uniqueItems}}std::collections::HashSet<{{/uniqueItems}}{{^uniqueItems}}Vec<{{/uniqueItems}}{{/isArray}}{{{enumName}}}{{#isArray}}>{{/isArray}}{{/isEnum}}{{^isEnum}}{{#isModel}}{{^avoidBoxedModels}}Box<{{/avoidBoxedModels}}{{{dataType}}}{{^avoidBoxedModels}}>{{/avoidBoxedModels}}{{/isModel}}{{^isModel}}{{#isByteArray}}Vec<u8>{{/isByteArray}}{{^isByteArray}}{{{dataType}}}{{/isByteArray}}{{/isModel}}{{/isEnum}}{{#isNullable}}>{{/isNullable}}{{^required}}>{{/required}},
 {{/vars}}
 }
@@ -132,6 +135,7 @@ impl {{{classname}}} {
 /// {{{.}}}
 {{/description}}
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(untagged)]
 pub enum {{classname}} {
 {{#composedSchemas.oneOf}}
@@ -155,6 +159,7 @@ impl Default for {{classname}} {
 {{#isEnum}}
 /// {{{description}}}
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub enum {{{enumName}}} {
 {{#allowableValues}}
 {{#enumVars}}

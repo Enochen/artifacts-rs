@@ -17,6 +17,7 @@ pub struct LogSchema {
     #[serde(rename = "description")]
     pub description: String,
     #[serde(rename = "content", deserialize_with = "Option::deserialize")]
+    #[cfg_attr(feature = "specta", specta(type = Option<specta_util::Unknown>))]
     pub content: Option<serde_json::Value>,
     /// Cooldown in seconds.
     #[serde(rename = "cooldown")]

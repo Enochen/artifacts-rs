@@ -13,6 +13,10 @@ readme = "README.md"
 name = "artifacts"
 path = "src/lib.rs"
 
+[features]
+default = []
+specta = ["dep:specta", "dep:specta-util"]
+
 [dependencies]
 serde = { version = "^1.0", features = ["derive"] }
 serde_with = { version = "^3.8", default-features = false, features = [
@@ -23,4 +27,5 @@ serde_with = { version = "^3.8", default-features = false, features = [
 serde_json = "^1.0"
 url = "^2.5"
 reqwest = { version = "^0.12", features = ["json", "multipart"] }
-specta = { version = "2.0.0-rc.22", optional = true }
+specta = { version = "2.0.0-rc.22", features = ["derive"], optional = true }
+specta-util = { version = "0.0.9", features = ["serde"], optional = true }

@@ -90,5 +90,9 @@ public class ArtifactsCodegen extends RustClientCodegen {
         if (property.name.equals("data") && model.vars.size() == 1) {
             model.vendorExtensions.put("x-data-type", property);
         }
+
+        if (property.isAnyType || (property.items != null && property.items.isAnyType)) {
+            property.vendorExtensions.put("x-unknown-value", true);
+        }
     }
 }
