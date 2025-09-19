@@ -50,7 +50,7 @@ public class ArtifactsCodegen extends RustClientCodegen {
 
         Set<String> specOperationIds = openAPI.getPaths().values().stream()
                 .flatMap(path -> path.readOperationsMap().values().stream())
-                .map(op -> removeNonNameElementToCamelCase(op.getOperationId()))
+                .map(op -> op.getOperationId())
                 .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
 
         Set<String> mappedOperationIds = operationIdNameMapping.keySet();
