@@ -1,7 +1,7 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`create_account`]
 #[derive(Clone, Debug)]
@@ -32,7 +32,7 @@ impl ForgotPasswordParams {
 /// struct for passing parameters to the method [`get_account`]
 #[derive(Clone, Debug)]
 pub struct GetAccountParams {
-    /// The account name.
+    /// The name of the account.
     pub account: String,
 }
 
@@ -45,7 +45,7 @@ impl GetAccountParams {
 /// struct for passing parameters to the method [`get_account_achievements`]
 #[derive(Clone, Debug)]
 pub struct GetAccountAchievementsParams {
-    /// The character name.
+    /// The name of the account.
     pub account: String,
     /// Type of achievements.
     pub r#type: Option<String>,
@@ -78,7 +78,7 @@ impl GetAccountAchievementsParams {
 /// struct for passing parameters to the method [`get_account_characters`]
 #[derive(Clone, Debug)]
 pub struct GetAccountCharactersParams {
-    /// The character name.
+    /// The name of the account.
     pub account: String,
 }
 
@@ -103,116 +103,154 @@ impl ResetPasswordParams {
 }
 
 /// struct for typed errors of method [`create_account`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum CreateAccountError {
     /// This username is already taken.
-    Status456,
+    Status456(models::ErrorResponseSchema),
     /// This email is already in use.
-    Status457,
+    Status457(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for CreateAccountError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            456 => Ok(Self::Status456),
-            457 => Ok(Self::Status457),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for CreateAccountError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            456 => Ok(Self::Status456(raw)),
+            457 => Ok(Self::Status457(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`forgot_password`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum ForgotPasswordError {}
+pub enum ForgotPasswordError {
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
 
-impl TryFrom<StatusCode> for ForgotPasswordError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for ForgotPasswordError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_account`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAccountError {
-    /// Account not found.
-    Status404,
+    /// account not found.
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetAccountError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetAccountError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_account_achievements`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAccountAchievementsError {
     /// Account not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetAccountAchievementsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetAccountAchievementsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_account_characters`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAccountCharactersError {}
 
-impl TryFrom<StatusCode> for GetAccountCharactersError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAccountCharactersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`reset_password`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum ResetPasswordError {
     /// The password reset token has expired.
-    Status561,
+    Status561(models::ErrorResponseSchema),
     /// This password reset token has already been used.
-    Status562,
+    Status562(models::ErrorResponseSchema),
     /// The password reset token is invalid.
-    Status560,
+    Status560(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for ResetPasswordError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            561 => Ok(Self::Status561),
-            562 => Ok(Self::Status562),
-            560 => Ok(Self::Status560),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for ResetPasswordError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            561 => Ok(Self::Status561(raw)),
+            562 => Ok(Self::Status562(raw)),
+            560 => Ok(Self::Status560(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -247,7 +285,8 @@ pub async fn create_account(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateAccountError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<CreateAccountError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -291,7 +330,8 @@ pub async fn forgot_password(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ForgotPasswordError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<ForgotPasswordError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -301,7 +341,7 @@ pub async fn forgot_password(
     }
 }
 
-/// Retrieve the details of a character.
+/// Retrieve the details of an account.
 pub async fn get_account(
     configuration: &configuration::Configuration,
     params: GetAccountParams,
@@ -335,7 +375,8 @@ pub async fn get_account(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -404,7 +445,7 @@ pub async fn get_account_achievements(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetAccountAchievementsError> =
-            local_var_status.try_into().ok();
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -448,7 +489,8 @@ pub async fn get_account_characters(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountCharactersError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountCharactersError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -492,7 +534,8 @@ pub async fn reset_password(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ResetPasswordError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<ResetPasswordError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

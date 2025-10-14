@@ -8,6 +8,16 @@ pub trait GetCharacter {
     fn get_character(&self) -> &CharacterSchema;
 }
 
+pub trait GetCharacters {
+    fn get_characters(&self) -> Vec<CharacterSchema>;
+}
+
+impl<T: GetCharacter + 'static> GetCharacters for T {
+    fn get_characters(&self) -> Vec<CharacterSchema> {
+        vec![self.get_character().clone()]
+    }
+}
+
 pub trait IntoData {
     type Data;
     fn into_data(self) -> Self::Data;

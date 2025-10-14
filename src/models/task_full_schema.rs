@@ -19,7 +19,8 @@ pub struct TaskFullSchema {
     /// Maximum amount of task.
     #[serde(rename = "max_quantity")]
     pub max_quantity: i32,
-    #[serde(rename = "skill", deserialize_with = "Option::deserialize")]
+    /// Skill required to complete the task.
+    #[serde(rename = "skill", skip_serializing_if = "Option::is_none")]
     pub skill: Option<String>,
     /// Rewards.
     #[serde(rename = "rewards")]
@@ -33,7 +34,6 @@ impl TaskFullSchema {
         r#type: models::TaskType,
         min_quantity: i32,
         max_quantity: i32,
-        skill: Option<String>,
         rewards: models::RewardsSchema,
     ) -> TaskFullSchema {
         TaskFullSchema {
@@ -42,7 +42,7 @@ impl TaskFullSchema {
             r#type,
             min_quantity,
             max_quantity,
-            skill,
+            skill: None,
             rewards: Box::new(rewards),
         }
     }

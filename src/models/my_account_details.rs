@@ -13,27 +13,24 @@ pub struct MyAccountDetails {
     /// Member status.
     #[serde(rename = "member")]
     pub member: bool,
-    #[serde(
-        rename = "member_expiration",
-        default,
-        with = "::serde_with::rust::double_option",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub member_expiration: Option<Option<String>>,
+    /// Member expiration date.
+    #[serde(rename = "member_expiration", skip_serializing_if = "Option::is_none")]
+    pub member_expiration: Option<String>,
     /// Account status.
     #[serde(rename = "status")]
     pub status: models::AccountStatus,
     /// Account badges.
     #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
-    #[cfg_attr(feature = "specta", specta(type = Option<Vec<specta_util::Unknown>>))]
-    pub badges: Option<Vec<serde_json::Value>>,
+    pub badges: Option<Vec<String>>,
     /// Skins owned.
     #[serde(rename = "skins")]
-    #[cfg_attr(feature = "specta", specta(type = Vec<specta_util::Unknown>))]
-    pub skins: Vec<serde_json::Value>,
+    pub skins: Vec<String>,
     /// Gems.
     #[serde(rename = "gems")]
     pub gems: i32,
+    /// Event tokens for spawning events.
+    #[serde(rename = "event_token")]
+    pub event_token: i32,
     /// Achievement points.
     #[serde(rename = "achievements_points")]
     pub achievements_points: i32,
@@ -51,8 +48,9 @@ impl MyAccountDetails {
         email: String,
         member: bool,
         status: models::AccountStatus,
-        skins: Vec<serde_json::Value>,
+        skins: Vec<String>,
         gems: i32,
+        event_token: i32,
         achievements_points: i32,
         banned: bool,
     ) -> MyAccountDetails {
@@ -65,6 +63,7 @@ impl MyAccountDetails {
             badges: None,
             skins,
             gems,
+            event_token,
             achievements_points,
             banned,
             ban_reason: None,

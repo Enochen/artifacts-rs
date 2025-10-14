@@ -195,6 +195,14 @@ impl crate::traits::GetCharacter for {{{classname}}} {
 }
 {{/vendorExtensions.x-character-field}}
 
+{{#vendorExtensions.x-characters-field}}
+impl crate::traits::GetCharacters for {{{classname}}} {
+    fn get_characters(&self) -> Vec<crate::models::CharacterSchema> {
+        self.{{{vendorExtensions.x-characters-field}}}.clone()
+    }
+}
+{{/vendorExtensions.x-characters-field}}
+
 {{#vendorExtensions.x-data-type}}
 impl crate::traits::IntoData for {{{classname}}} {
     type Data = {{#isNullable}}Option<{{/isNullable}}{{^required}}Option<{{/required}}{{#isEnum}}{{#isArray}}{{#uniqueItems}}std::collections::HashSet<{{/uniqueItems}}{{^uniqueItems}}Vec<{{/uniqueItems}}{{/isArray}}{{{enumName}}}{{#isArray}}>{{/isArray}}{{/isEnum}}{{^isEnum}}{{#isModel}}{{^avoidBoxedModels}}Box<{{/avoidBoxedModels}}{{{dataType}}}{{^avoidBoxedModels}}>{{/avoidBoxedModels}}{{/isModel}}{{^isModel}}{{#isByteArray}}Vec<u8>{{/isByteArray}}{{^isByteArray}}{{{dataType}}}{{/isByteArray}}{{/isModel}}{{/isEnum}}{{#isNullable}}>{{/isNullable}}{{^required}}>{{/required}};

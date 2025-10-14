@@ -1,23 +1,31 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for typed errors of method [`generate_token`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GenerateTokenError {
     /// Failed to generate token.
-    Status455,
+    Status455(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GenerateTokenError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            455 => Ok(Self::Status455),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GenerateTokenError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            455 => Ok(Self::Status455(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -54,7 +62,8 @@ pub async fn generate_token(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GenerateTokenError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GenerateTokenError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

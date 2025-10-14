@@ -7,13 +7,9 @@ pub struct BadgeSchema {
     /// Code of the badge. This is the badge's unique identifier (ID).
     #[serde(rename = "code")]
     pub code: String,
-    #[serde(
-        rename = "season",
-        default,
-        with = "::serde_with::rust::double_option",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub season: Option<Option<i32>>,
+    /// Season of the badge.
+    #[serde(rename = "season", skip_serializing_if = "Option::is_none")]
+    pub season: Option<i32>,
     /// Description of the badge.
     #[serde(rename = "description")]
     pub description: String,

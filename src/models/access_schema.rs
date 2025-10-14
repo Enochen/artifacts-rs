@@ -1,0 +1,22 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct AccessSchema {
+    /// Map access type determining movement and accessibility
+    #[serde(rename = "type")]
+    pub r#type: models::MapAccessType,
+    /// Access conditions for the map
+    #[serde(rename = "conditions", skip_serializing_if = "Option::is_none")]
+    pub conditions: Option<Vec<models::ConditionSchema>>,
+}
+
+impl AccessSchema {
+    pub fn new(r#type: models::MapAccessType) -> AccessSchema {
+        AccessSchema {
+            r#type,
+            conditions: None,
+        }
+    }
+}

@@ -1,7 +1,7 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`create_character`]
 #[derive(Clone, Debug)]
@@ -31,10 +31,25 @@ impl DeleteCharacterParams {
     }
 }
 
+/// struct for passing parameters to the method [`get_active_characters`]
+#[derive(Clone, Debug)]
+pub struct GetActiveCharactersParams {
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+impl GetActiveCharactersParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
+    }
+}
+
 /// struct for passing parameters to the method [`get_character`]
 #[derive(Clone, Debug)]
 pub struct GetCharacterParams {
-    /// The character name.
+    /// The name of the character.
     pub name: String,
 }
 
@@ -45,64 +60,103 @@ impl GetCharacterParams {
 }
 
 /// struct for typed errors of method [`create_character`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum CreateCharacterError {
     /// This name is already in use.
-    Status494,
+    Status494(models::ErrorResponseSchema),
     /// You have reached the maximum number of characters on your account.
-    Status495,
+    Status495(models::ErrorResponseSchema),
     /// You cannot choose this skin because you do not own it.
-    Status550,
+    Status550(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for CreateCharacterError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            494 => Ok(Self::Status494),
-            495 => Ok(Self::Status495),
-            550 => Ok(Self::Status550),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for CreateCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            494 => Ok(Self::Status494(raw)),
+            495 => Ok(Self::Status495(raw)),
+            550 => Ok(Self::Status550(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`delete_character`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum DeleteCharacterError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for DeleteCharacterError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for DeleteCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
-/// struct for typed errors of method [`get_character`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// struct for typed errors of method [`get_active_characters`]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetCharacterError {
-    /// Character not found.
-    Status404,
+pub enum GetActiveCharactersError {}
+
+impl<'de> Deserialize<'de> for GetActiveCharactersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
+    }
 }
 
-impl TryFrom<StatusCode> for GetCharacterError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+/// struct for typed errors of method [`get_character`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GetCharacterError {
+    /// character not found.
+    Status404(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for GetCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -141,7 +195,8 @@ pub async fn create_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CreateCharacterError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<CreateCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -185,7 +240,59 @@ pub async fn delete_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DeleteCharacterError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<DeleteCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Fetch active characters details.
+pub async fn get_active_characters(
+    configuration: &configuration::Configuration,
+    params: GetActiveCharactersParams,
+) -> Result<models::DataPageActiveCharacterSchema, Error<GetActiveCharactersError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!("{}/characters/active", local_var_configuration.base_path);
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetActiveCharactersError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -229,7 +336,8 @@ pub async fn get_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharacterError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

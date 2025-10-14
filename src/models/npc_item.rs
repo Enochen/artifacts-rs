@@ -13,26 +13,22 @@ pub struct NpcItem {
     /// Currency used to buy/sell the item. If it's not gold, it's the item code.
     #[serde(rename = "currency")]
     pub currency: String,
-    #[serde(rename = "buy_price", deserialize_with = "Option::deserialize")]
+    /// Price to buy the item.
+    #[serde(rename = "buy_price", skip_serializing_if = "Option::is_none")]
     pub buy_price: Option<i32>,
-    #[serde(rename = "sell_price", deserialize_with = "Option::deserialize")]
+    /// Price to sell the item.
+    #[serde(rename = "sell_price", skip_serializing_if = "Option::is_none")]
     pub sell_price: Option<i32>,
 }
 
 impl NpcItem {
-    pub fn new(
-        code: String,
-        npc: String,
-        currency: String,
-        buy_price: Option<i32>,
-        sell_price: Option<i32>,
-    ) -> NpcItem {
+    pub fn new(code: String, npc: String, currency: String) -> NpcItem {
         NpcItem {
             code,
             npc,
             currency,
-            buy_price,
-            sell_price,
+            buy_price: None,
+            sell_price: None,
         }
     }
 }

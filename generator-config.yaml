@@ -11,6 +11,7 @@ operationIdNameMappings:
   get_account_details_my_details_get: get_account_details
   change_password_my_change_password_post: change_password
   action_move_my__name__action_move_post: move_character
+  action_transition_my__name__action_transition_post: action_transition
   action_rest_my__name__action_rest_post: rest_character
   action_equip_item_my__name__action_equip_post: equip_item
   action_unequip_item_my__name__action_unequip_post: unequip_item
@@ -53,11 +54,13 @@ operationIdNameMappings:
   get_badge_badges__code__get: get_badge
   create_character_characters_create_post: create_character
   delete_character_characters_delete_post: delete_character
+  get_active_characters_characters_active_get: get_active_characters
   get_character_characters__name__get: get_character
   get_all_effects_effects_get: get_all_effects
   get_effect_effects__code__get: get_effect
   get_all_active_events_events_active_get: get_all_active_events
   get_all_events_events_get: get_all_events
+  spawn_event_events_spawn_post: spawn_event
   get_ge_sell_history_grandexchange_history__code__get: get_ge_sell_history_by_code
   get_ge_sell_orders_grandexchange_orders_get: get_ge_sell_orders
   get_ge_sell_order_grandexchange_orders__id__get: get_ge_sell_order_by_id
@@ -66,7 +69,9 @@ operationIdNameMappings:
   get_characters_leaderboard_leaderboard_characters_get: get_characters_leaderboard
   get_accounts_leaderboard_leaderboard_accounts_get: get_accounts_leaderboard
   get_all_maps_maps_get: get_all_maps
-  get_map_maps__x___y__get: get_map
+  get_layer_maps_maps__layer__get: get_layer_maps
+  get_map_by_position_maps__layer___x___y__get: get_map_by_position
+  get_map_by_id_maps_id__map_id__get: get_map_by_id
   get_all_monsters_monsters_get: get_all_monsters
   get_monster_monsters__code__get: get_monster
   get_all_npcs_npcs_details_get: get_all_npcs
@@ -79,4 +84,5 @@ operationIdNameMappings:
   get_task_tasks_list__code__get: get_task
   get_all_tasks_rewards_tasks_rewards_get: get_all_tasks_rewards
   get_tasks_reward_tasks_rewards__code__get: get_tasks_reward
+  fight_simulation_simulation_fight_simulation_post: fight_simulation
   generate_token_token_post: generate_token

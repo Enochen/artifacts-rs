@@ -6,33 +6,23 @@ use serde::{Deserialize, Serialize};
 pub struct DataPageEventSchema {
     #[serde(rename = "data")]
     pub data: Vec<models::EventSchema>,
-    #[serde(rename = "total", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
-    #[serde(rename = "page", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
     pub page: Option<u32>,
-    #[serde(rename = "size", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
-    #[serde(
-        rename = "pages",
-        default,
-        with = "::serde_with::rust::double_option",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub pages: Option<Option<u32>>,
+    #[serde(rename = "pages", skip_serializing_if = "Option::is_none")]
+    pub pages: Option<u32>,
 }
 
 impl DataPageEventSchema {
-    pub fn new(
-        data: Vec<models::EventSchema>,
-        total: Option<u32>,
-        page: Option<u32>,
-        size: Option<u32>,
-    ) -> DataPageEventSchema {
+    pub fn new(data: Vec<models::EventSchema>) -> DataPageEventSchema {
         DataPageEventSchema {
             data,
-            total,
-            page,
-            size,
+            total: None,
+            page: None,
+            size: None,
             pages: None,
         }
     }

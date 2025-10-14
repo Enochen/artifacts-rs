@@ -1,7 +1,7 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`change_password`]
 #[derive(Clone, Debug)]
@@ -83,99 +83,122 @@ impl GetGeSellOrdersParams {
 }
 
 /// struct for typed errors of method [`change_password`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum ChangePasswordError {
     /// Please use a different password.
-    Status458,
+    Status458(models::ErrorResponseSchema),
     /// The current password you entered is invalid.
-    Status459,
+    Status459(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for ChangePasswordError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            458 => Ok(Self::Status458),
-            459 => Ok(Self::Status459),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for ChangePasswordError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            458 => Ok(Self::Status458(raw)),
+            459 => Ok(Self::Status459(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_account_details`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAccountDetailsError {}
 
-impl TryFrom<StatusCode> for GetAccountDetailsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAccountDetailsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_bank_details`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetBankDetailsError {}
 
-impl TryFrom<StatusCode> for GetBankDetailsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetBankDetailsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_bank_items`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetBankItemsError {}
 
-impl TryFrom<StatusCode> for GetBankItemsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetBankItemsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_ge_sell_history`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetGeSellHistoryError {}
 
-impl TryFrom<StatusCode> for GetGeSellHistoryError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetGeSellHistoryError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_ge_sell_orders`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetGeSellOrdersError {}
 
-impl TryFrom<StatusCode> for GetGeSellOrdersError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetGeSellOrdersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
@@ -213,7 +236,8 @@ pub async fn change_password(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ChangePasswordError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<ChangePasswordError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -252,7 +276,8 @@ pub async fn get_account_details(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAccountDetailsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAccountDetailsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -291,7 +316,8 @@ pub async fn get_bank_details(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankDetailsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetBankDetailsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -350,7 +376,8 @@ pub async fn get_bank_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetBankItemsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetBankItemsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -417,7 +444,8 @@ pub async fn get_ge_sell_history(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellHistoryError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellHistoryError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -479,7 +507,8 @@ pub async fn get_ge_sell_orders(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrdersError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

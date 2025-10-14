@@ -1,16 +1,16 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`get_all_npc_items`]
 #[derive(Clone, Debug)]
 pub struct GetAllNpcItemsParams {
-    /// The code of the item.
+    /// Item code.
     pub code: Option<String>,
-    /// The code of the npc.
+    /// NPC code.
     pub npc: Option<String>,
-    /// The code of the currency.
+    /// Currency code.
     pub currency: Option<String>,
     /// Page number
     pub page: Option<u32>,
@@ -39,9 +39,9 @@ impl GetAllNpcItemsParams {
 /// struct for passing parameters to the method [`get_all_npcs`]
 #[derive(Clone, Debug)]
 pub struct GetAllNpcsParams {
-    /// Name of the npc.
+    /// NPC name.
     pub name: Option<String>,
-    /// The type of the NPC.
+    /// Type of NPCs.
     pub r#type: Option<models::NpcType>,
     /// Page number
     pub page: Option<u32>,
@@ -96,69 +96,85 @@ impl GetNpcItemsParams {
 }
 
 /// struct for typed errors of method [`get_all_npc_items`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAllNpcItemsError {}
 
-impl TryFrom<StatusCode> for GetAllNpcItemsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAllNpcItemsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_all_npcs`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAllNpcsError {}
 
-impl TryFrom<StatusCode> for GetAllNpcsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAllNpcsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_npc`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetNpcError {
     /// NPC not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetNpcError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetNpcError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_npc_items`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetNpcItemsError {
-    /// NPC not found.
-    Status404,
+    /// NPC items not found.
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetNpcItemsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetNpcItemsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -220,7 +236,8 @@ pub async fn get_all_npc_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllNpcItemsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllNpcItemsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -282,7 +299,8 @@ pub async fn get_all_npcs(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllNpcsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllNpcsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -326,7 +344,7 @@ pub async fn get_npc(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetNpcError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetNpcError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -382,7 +400,8 @@ pub async fn get_npc_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetNpcItemsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetNpcItemsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

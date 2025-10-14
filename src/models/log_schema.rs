@@ -22,9 +22,10 @@ pub struct LogSchema {
     /// Cooldown in seconds.
     #[serde(rename = "cooldown")]
     pub cooldown: i32,
+    /// Datetime of cooldown expiration.
     #[serde(
         rename = "cooldown_expiration",
-        deserialize_with = "Option::deserialize"
+        skip_serializing_if = "Option::is_none"
     )]
     pub cooldown_expiration: Option<String>,
     /// Datetime of creation.
@@ -40,7 +41,6 @@ impl LogSchema {
         description: String,
         content: Option<serde_json::Value>,
         cooldown: i32,
-        cooldown_expiration: Option<String>,
         created_at: String,
     ) -> LogSchema {
         LogSchema {
@@ -50,7 +50,7 @@ impl LogSchema {
             description,
             content,
             cooldown,
-            cooldown_expiration,
+            cooldown_expiration: None,
             created_at,
         }
     }

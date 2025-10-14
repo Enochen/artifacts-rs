@@ -13,6 +13,9 @@ pub struct MonsterSchema {
     /// Monster level.
     #[serde(rename = "level")]
     pub level: i32,
+    /// Monster type.
+    #[serde(rename = "type")]
+    pub r#type: models::MonsterType,
     /// Monster hit points.
     #[serde(rename = "hp")]
     pub hp: i32,
@@ -43,6 +46,9 @@ pub struct MonsterSchema {
     /// Monster % critical strike.
     #[serde(rename = "critical_strike")]
     pub critical_strike: i32,
+    /// Monster initiative for turn order.
+    #[serde(rename = "initiative")]
+    pub initiative: i32,
     /// List of effects.
     #[serde(rename = "effects", skip_serializing_if = "Option::is_none")]
     pub effects: Option<Vec<models::SimpleEffectSchema>>,
@@ -62,6 +68,7 @@ impl MonsterSchema {
         name: String,
         code: String,
         level: i32,
+        r#type: models::MonsterType,
         hp: i32,
         attack_fire: i32,
         attack_earth: i32,
@@ -72,6 +79,7 @@ impl MonsterSchema {
         res_water: i32,
         res_air: i32,
         critical_strike: i32,
+        initiative: i32,
         min_gold: i32,
         max_gold: i32,
         drops: Vec<models::DropRateSchema>,
@@ -80,6 +88,7 @@ impl MonsterSchema {
             name,
             code,
             level,
+            r#type,
             hp,
             attack_fire,
             attack_earth,
@@ -90,6 +99,7 @@ impl MonsterSchema {
             res_water,
             res_air,
             critical_strike,
+            initiative,
             effects: None,
             min_gold,
             max_gold,

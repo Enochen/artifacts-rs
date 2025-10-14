@@ -15,12 +15,10 @@ pub struct AccountDetails {
     pub status: models::AccountStatus,
     /// Account badges.
     #[serde(rename = "badges", skip_serializing_if = "Option::is_none")]
-    #[cfg_attr(feature = "specta", specta(type = Option<Vec<specta_util::Unknown>>))]
-    pub badges: Option<Vec<serde_json::Value>>,
+    pub badges: Option<Vec<String>>,
     /// Skins owned.
     #[serde(rename = "skins")]
-    #[cfg_attr(feature = "specta", specta(type = Vec<specta_util::Unknown>))]
-    pub skins: Vec<serde_json::Value>,
+    pub skins: Vec<String>,
     /// Achievement points.
     #[serde(rename = "achievements_points")]
     pub achievements_points: i32,
@@ -37,7 +35,7 @@ impl AccountDetails {
         username: String,
         member: bool,
         status: models::AccountStatus,
-        skins: Vec<serde_json::Value>,
+        skins: Vec<String>,
         achievements_points: i32,
         banned: bool,
     ) -> AccountDetails {

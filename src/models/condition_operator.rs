@@ -12,6 +12,12 @@ pub enum ConditionOperator {
     Gt,
     #[serde(rename = "lt")]
     Lt,
+    #[serde(rename = "cost")]
+    Cost,
+    #[serde(rename = "has_item")]
+    HasItem,
+    #[serde(rename = "achievement_unlocked")]
+    AchievementUnlocked,
 }
 
 impl std::fmt::Display for ConditionOperator {
@@ -21,6 +27,9 @@ impl std::fmt::Display for ConditionOperator {
             Self::Ne => write!(f, "ne"),
             Self::Gt => write!(f, "gt"),
             Self::Lt => write!(f, "lt"),
+            Self::Cost => write!(f, "cost"),
+            Self::HasItem => write!(f, "has_item"),
+            Self::AchievementUnlocked => write!(f, "achievement_unlocked"),
         }
     }
 }

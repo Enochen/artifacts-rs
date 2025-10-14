@@ -1,16 +1,16 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`get_all_items`]
 #[derive(Clone, Debug)]
 pub struct GetAllItemsParams {
     /// Name of the item.
     pub name: Option<String>,
-    /// Minimum level items.
+    /// Minimum level.
     pub min_level: Option<u32>,
-    /// Maximum level items.
+    /// Maximum level.
     pub max_level: Option<u32>,
     /// Type of items.
     pub r#type: Option<models::ItemType>,
@@ -62,35 +62,43 @@ impl GetItemParams {
 }
 
 /// struct for typed errors of method [`get_all_items`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAllItemsError {}
 
-impl TryFrom<StatusCode> for GetAllItemsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAllItemsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetItemError {
-    /// Item not found.
-    Status404,
+    /// item not found.
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -171,7 +179,8 @@ pub async fn get_all_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllItemsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllItemsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -215,7 +224,7 @@ pub async fn get_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetItemError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

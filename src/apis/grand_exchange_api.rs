@@ -1,7 +1,7 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`get_ge_sell_history_by_code`]
 #[derive(Clone, Debug)]
@@ -79,55 +79,68 @@ impl GetGeSellOrdersParams {
 }
 
 /// struct for typed errors of method [`get_ge_sell_history_by_code`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetGeSellHistoryByCodeError {
-    /// Item not found.
-    Status404,
+    /// item history not found.
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetGeSellHistoryByCodeError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetGeSellHistoryByCodeError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_ge_sell_order_by_id`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetGeSellOrderByIdError {
-    /// Order not found.
-    Status404,
+    /// GE order not found.
+    Status404(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetGeSellOrderByIdError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetGeSellOrderByIdError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_ge_sell_orders`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetGeSellOrdersError {}
 
-impl TryFrom<StatusCode> for GetGeSellOrdersError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetGeSellOrdersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
@@ -190,7 +203,7 @@ pub async fn get_ge_sell_history_by_code(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetGeSellHistoryByCodeError> =
-            local_var_status.try_into().ok();
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -204,7 +217,7 @@ pub async fn get_ge_sell_history_by_code(
 pub async fn get_ge_sell_order_by_id(
     configuration: &configuration::Configuration,
     params: GetGeSellOrderByIdParams,
-) -> Result<models::GeOrderReponseSchema, Error<GetGeSellOrderByIdError>> {
+) -> Result<models::GeOrderResponseSchema, Error<GetGeSellOrderByIdError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -234,7 +247,8 @@ pub async fn get_ge_sell_order_by_id(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrderByIdError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrderByIdError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -296,7 +310,8 @@ pub async fn get_ge_sell_orders(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetGeSellOrdersError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

@@ -8,6 +8,8 @@ pub enum ActionType {
     Movement,
     #[serde(rename = "fight")]
     Fight,
+    #[serde(rename = "multi_fight")]
+    MultiFight,
     #[serde(rename = "crafting")]
     Crafting,
     #[serde(rename = "gathering")]
@@ -38,8 +40,6 @@ pub enum ActionType {
     Unequip,
     #[serde(rename = "task")]
     Task,
-    #[serde(rename = "christmas_exchange")]
-    ChristmasExchange,
     #[serde(rename = "recycling")]
     Recycling,
     #[serde(rename = "rest")]
@@ -56,6 +56,8 @@ pub enum ActionType {
     ChangeSkin,
     #[serde(rename = "rename")]
     Rename,
+    #[serde(rename = "transition")]
+    Transition,
 }
 
 impl std::fmt::Display for ActionType {
@@ -63,6 +65,7 @@ impl std::fmt::Display for ActionType {
         match self {
             Self::Movement => write!(f, "movement"),
             Self::Fight => write!(f, "fight"),
+            Self::MultiFight => write!(f, "multi_fight"),
             Self::Crafting => write!(f, "crafting"),
             Self::Gathering => write!(f, "gathering"),
             Self::BuyGe => write!(f, "buy_ge"),
@@ -78,7 +81,6 @@ impl std::fmt::Display for ActionType {
             Self::Equip => write!(f, "equip"),
             Self::Unequip => write!(f, "unequip"),
             Self::Task => write!(f, "task"),
-            Self::ChristmasExchange => write!(f, "christmas_exchange"),
             Self::Recycling => write!(f, "recycling"),
             Self::Rest => write!(f, "rest"),
             Self::Use => write!(f, "use"),
@@ -87,6 +89,7 @@ impl std::fmt::Display for ActionType {
             Self::GiveGold => write!(f, "give_gold"),
             Self::ChangeSkin => write!(f, "change_skin"),
             Self::Rename => write!(f, "rename"),
+            Self::Transition => write!(f, "transition"),
         }
     }
 }

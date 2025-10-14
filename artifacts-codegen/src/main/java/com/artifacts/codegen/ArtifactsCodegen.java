@@ -1,15 +1,23 @@
 package com.artifacts.codegen;
 
 import org.openapitools.codegen.CodegenModel;
+import org.openapitools.codegen.CodegenOperation;
+import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.CodegenType;
 import org.openapitools.codegen.SupportingFile;
 import org.openapitools.codegen.languages.RustClientCodegen;
+import org.openapitools.codegen.model.ModelMap;
+import org.openapitools.codegen.model.OperationsMap;
 
 import io.swagger.v3.oas.models.OpenAPI;
 
 import java.util.Set;
+
+import io.swagger.v3.oas.models.parameters.RequestBody;
+
 import java.util.LinkedHashSet;
+import java.util.List;
 
 public class ArtifactsCodegen extends RustClientCodegen {
 
@@ -87,6 +95,10 @@ public class ArtifactsCodegen extends RustClientCodegen {
             model.vendorExtensions.put("x-character-field", property.name);
         }
 
+        if (property.isArray && property.complexType != null && property.complexType.equals("CharacterSchema")) {
+            model.vendorExtensions.put("x-characters-field", property.name);
+        }
+
         if (property.name.equals("data") && model.vars.size() == 1) {
             model.vendorExtensions.put("x-data-type", property);
         }
@@ -94,5 +106,26 @@ public class ArtifactsCodegen extends RustClientCodegen {
         if (property.isAnyType || (property.items != null && property.items.isAnyType)) {
             property.vendorExtensions.put("x-unknown-value", true);
         }
+    }
+
+    @Override
+    public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
+        OperationsMap map = super.postProcessOperationsWithModels(objs, allModels);
+        for (CodegenOperation operation : map.getOperations().getOperation()) {
+            if (operation.responses.stream().filter(response -> response.is4xx || response.is5xx)
+                    .allMatch(response -> response.baseType.equals("ErrorResponseSchema"))) {
+                operation.vendorExtensions.put("x-error-field", "models::ErrorResponseSchema");
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CodegenParameter fromRequestBody(RequestBody body, Set<String> imports, String bodyParameterName) {
+        CodegenParameter codegenParameter = super.fromRequestBody(body, imports, bodyParameterName);
+        if (codegenParameter.isModel && !codegenParameter.dataType.startsWith("models::")) {
+            codegenParameter.dataType = "models::" + codegenParameter.dataType;
+        }
+        return codegenParameter;
     }
 }

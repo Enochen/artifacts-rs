@@ -4,6 +4,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct MapSchema {
+    /// ID of the map.
+    #[serde(rename = "map_id")]
+    pub map_id: i32,
     /// Name of the map.
     #[serde(rename = "name")]
     pub name: String,
@@ -16,24 +19,37 @@ pub struct MapSchema {
     /// Position Y of the map.
     #[serde(rename = "y")]
     pub y: i32,
-    #[serde(rename = "content", deserialize_with = "Option::deserialize")]
-    pub content: Option<Box<models::MapContentSchema>>,
+    /// Layer of the map.
+    #[serde(rename = "layer")]
+    pub layer: models::MapLayer,
+    /// Access information for the map
+    #[serde(rename = "access")]
+    pub access: Box<models::AccessSchema>,
+    /// Interactions available on this map.
+    #[serde(rename = "interactions")]
+    pub interactions: Box<models::InteractionSchema>,
 }
 
 impl MapSchema {
     pub fn new(
+        map_id: i32,
         name: String,
         skin: String,
         x: i32,
         y: i32,
-        content: Option<models::MapContentSchema>,
+        layer: models::MapLayer,
+        access: models::AccessSchema,
+        interactions: models::InteractionSchema,
     ) -> MapSchema {
         MapSchema {
+            map_id,
             name,
             skin,
             x,
             y,
-            content: content.map(Box::new),
+            layer,
+            access: Box::new(access),
+            interactions: Box::new(interactions),
         }
     }
 }

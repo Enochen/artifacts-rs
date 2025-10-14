@@ -1,0 +1,30 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct CombatSimulationRequestSchema {
+    /// List of fake characters (1-3).
+    #[serde(rename = "characters")]
+    pub characters: Vec<models::FakeCharacterSchema>,
+    /// Monster code to fight against.
+    #[serde(rename = "monster")]
+    pub monster: String,
+    /// Number of combat iterations to simulate.
+    #[serde(rename = "iterations")]
+    pub iterations: u32,
+}
+
+impl CombatSimulationRequestSchema {
+    pub fn new(
+        characters: Vec<models::FakeCharacterSchema>,
+        monster: String,
+        iterations: u32,
+    ) -> CombatSimulationRequestSchema {
+        CombatSimulationRequestSchema {
+            characters,
+            monster,
+            iterations,
+        }
+    }
+}

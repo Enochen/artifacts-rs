@@ -1,14 +1,14 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`get_accounts_leaderboard`]
 #[derive(Clone, Debug)]
 pub struct GetAccountsLeaderboardParams {
-    /// Default sort by achievements points.
+    /// Sort of account leaderboards.
     pub sort: Option<models::AccountLeaderboardType>,
-    /// Find a account by name.
+    /// Account name.
     pub name: Option<String>,
     /// Page number
     pub page: Option<u32>,
@@ -35,9 +35,9 @@ impl GetAccountsLeaderboardParams {
 /// struct for passing parameters to the method [`get_characters_leaderboard`]
 #[derive(Clone, Debug)]
 pub struct GetCharactersLeaderboardParams {
-    /// Default sort by combat total XP.
+    /// Sort of character leaderboards.
     pub sort: Option<models::CharacterLeaderboardType>,
-    /// Find a character by name.
+    /// Character name.
     pub name: Option<String>,
     /// Page number
     pub page: Option<u32>,
@@ -62,32 +62,38 @@ impl GetCharactersLeaderboardParams {
 }
 
 /// struct for typed errors of method [`get_accounts_leaderboard`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAccountsLeaderboardError {}
 
-impl TryFrom<StatusCode> for GetAccountsLeaderboardError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetAccountsLeaderboardError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`get_characters_leaderboard`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetCharactersLeaderboardError {}
 
-impl TryFrom<StatusCode> for GetCharactersLeaderboardError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetCharactersLeaderboardError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
@@ -144,7 +150,7 @@ pub async fn get_accounts_leaderboard(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetAccountsLeaderboardError> =
-            local_var_status.try_into().ok();
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -210,7 +216,7 @@ pub async fn get_characters_leaderboard(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetCharactersLeaderboardError> =
-            local_var_status.try_into().ok();
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

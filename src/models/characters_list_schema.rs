@@ -15,6 +15,12 @@ impl CharactersListSchema {
     }
 }
 
+impl crate::traits::GetCharacters for CharactersListSchema {
+    fn get_characters(&self) -> Vec<crate::models::CharacterSchema> {
+        self.data.clone()
+    }
+}
+
 impl crate::traits::IntoData for CharactersListSchema {
     type Data = Vec<models::CharacterSchema>;
     fn into_data(self) -> Self::Data {

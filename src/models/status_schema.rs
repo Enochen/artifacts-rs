@@ -22,9 +22,6 @@ pub struct StatusSchema {
     /// Current season details.
     #[serde(rename = "season", skip_serializing_if = "Option::is_none")]
     pub season: Option<Box<models::SeasonSchema>>,
-    /// Server announcements.
-    #[serde(rename = "announcements")]
-    pub announcements: Vec<models::AnnouncementSchema>,
     /// Rate limits.
     #[serde(rename = "rate_limits")]
     pub rate_limits: Vec<models::RateLimitSchema>,
@@ -37,7 +34,6 @@ impl StatusSchema {
         max_level: i32,
         max_skill_level: i32,
         characters_online: i32,
-        announcements: Vec<models::AnnouncementSchema>,
         rate_limits: Vec<models::RateLimitSchema>,
     ) -> StatusSchema {
         StatusSchema {
@@ -47,7 +43,6 @@ impl StatusSchema {
             max_skill_level,
             characters_online,
             season: None,
-            announcements,
             rate_limits,
         }
     }

@@ -7,12 +7,16 @@ pub struct BadgeConditionSchema {
     /// Code of the condition.
     #[serde(rename = "code")]
     pub code: String,
-    #[serde(rename = "quantity", deserialize_with = "Option::deserialize")]
+    /// Quantity of the condition (if any).
+    #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<i32>,
 }
 
 impl BadgeConditionSchema {
-    pub fn new(code: String, quantity: Option<i32>) -> BadgeConditionSchema {
-        BadgeConditionSchema { code, quantity }
+    pub fn new(code: String) -> BadgeConditionSchema {
+        BadgeConditionSchema {
+            code,
+            quantity: None,
+        }
     }
 }

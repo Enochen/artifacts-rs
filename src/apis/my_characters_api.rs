@@ -1,7 +1,7 @@
 use super::{configuration, Error};
 use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Deserializer, Serialize};
 
 /// struct for passing parameters to the method [`accept_new_task`]
 #[derive(Clone, Debug)]
@@ -11,6 +11,19 @@ pub struct AcceptNewTaskParams {
 }
 
 impl AcceptNewTaskParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
+/// struct for passing parameters to the method [`action_transition`]
+#[derive(Clone, Debug)]
+pub struct ActionTransitionParams {
+    /// Name of your character.
+    pub name: String,
+}
+
+impl ActionTransitionParams {
     pub fn new(name: String) -> Self {
         Self { name }
     }
@@ -165,11 +178,15 @@ impl EquipItemParams {
 pub struct FightParams {
     /// Name of your character.
     pub name: String,
+    pub fight_request_schema: Option<models::FightRequestSchema>,
 }
 
 impl FightParams {
-    pub fn new(name: String) -> Self {
-        Self { name }
+    pub fn new(name: String, fight_request_schema: Option<models::FightRequestSchema>) -> Self {
+        Self {
+            name,
+            fight_request_schema,
+        }
     }
 }
 
@@ -486,1063 +503,1357 @@ impl WithdrawItemParams {
 }
 
 /// struct for typed errors of method [`accept_new_task`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum AcceptNewTaskError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// The character already has an assigned task.
-    Status489,
+    Status489(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for AcceptNewTaskError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            489 => Ok(Self::Status489),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for AcceptNewTaskError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            489 => Ok(Self::Status489(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
+/// struct for typed errors of method [`action_transition`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum ActionTransitionError {
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// Transition not found.
+    Status404(models::ErrorResponseSchema),
+    /// Insufficient gold for this transition.
+    Status492(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Conditions not met.
+    Status496(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for ActionTransitionError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            404 => Ok(Self::Status404(raw)),
+            492 => Ok(Self::Status492(raw)),
+            478 => Ok(Self::Status478(raw)),
+            486 => Ok(Self::Status486(raw)),
+            496 => Ok(Self::Status496(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`buy_bank_expansion`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum BuyBankExpansionError {
     /// Bank not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for BuyBankExpansionError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            492 => Ok(Self::Status492),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for BuyBankExpansionError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            492 => Ok(Self::Status492(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`cancel_task`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum CancelTaskError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
-    Status598,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status598(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for CancelTaskError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for CancelTaskError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`change_skin`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum ChangeSkinError {
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// You cannot choose this skin because you do not own it.
-    Status550,
+    Status550(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for ChangeSkinError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            550 => Ok(Self::Status550),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for ChangeSkinError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            550 => Ok(Self::Status550(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`complete_task`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum CompleteTaskError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// The character has not completed the task.
-    Status488,
+    Status488(models::ErrorResponseSchema),
     /// The character has no task assigned.
-    Status487,
+    Status487(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for CompleteTaskError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            488 => Ok(Self::Status488),
-            487 => Ok(Self::Status487),
-            497 => Ok(Self::Status497),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for CompleteTaskError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            488 => Ok(Self::Status488(raw)),
+            487 => Ok(Self::Status487(raw)),
+            497 => Ok(Self::Status497(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`craft`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum CraftError {
     /// Craft not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Workshop not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character&#39;s skill level is too low.
-    Status493,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status493(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for CraftError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            493 => Ok(Self::Status493),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for CraftError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            493 => Ok(Self::Status493(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`delete_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum DeleteItemError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for DeleteItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for DeleteItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`deposit_gold`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum DepositGoldError {
     /// Bank not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// Some of your items or your gold in the bank are already part of an ongoing transaction.
-    Status461,
+    Status461(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for DepositGoldError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            492 => Ok(Self::Status492),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            461 => Ok(Self::Status461),
-            486 => Ok(Self::Status486),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for DepositGoldError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            492 => Ok(Self::Status492(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            461 => Ok(Self::Status461(raw)),
+            486 => Ok(Self::Status486(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`deposit_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum DepositItemError {
     /// Bank not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Some of your items or your gold in the bank are already part of an ongoing transaction.
-    Status461,
+    Status461(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// Your bank is full.
-    Status462,
+    Status462(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for DepositItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            404 => Ok(Self::Status404),
-            461 => Ok(Self::Status461),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            462 => Ok(Self::Status462),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for DepositItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            404 => Ok(Self::Status404(raw)),
+            461 => Ok(Self::Status461(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            462 => Ok(Self::Status462(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`equip_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum EquipItemError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character does not have enough HP to unequip this item.
-    Status483,
+    Status483(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
-    /// The character does not meet the required condition.
-    Status496,
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Conditions not met.
+    Status496(models::ErrorResponseSchema),
     /// The equipment slot is not empty.
-    Status491,
+    Status491(models::ErrorResponseSchema),
     /// This item is already equipped.
-    Status485,
+    Status485(models::ErrorResponseSchema),
     /// The character cannot equip more than 100 utilities in the same slot.
-    Status484,
+    Status484(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for EquipItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            483 => Ok(Self::Status483),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            496 => Ok(Self::Status496),
-            491 => Ok(Self::Status491),
-            485 => Ok(Self::Status485),
-            484 => Ok(Self::Status484),
-            497 => Ok(Self::Status497),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for EquipItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            483 => Ok(Self::Status483(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            496 => Ok(Self::Status496(raw)),
+            491 => Ok(Self::Status491(raw)),
+            485 => Ok(Self::Status485(raw)),
+            484 => Ok(Self::Status484(raw)),
+            497 => Ok(Self::Status497(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`fight`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum FightError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// Monster not found on this map.
-    Status598,
-    /// An action is already in progress for this character.
-    Status486,
+    Status598(models::ErrorResponseSchema),
+    /// Only boss monsters can be fought by multiple characters.
+    Status486(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for FightError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            598 => Ok(Self::Status598),
-            486 => Ok(Self::Status486),
-            497 => Ok(Self::Status497),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for FightError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            598 => Ok(Self::Status598(raw)),
+            486 => Ok(Self::Status486(raw)),
+            497 => Ok(Self::Status497(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`gather`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GatherError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// Resource not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character&#39;s skill level is too low.
-    Status493,
+    Status493(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GatherError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            598 => Ok(Self::Status598),
-            486 => Ok(Self::Status486),
-            493 => Ok(Self::Status493),
-            497 => Ok(Self::Status497),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GatherError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            598 => Ok(Self::Status598(raw)),
+            486 => Ok(Self::Status486(raw)),
+            493 => Ok(Self::Status493(raw)),
+            497 => Ok(Self::Status497(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`ge_buy_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GeBuyItemError {
     /// Grand Exchange not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// A transaction is already in progress for this order by another character.
-    Status436,
+    Status436(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
     /// This offer does not contain that many items.
-    Status434,
+    Status434(models::ErrorResponseSchema),
     /// You cannot trade with yourself.
-    Status435,
+    Status435(models::ErrorResponseSchema),
     /// Order not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GeBuyItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            436 => Ok(Self::Status436),
-            486 => Ok(Self::Status486),
-            492 => Ok(Self::Status492),
-            434 => Ok(Self::Status434),
-            435 => Ok(Self::Status435),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GeBuyItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            436 => Ok(Self::Status436(raw)),
+            486 => Ok(Self::Status486(raw)),
+            492 => Ok(Self::Status492(raw)),
+            434 => Ok(Self::Status434(raw)),
+            435 => Ok(Self::Status435(raw)),
+            404 => Ok(Self::Status404(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`ge_cancel_sell_order`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GeCancelSellOrderError {
     /// Grand Exchange not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// A transaction is already in progress for this order by another character.
-    Status436,
+    Status436(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// You cannot cancel an order that is not yours.
-    Status438,
+    Status438(models::ErrorResponseSchema),
     /// Order not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GeCancelSellOrderError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            436 => Ok(Self::Status436),
-            486 => Ok(Self::Status486),
-            438 => Ok(Self::Status438),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GeCancelSellOrderError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            436 => Ok(Self::Status436(raw)),
+            486 => Ok(Self::Status486(raw)),
+            438 => Ok(Self::Status438(raw)),
+            404 => Ok(Self::Status404(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`ge_create_sell_order`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GeCreateSellOrderError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Item not found.
-    Status404,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status404(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
     /// You cannot create more than 100 orders at the same time.
-    Status433,
+    Status433(models::ErrorResponseSchema),
     /// This item cannot be sold.
-    Status437,
+    Status437(models::ErrorResponseSchema),
     /// Grand Exchange not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GeCreateSellOrderError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            404 => Ok(Self::Status404),
-            478 => Ok(Self::Status478),
-            492 => Ok(Self::Status492),
-            433 => Ok(Self::Status433),
-            437 => Ok(Self::Status437),
-            598 => Ok(Self::Status598),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GeCreateSellOrderError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            404 => Ok(Self::Status404(raw)),
+            478 => Ok(Self::Status478(raw)),
+            492 => Ok(Self::Status492(raw)),
+            433 => Ok(Self::Status433(raw)),
+            437 => Ok(Self::Status437(raw)),
+            598 => Ok(Self::Status598(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_all_characters_logs`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetAllCharactersLogsError {
     /// Logs not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetAllCharactersLogsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetAllCharactersLogsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_character_logs`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetCharacterLogsError {
     /// Logs not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GetCharacterLogsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GetCharacterLogsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`get_my_characters`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GetMyCharactersError {}
 
-impl TryFrom<StatusCode> for GetMyCharactersError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            _ => Err("status code not in spec"),
-        }
+impl<'de> Deserialize<'de> for GetMyCharactersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
     }
 }
 
 /// struct for typed errors of method [`give_gold`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GiveGoldError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GiveGoldError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            492 => Ok(Self::Status492),
-            486 => Ok(Self::Status486),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GiveGoldError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            492 => Ok(Self::Status492(raw)),
+            486 => Ok(Self::Status486(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`give_items`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum GiveItemsError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for GiveItemsError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            497 => Ok(Self::Status497),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for GiveItemsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            497 => Ok(Self::Status497(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`move_character`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum MoveCharacterError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// The character is already at the destination.
-    Status490,
+    Status490(models::ErrorResponseSchema),
     /// Map not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
+    /// No path available to the destination map.
+    Status595(models::ErrorResponseSchema),
+    /// The map is blocked and cannot be accessed.
+    Status596(models::ErrorResponseSchema),
+    /// Conditions not met.
+    Status496(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for MoveCharacterError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            490 => Ok(Self::Status490),
-            404 => Ok(Self::Status404),
-            486 => Ok(Self::Status486),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for MoveCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            490 => Ok(Self::Status490(raw)),
+            404 => Ok(Self::Status404(raw)),
+            486 => Ok(Self::Status486(raw)),
+            595 => Ok(Self::Status595(raw)),
+            596 => Ok(Self::Status596(raw)),
+            496 => Ok(Self::Status496(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`npc_buy_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum NpcBuyItemError {
     /// NPC not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character does not have enough gold.
-    Status492,
+    Status492(models::ErrorResponseSchema),
     /// This item is not available for purchase.
-    Status441,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status441(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for NpcBuyItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            492 => Ok(Self::Status492),
-            441 => Ok(Self::Status441),
-            478 => Ok(Self::Status478),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for NpcBuyItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            492 => Ok(Self::Status492(raw)),
+            441 => Ok(Self::Status441(raw)),
+            478 => Ok(Self::Status478(raw)),
+            404 => Ok(Self::Status404(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`npc_sell_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum NpcSellItemError {
     /// NPC not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// This item cannot be sold.
-    Status442,
+    Status442(models::ErrorResponseSchema),
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for NpcSellItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            478 => Ok(Self::Status478),
-            442 => Ok(Self::Status442),
-            404 => Ok(Self::Status404),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for NpcSellItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            442 => Ok(Self::Status442(raw)),
+            404 => Ok(Self::Status404(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`recycle`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum RecycleError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Workshop not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character&#39;s skill level is too low.
-    Status493,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status493(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// This item cannot be recycled.
-    Status473,
+    Status473(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for RecycleError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            598 => Ok(Self::Status598),
-            498 => Ok(Self::Status498),
-            497 => Ok(Self::Status497),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            493 => Ok(Self::Status493),
-            478 => Ok(Self::Status478),
-            473 => Ok(Self::Status473),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for RecycleError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            493 => Ok(Self::Status493(raw)),
+            478 => Ok(Self::Status478(raw)),
+            473 => Ok(Self::Status473(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`rest_character`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum RestCharacterError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for RestCharacterError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for RestCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`task_exchange`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum TaskExchangeError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
-    Status598,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status598(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for TaskExchangeError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            478 => Ok(Self::Status478),
-            497 => Ok(Self::Status497),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for TaskExchangeError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            478 => Ok(Self::Status478(raw)),
+            497 => Ok(Self::Status497(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`task_trade`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum TaskTradeError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Task already completed or too many items submitted.
-    Status475,
+    Status475(models::ErrorResponseSchema),
     /// The character does not have this task.
-    Status474,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status474(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for TaskTradeError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            475 => Ok(Self::Status475),
-            474 => Ok(Self::Status474),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for TaskTradeError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            475 => Ok(Self::Status475(raw)),
+            474 => Ok(Self::Status474(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`unequip_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum UnequipItemError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The equipment slot is empty.
-    Status491,
+    Status491(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status497(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
     /// The character does not have enough HP to unequip this item.
-    Status483,
+    Status483(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for UnequipItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            486 => Ok(Self::Status486),
-            491 => Ok(Self::Status491),
-            497 => Ok(Self::Status497),
-            478 => Ok(Self::Status478),
-            483 => Ok(Self::Status483),
-            499 => Ok(Self::Status499),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for UnequipItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            486 => Ok(Self::Status486(raw)),
+            491 => Ok(Self::Status491(raw)),
+            497 => Ok(Self::Status497(raw)),
+            478 => Ok(Self::Status478(raw)),
+            483 => Ok(Self::Status483(raw)),
+            499 => Ok(Self::Status499(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`use_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum UseItemError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// This item is not a consumable.
-    Status476,
-    /// Missing item or insufficient quantity.
-    Status478,
-    /// The character does not meet the required condition.
-    Status496,
+    Status476(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Conditions not met.
+    Status496(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for UseItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            486 => Ok(Self::Status486),
-            476 => Ok(Self::Status476),
-            478 => Ok(Self::Status478),
-            496 => Ok(Self::Status496),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for UseItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            476 => Ok(Self::Status476(raw)),
+            478 => Ok(Self::Status478(raw)),
+            496 => Ok(Self::Status496(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`withdraw_gold`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum WithdrawGoldError {
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// Some of your items or your gold in the bank are already part of an ongoing transaction.
-    Status461,
+    Status461(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// Bank not found on this map.
-    Status598,
+    Status598(models::ErrorResponseSchema),
     /// Insufficient gold in your bank.
-    Status460,
+    Status460(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for WithdrawGoldError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            461 => Ok(Self::Status461),
-            486 => Ok(Self::Status486),
-            598 => Ok(Self::Status598),
-            460 => Ok(Self::Status460),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for WithdrawGoldError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            461 => Ok(Self::Status461(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            460 => Ok(Self::Status460(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
 
 /// struct for typed errors of method [`withdraw_item`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum WithdrawItemError {
     /// Item not found.
-    Status404,
+    Status404(models::ErrorResponseSchema),
     /// Character not found.
-    Status498,
+    Status498(models::ErrorResponseSchema),
     /// The character is in cooldown.
-    Status499,
+    Status499(models::ErrorResponseSchema),
     /// Some of your items or your gold in the bank are already part of an ongoing transaction.
-    Status461,
+    Status461(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
-    Status486,
+    Status486(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
-    Status497,
+    Status497(models::ErrorResponseSchema),
     /// Bank not found on this map.
-    Status598,
-    /// Missing item or insufficient quantity.
-    Status478,
+    Status598(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
 }
 
-impl TryFrom<StatusCode> for WithdrawItemError {
-    type Error = &'static str;
-    #[allow(clippy::match_single_binding)]
-    fn try_from(status: StatusCode) -> Result<Self, Self::Error> {
-        match status.as_u16() {
-            404 => Ok(Self::Status404),
-            498 => Ok(Self::Status498),
-            499 => Ok(Self::Status499),
-            461 => Ok(Self::Status461),
-            486 => Ok(Self::Status486),
-            497 => Ok(Self::Status497),
-            598 => Ok(Self::Status598),
-            478 => Ok(Self::Status478),
-            _ => Err("status code not in spec"),
+impl<'de> Deserialize<'de> for WithdrawItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            461 => Ok(Self::Status461(raw)),
+            486 => Ok(Self::Status486(raw)),
+            497 => Ok(Self::Status497(raw)),
+            598 => Ok(Self::Status598(raw)),
+            478 => Ok(Self::Status478(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
         }
     }
 }
@@ -1584,7 +1895,8 @@ pub async fn accept_new_task(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<AcceptNewTaskError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<AcceptNewTaskError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1594,7 +1906,55 @@ pub async fn accept_new_task(
     }
 }
 
-/// Buy a 25 slots bank expansion.
+/// Execute a transition from the current map to another layer. The character must be on a map that has a transition available.
+pub async fn action_transition(
+    configuration: &configuration::Configuration,
+    params: ActionTransitionParams,
+) -> Result<models::CharacterTransitionResponseSchema, Error<ActionTransitionError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/transition",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<ActionTransitionError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Buy a 20 slots bank expansion.
 pub async fn buy_bank_expansion(
     configuration: &configuration::Configuration,
     params: BuyBankExpansionParams,
@@ -1631,7 +1991,8 @@ pub async fn buy_bank_expansion(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<BuyBankExpansionError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<BuyBankExpansionError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1678,7 +2039,8 @@ pub async fn cancel_task(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CancelTaskError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<CancelTaskError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1728,7 +2090,8 @@ pub async fn change_skin(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<ChangeSkinError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<ChangeSkinError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1775,7 +2138,8 @@ pub async fn complete_task(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CompleteTaskError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<CompleteTaskError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1785,7 +2149,7 @@ pub async fn complete_task(
     }
 }
 
-/// Crafting an item. The character must be on a map with a workshop.
+/// Craft an item. The character must be on a map with a workshop.
 pub async fn craft(
     configuration: &configuration::Configuration,
     params: CraftParams,
@@ -1825,7 +2189,7 @@ pub async fn craft(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<CraftError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<CraftError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1875,7 +2239,8 @@ pub async fn delete_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DeleteItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<DeleteItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1925,7 +2290,8 @@ pub async fn deposit_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DepositGoldError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<DepositGoldError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -1935,7 +2301,7 @@ pub async fn deposit_gold(
     }
 }
 
-/// Deposit multiple items in a bank on the character's map. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
+/// Deposit multiple items in a bank on the character's map. The cooldown will be 3 seconds multiplied by the number of different items deposited.
 pub async fn deposit_item(
     configuration: &configuration::Configuration,
     params: DepositItemParams,
@@ -1975,7 +2341,8 @@ pub async fn deposit_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<DepositItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<DepositItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2025,7 +2392,8 @@ pub async fn equip_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<EquipItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<EquipItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2035,7 +2403,7 @@ pub async fn equip_item(
     }
 }
 
-/// Start a fight against a monster on the character's map.
+/// Start a fight against a monster on the character's map. Add participants for multi-character fights (up to 3 characters, only for boss).
 pub async fn fight(
     configuration: &configuration::Configuration,
     params: FightParams,
@@ -2044,6 +2412,8 @@ pub async fn fight(
 
     // unbox the parameters
     let name = params.name;
+    // unbox the parameters
+    let fight_request_schema = params.fight_request_schema;
 
     let local_var_client = &local_var_configuration.client;
 
@@ -2062,6 +2432,7 @@ pub async fn fight(
     if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
         local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
     };
+    local_var_req_builder = local_var_req_builder.json(&fight_request_schema);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -2072,7 +2443,7 @@ pub async fn fight(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<FightError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<FightError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2119,7 +2490,7 @@ pub async fn gather(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GatherError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GatherError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2169,7 +2540,8 @@ pub async fn ge_buy_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeBuyItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GeBuyItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2219,7 +2591,8 @@ pub async fn ge_cancel_sell_order(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeCancelSellOrderError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GeCancelSellOrderError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2229,7 +2602,7 @@ pub async fn ge_cancel_sell_order(
     }
 }
 
-/// Create a sell order at the Grand Exchange on the character's map. Please note there is a 3% listing tax, charged at the time of posting, on the total price.
+/// Create a sell order at the Grand Exchange on the character's map.  Please note there is a 3% listing tax, charged at the time of posting, on the total price.
 pub async fn ge_create_sell_order(
     configuration: &configuration::Configuration,
     params: GeCreateSellOrderParams,
@@ -2269,7 +2642,8 @@ pub async fn ge_create_sell_order(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeCreateSellOrderError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GeCreateSellOrderError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2279,7 +2653,7 @@ pub async fn ge_create_sell_order(
     }
 }
 
-/// History of the last 250 actions of all your characters.
+/// History of the last 5000 actions of all your characters.
 pub async fn get_all_characters_logs(
     configuration: &configuration::Configuration,
     params: GetAllCharactersLogsParams,
@@ -2322,7 +2696,8 @@ pub async fn get_all_characters_logs(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetAllCharactersLogsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetAllCharactersLogsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2381,7 +2756,8 @@ pub async fn get_character_logs(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetCharacterLogsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetCharacterLogsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2420,7 +2796,8 @@ pub async fn get_my_characters(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetMyCharactersError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GetMyCharactersError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2434,7 +2811,7 @@ pub async fn get_my_characters(
 pub async fn give_gold(
     configuration: &configuration::Configuration,
     params: GiveGoldParams,
-) -> Result<models::GiveGoldReponseSchema, Error<GiveGoldError>> {
+) -> Result<models::GiveGoldResponseSchema, Error<GiveGoldError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -2470,7 +2847,7 @@ pub async fn give_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GiveGoldError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GiveGoldError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2484,7 +2861,7 @@ pub async fn give_gold(
 pub async fn give_items(
     configuration: &configuration::Configuration,
     params: GiveItemsParams,
-) -> Result<models::GiveItemReponseSchema, Error<GiveItemsError>> {
+) -> Result<models::GiveItemResponseSchema, Error<GiveItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -2520,7 +2897,8 @@ pub async fn give_items(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GiveItemsError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<GiveItemsError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2530,7 +2908,7 @@ pub async fn give_items(
     }
 }
 
-/// Moves a character on the map using the map's X and Y position.
+/// Moves a character on the map using either the map's ID or X and Y position. Provide either 'map_id' or both 'x' and 'y' coordinates in the request body.
 pub async fn move_character(
     configuration: &configuration::Configuration,
     params: MoveCharacterParams,
@@ -2570,7 +2948,8 @@ pub async fn move_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<MoveCharacterError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<MoveCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2620,7 +2999,8 @@ pub async fn npc_buy_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<NpcBuyItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<NpcBuyItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2670,7 +3050,8 @@ pub async fn npc_sell_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<NpcSellItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<NpcSellItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2720,7 +3101,7 @@ pub async fn recycle(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<RecycleError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<RecycleError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2767,7 +3148,8 @@ pub async fn rest_character(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<RestCharacterError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<RestCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2814,7 +3196,8 @@ pub async fn task_exchange(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<TaskExchangeError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<TaskExchangeError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2864,7 +3247,8 @@ pub async fn task_trade(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<TaskTradeError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<TaskTradeError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2914,7 +3298,8 @@ pub async fn unequip_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<UnequipItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<UnequipItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -2964,7 +3349,7 @@ pub async fn use_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<UseItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<UseItemError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -3014,7 +3399,8 @@ pub async fn withdraw_gold(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<WithdrawGoldError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<WithdrawGoldError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,
@@ -3064,7 +3450,8 @@ pub async fn withdraw_item(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<WithdrawItemError> = local_var_status.try_into().ok();
+        let local_var_entity: Option<WithdrawItemError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

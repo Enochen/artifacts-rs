@@ -19,7 +19,8 @@ pub struct AccountAchievementSchema {
     /// Type of achievement.
     #[serde(rename = "type")]
     pub r#type: models::AchievementType,
-    #[serde(rename = "target", deserialize_with = "Option::deserialize")]
+    /// Target of the achievement.
+    #[serde(rename = "target", skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
     /// Total to do.
     #[serde(rename = "total")]
@@ -30,7 +31,8 @@ pub struct AccountAchievementSchema {
     /// Current progress.
     #[serde(rename = "current")]
     pub current: i32,
-    #[serde(rename = "completed_at", deserialize_with = "Option::deserialize")]
+    /// Completed at.
+    #[serde(rename = "completed_at", skip_serializing_if = "Option::is_none")]
     pub completed_at: Option<String>,
 }
 
@@ -41,11 +43,9 @@ impl AccountAchievementSchema {
         description: String,
         points: i32,
         r#type: models::AchievementType,
-        target: Option<String>,
         total: i32,
         rewards: models::AchievementRewardsSchema,
         current: i32,
-        completed_at: Option<String>,
     ) -> AccountAchievementSchema {
         AccountAchievementSchema {
             name,
@@ -53,11 +53,11 @@ impl AccountAchievementSchema {
             description,
             points,
             r#type,
-            target,
+            target: None,
             total,
             rewards: Box::new(rewards),
             current,
-            completed_at,
+            completed_at: None,
         }
     }
 }

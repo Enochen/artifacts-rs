@@ -118,6 +118,12 @@ pub struct CharacterSchema {
     /// Prospecting increases the chances of getting drops from fights and skills (1% extra per 10 PP).
     #[serde(rename = "prospecting")]
     pub prospecting: i32,
+    /// Initiative determines turn order in combat. Higher initiative goes first.
+    #[serde(rename = "initiative")]
+    pub initiative: i32,
+    /// Threat level affects monster targeting in multi-character combat.
+    #[serde(rename = "threat")]
+    pub threat: i32,
     /// Fire attack.
     #[serde(rename = "attack_fire")]
     pub attack_fire: i32,
@@ -157,12 +163,21 @@ pub struct CharacterSchema {
     /// % Air resistance. Reduces air attack.
     #[serde(rename = "res_air")]
     pub res_air: i32,
+    /// List of active effects on the character.
+    #[serde(rename = "effects", skip_serializing_if = "Option::is_none")]
+    pub effects: Option<Vec<models::StorageEffectSchema>>,
     /// Character x coordinate.
     #[serde(rename = "x")]
     pub x: i32,
     /// Character y coordinate.
     #[serde(rename = "y")]
     pub y: i32,
+    /// Character current layer.
+    #[serde(rename = "layer")]
+    pub layer: models::MapLayer,
+    /// Character current map ID.
+    #[serde(rename = "map_id")]
+    pub map_id: i32,
     /// Cooldown in seconds.
     #[serde(rename = "cooldown")]
     pub cooldown: i32,
@@ -286,6 +301,8 @@ impl CharacterSchema {
         critical_strike: i32,
         wisdom: i32,
         prospecting: i32,
+        initiative: i32,
+        threat: i32,
         attack_fire: i32,
         attack_earth: i32,
         attack_water: i32,
@@ -301,6 +318,8 @@ impl CharacterSchema {
         res_air: i32,
         x: i32,
         y: i32,
+        layer: models::MapLayer,
+        map_id: i32,
         cooldown: i32,
         weapon_slot: String,
         rune_slot: String,
@@ -365,6 +384,8 @@ impl CharacterSchema {
             critical_strike,
             wisdom,
             prospecting,
+            initiative,
+            threat,
             attack_fire,
             attack_earth,
             attack_water,
@@ -378,8 +399,11 @@ impl CharacterSchema {
             res_earth,
             res_water,
             res_air,
+            effects: None,
             x,
             y,
+            layer,
+            map_id,
             cooldown,
             cooldown_expiration: None,
             weapon_slot,

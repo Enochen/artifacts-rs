@@ -6,33 +6,23 @@ use serde::{Deserialize, Serialize};
 pub struct DataPageNpcSchema {
     #[serde(rename = "data")]
     pub data: Vec<models::NpcSchema>,
-    #[serde(rename = "total", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
-    #[serde(rename = "page", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
     pub page: Option<u32>,
-    #[serde(rename = "size", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
-    #[serde(
-        rename = "pages",
-        default,
-        with = "::serde_with::rust::double_option",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub pages: Option<Option<u32>>,
+    #[serde(rename = "pages", skip_serializing_if = "Option::is_none")]
+    pub pages: Option<u32>,
 }
 
 impl DataPageNpcSchema {
-    pub fn new(
-        data: Vec<models::NpcSchema>,
-        total: Option<u32>,
-        page: Option<u32>,
-        size: Option<u32>,
-    ) -> DataPageNpcSchema {
+    pub fn new(data: Vec<models::NpcSchema>) -> DataPageNpcSchema {
         DataPageNpcSchema {
             data,
-            total,
-            page,
-            size,
+            total: None,
+            page: None,
+            size: None,
             pages: None,
         }
     }

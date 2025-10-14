@@ -20,6 +20,8 @@ pub enum CharacterSkin {
     Corrupted1,
     #[serde(rename = "zombie1")]
     Zombie1,
+    #[serde(rename = "marauder1")]
+    Marauder1,
 }
 
 impl std::fmt::Display for CharacterSkin {
@@ -33,6 +35,7 @@ impl std::fmt::Display for CharacterSkin {
             Self::Women3 => write!(f, "women3"),
             Self::Corrupted1 => write!(f, "corrupted1"),
             Self::Zombie1 => write!(f, "zombie1"),
+            Self::Marauder1 => write!(f, "marauder1"),
         }
     }
 }
