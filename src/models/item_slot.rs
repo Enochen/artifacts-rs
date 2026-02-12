@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum ItemSlot {
     #[serde(rename = "weapon")]
+    #[default]
     Weapon,
     #[serde(rename = "shield")]
     Shield,
@@ -58,11 +60,5 @@ impl std::fmt::Display for ItemSlot {
             Self::Bag => write!(f, "bag"),
             Self::Rune => write!(f, "rune"),
         }
-    }
-}
-
-impl Default for ItemSlot {
-    fn default() -> ItemSlot {
-        Self::Weapon
     }
 }

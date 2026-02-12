@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum EffectSubtype {
     #[serde(rename = "stat")]
+    #[default]
     Stat,
     #[serde(rename = "other")]
     Other,
@@ -37,11 +39,5 @@ impl std::fmt::Display for EffectSubtype {
             Self::Teleport => write!(f, "teleport"),
             Self::Gold => write!(f, "gold"),
         }
-    }
-}
-
-impl Default for EffectSubtype {
-    fn default() -> EffectSubtype {
-        Self::Stat
     }
 }

@@ -15,6 +15,7 @@ pub struct CombatResultSchema {
     pub logs: Vec<String>,
     /// Character results from combat.
     #[serde(rename = "character_results")]
+    #[cfg_attr(feature = "specta", specta(type = Vec<specta_util::Unknown>))]
     pub character_results: Vec<serde_json::Value>,
 }
 

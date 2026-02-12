@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum ConditionOperator {
     #[serde(rename = "eq")]
+    #[default]
     Eq,
     #[serde(rename = "ne")]
     Ne,
@@ -31,11 +33,5 @@ impl std::fmt::Display for ConditionOperator {
             Self::HasItem => write!(f, "has_item"),
             Self::AchievementUnlocked => write!(f, "achievement_unlocked"),
         }
-    }
-}
-
-impl Default for ConditionOperator {
-    fn default() -> ConditionOperator {
-        Self::Eq
     }
 }

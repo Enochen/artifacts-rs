@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum NpcType {
     #[serde(rename = "merchant")]
+    #[default]
     Merchant,
     #[serde(rename = "trader")]
     Trader,
@@ -16,11 +18,5 @@ impl std::fmt::Display for NpcType {
             Self::Merchant => write!(f, "merchant"),
             Self::Trader => write!(f, "trader"),
         }
-    }
-}
-
-impl Default for NpcType {
-    fn default() -> NpcType {
-        Self::Merchant
     }
 }

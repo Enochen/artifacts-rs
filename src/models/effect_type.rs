@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum EffectType {
     #[serde(rename = "equipment")]
+    #[default]
     Equipment,
     #[serde(rename = "consumable")]
     Consumable,
@@ -19,11 +21,5 @@ impl std::fmt::Display for EffectType {
             Self::Consumable => write!(f, "consumable"),
             Self::Combat => write!(f, "combat"),
         }
-    }
-}
-
-impl Default for EffectType {
-    fn default() -> EffectType {
-        Self::Equipment
     }
 }

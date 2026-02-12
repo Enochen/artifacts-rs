@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum MonsterType {
     #[serde(rename = "normal")]
+    #[default]
     Normal,
     #[serde(rename = "elite")]
     Elite,
@@ -19,11 +21,5 @@ impl std::fmt::Display for MonsterType {
             Self::Elite => write!(f, "elite"),
             Self::Boss => write!(f, "boss"),
         }
-    }
-}
-
-impl Default for MonsterType {
-    fn default() -> MonsterType {
-        Self::Normal
     }
 }

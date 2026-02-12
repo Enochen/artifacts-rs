@@ -12,7 +12,7 @@ pub struct CharacterMovementDataSchema {
     pub destination: Box<models::MapSchema>,
     /// Path taken from start to destination (list of coordinates)
     #[serde(rename = "path")]
-    pub path: Vec<Vec<serde_json::Value>>,
+    pub path: Vec<Vec<i32>>,
     /// Character details.
     #[serde(rename = "character")]
     pub character: Box<models::CharacterSchema>,
@@ -22,7 +22,7 @@ impl CharacterMovementDataSchema {
     pub fn new(
         cooldown: models::CooldownSchema,
         destination: models::MapSchema,
-        path: Vec<Vec<serde_json::Value>>,
+        path: Vec<Vec<i32>>,
         character: models::CharacterSchema,
     ) -> CharacterMovementDataSchema {
         CharacterMovementDataSchema {

@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum AchievementType {
     #[serde(rename = "combat_kill")]
+    #[default]
     CombatKill,
     #[serde(rename = "combat_drop")]
     CombatDrop,
@@ -37,11 +39,5 @@ impl std::fmt::Display for AchievementType {
             Self::Other => write!(f, "other"),
             Self::Use => write!(f, "use"),
         }
-    }
-}
-
-impl Default for AchievementType {
-    fn default() -> AchievementType {
-        Self::CombatKill
     }
 }

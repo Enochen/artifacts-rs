@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum CharacterLeaderboardType {
     #[serde(rename = "combat")]
+    #[default]
     Combat,
     #[serde(rename = "woodcutting")]
     Woodcutting,
@@ -37,11 +39,5 @@ impl std::fmt::Display for CharacterLeaderboardType {
             Self::Cooking => write!(f, "cooking"),
             Self::Alchemy => write!(f, "alchemy"),
         }
-    }
-}
-
-impl Default for CharacterLeaderboardType {
-    fn default() -> CharacterLeaderboardType {
-        Self::Combat
     }
 }

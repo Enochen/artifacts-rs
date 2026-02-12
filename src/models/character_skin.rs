@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum CharacterSkin {
     #[serde(rename = "men1")]
+    #[default]
     Men1,
     #[serde(rename = "men2")]
     Men2,
@@ -37,11 +39,5 @@ impl std::fmt::Display for CharacterSkin {
             Self::Zombie1 => write!(f, "zombie1"),
             Self::Marauder1 => write!(f, "marauder1"),
         }
-    }
-}
-
-impl Default for CharacterSkin {
-    fn default() -> CharacterSkin {
-        Self::Men1
     }
 }

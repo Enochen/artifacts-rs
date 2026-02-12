@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum ItemType {
     #[serde(rename = "utility")]
+    #[default]
     Utility,
     #[serde(rename = "body_armor")]
     BodyArmor,
@@ -55,11 +57,5 @@ impl std::fmt::Display for ItemType {
             Self::Rune => write!(f, "rune"),
             Self::Bag => write!(f, "bag"),
         }
-    }
-}
-
-impl Default for ItemType {
-    fn default() -> ItemType {
-        Self::Utility
     }
 }

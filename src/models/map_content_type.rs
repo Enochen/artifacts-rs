@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum MapContentType {
     #[serde(rename = "monster")]
+    #[default]
     Monster,
     #[serde(rename = "resource")]
     Resource,
@@ -31,11 +33,5 @@ impl std::fmt::Display for MapContentType {
             Self::TasksMaster => write!(f, "tasks_master"),
             Self::Npc => write!(f, "npc"),
         }
-    }
-}
-
-impl Default for MapContentType {
-    fn default() -> MapContentType {
-        Self::Monster
     }
 }

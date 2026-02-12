@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum LogType {
     #[serde(rename = "spawn")]
+    #[default]
     Spawn,
     #[serde(rename = "movement")]
     Movement,
@@ -115,11 +117,5 @@ impl std::fmt::Display for LogType {
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
         }
-    }
-}
-
-impl Default for LogType {
-    fn default() -> LogType {
-        Self::Spawn
     }
 }

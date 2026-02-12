@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum ActionType {
     #[serde(rename = "movement")]
+    #[default]
     Movement,
     #[serde(rename = "fight")]
     Fight,
@@ -91,11 +93,5 @@ impl std::fmt::Display for ActionType {
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
         }
-    }
-}
-
-impl Default for ActionType {
-    fn default() -> ActionType {
-        Self::Movement
     }
 }

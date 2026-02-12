@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum CraftSkill {
     #[serde(rename = "weaponcrafting")]
+    #[default]
     Weaponcrafting,
     #[serde(rename = "gearcrafting")]
     Gearcrafting,
@@ -31,11 +33,5 @@ impl std::fmt::Display for CraftSkill {
             Self::Mining => write!(f, "mining"),
             Self::Alchemy => write!(f, "alchemy"),
         }
-    }
-}
-
-impl Default for CraftSkill {
-    fn default() -> CraftSkill {
-        Self::Weaponcrafting
     }
 }

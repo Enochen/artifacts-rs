@@ -3,8 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
+#[derive(Default)]
 pub enum MapLayer {
     #[serde(rename = "interior")]
+    #[default]
     Interior,
     #[serde(rename = "overworld")]
     Overworld,
@@ -19,11 +21,5 @@ impl std::fmt::Display for MapLayer {
             Self::Overworld => write!(f, "overworld"),
             Self::Underground => write!(f, "underground"),
         }
-    }
-}
-
-impl Default for MapLayer {
-    fn default() -> MapLayer {
-        Self::Interior
     }
 }

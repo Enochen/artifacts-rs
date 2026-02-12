@@ -9,13 +9,14 @@ import org.openapitools.codegen.SupportingFile;
 import org.openapitools.codegen.languages.RustClientCodegen;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.OperationsMap;
+import org.openapitools.codegen.utils.ModelUtils;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.IntegerSchema;
 
 import java.util.Set;
-
 import io.swagger.v3.oas.models.parameters.RequestBody;
-
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -48,6 +49,21 @@ public class ArtifactsCodegen extends RustClientCodegen {
     @Override
     public void preprocessOpenAPI(OpenAPI openAPI) {
         validateOperationIds(openAPI);
+
+        if (openAPI.getComponents() != null && openAPI.getComponents().getSchemas() != null) {
+            for (Schema<?> schema : openAPI.getComponents().getSchemas().values()) {
+                if (schema.getProperties() != null) {
+                    Schema<?> pathProp = schema.getProperties().get("path");
+                    if (pathProp != null && ModelUtils.isArraySchema(pathProp)) {
+                        Schema<?> items = pathProp.getItems();
+                        if (items != null && items.getMinItems() != null && items.getMinItems().equals(items.getMaxItems())) {
+                            items.setItems(new IntegerSchema());
+                        }
+                    }
+                }
+            }
+        }
+
         super.preprocessOpenAPI(openAPI);
     }
 
@@ -103,7 +119,9 @@ public class ArtifactsCodegen extends RustClientCodegen {
             model.vendorExtensions.put("x-data-type", property);
         }
 
-        if (property.isAnyType || (property.items != null && property.items.isAnyType)) {
+        if (property.isAnyType || property.isFreeFormObject
+                || (property.items != null && property.items.isAnyType)
+                || (property.items != null && property.items.isFreeFormObject)) {
             property.vendorExtensions.put("x-unknown-value", true);
         }
     }
