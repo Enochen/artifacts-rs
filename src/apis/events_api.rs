@@ -97,8 +97,6 @@ pub enum SpawnEventError {
     Status563(models::ErrorResponseSchema),
     /// Event not found or already active.
     Status564(models::ErrorResponseSchema),
-    /// Access denied, you must be a member to do that.
-    Status451(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -112,7 +110,6 @@ impl<'de> Deserialize<'de> for SpawnEventError {
         match raw.error.code {
             563 => Ok(Self::Status563(raw)),
             564 => Ok(Self::Status564(raw)),
-            451 => Ok(Self::Status451(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",

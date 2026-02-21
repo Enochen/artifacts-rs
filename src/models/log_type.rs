@@ -22,6 +22,10 @@ pub enum LogType {
     BuyGe,
     #[serde(rename = "sell_ge")]
     SellGe,
+    #[serde(rename = "create_buy_order_ge")]
+    CreateBuyOrderGe,
+    #[serde(rename = "fill_buy_order_ge")]
+    FillBuyOrderGe,
     #[serde(rename = "buy_npc")]
     BuyNpc,
     #[serde(rename = "sell_npc")]
@@ -76,6 +80,8 @@ pub enum LogType {
     Rename,
     #[serde(rename = "transition")]
     Transition,
+    #[serde(rename = "claim_item")]
+    ClaimItem,
 }
 
 impl std::fmt::Display for LogType {
@@ -89,6 +95,8 @@ impl std::fmt::Display for LogType {
             Self::Gathering => write!(f, "gathering"),
             Self::BuyGe => write!(f, "buy_ge"),
             Self::SellGe => write!(f, "sell_ge"),
+            Self::CreateBuyOrderGe => write!(f, "create_buy_order_ge"),
+            Self::FillBuyOrderGe => write!(f, "fill_buy_order_ge"),
             Self::BuyNpc => write!(f, "buy_npc"),
             Self::SellNpc => write!(f, "sell_npc"),
             Self::CancelGe => write!(f, "cancel_ge"),
@@ -116,6 +124,7 @@ impl std::fmt::Display for LogType {
             Self::ChangeSkin => write!(f, "change_skin"),
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
+            Self::ClaimItem => write!(f, "claim_item"),
         }
     }
 }

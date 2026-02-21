@@ -22,9 +22,6 @@ pub struct GeOrderCreatedSchema {
     /// Total price.
     #[serde(rename = "total_price")]
     pub total_price: u32,
-    /// Listing tax (3%, minimum 1)
-    #[serde(rename = "tax")]
-    pub tax: u32,
 }
 
 impl GeOrderCreatedSchema {
@@ -35,7 +32,6 @@ impl GeOrderCreatedSchema {
         quantity: u32,
         price: u32,
         total_price: u32,
-        tax: u32,
     ) -> GeOrderCreatedSchema {
         GeOrderCreatedSchema {
             id,
@@ -44,7 +40,6 @@ impl GeOrderCreatedSchema {
             quantity,
             price,
             total_price,
-            tax,
         }
     }
 }

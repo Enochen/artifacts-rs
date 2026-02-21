@@ -7,9 +7,12 @@ pub struct GeOrderSchema {
     /// Order id.
     #[serde(rename = "id")]
     pub id: String,
-    /// Seller account name.
-    #[serde(rename = "seller")]
-    pub seller: String,
+    /// Order type (sell or buy).
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<models::GeOrderType>,
+    /// Account linked to the order.
+    #[serde(rename = "account", skip_serializing_if = "Option::is_none")]
+    pub account: Option<String>,
     /// Item code.
     #[serde(rename = "code")]
     pub code: String,
@@ -27,7 +30,6 @@ pub struct GeOrderSchema {
 impl GeOrderSchema {
     pub fn new(
         id: String,
-        seller: String,
         code: String,
         quantity: u32,
         price: u32,
@@ -35,7 +37,8 @@ impl GeOrderSchema {
     ) -> GeOrderSchema {
         GeOrderSchema {
             id,
-            seller,
+            r#type: None,
+            account: None,
             code,
             quantity,
             price,

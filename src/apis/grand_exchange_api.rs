@@ -3,90 +3,90 @@ use crate::{apis::ResponseContent, models};
 use reqwest::StatusCode;
 use serde::{de, Deserialize, Deserializer, Serialize};
 
-/// struct for passing parameters to the method [`get_ge_sell_history_by_code`]
+/// struct for passing parameters to the method [`get_ge_history`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellHistoryByCodeParams {
+pub struct GetGeHistoryParams {
     /// The code of the item.
     pub code: String,
-    /// The seller (account name) of the item.
-    pub seller: Option<String>,
-    /// The buyer (account name) of the item.
-    pub buyer: Option<String>,
+    /// Account involved in the transaction (matches either seller or buyer).
+    pub account: Option<String>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-impl GetGeSellHistoryByCodeParams {
+impl GetGeHistoryParams {
     pub fn new(
         code: String,
-        seller: Option<String>,
-        buyer: Option<String>,
+        account: Option<String>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
         Self {
             code,
-            seller,
-            buyer,
+            account,
             page,
             size,
         }
     }
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_order_by_id`]
+/// struct for passing parameters to the method [`get_ge_order`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrderByIdParams {
+pub struct GetGeOrderParams {
     /// The id of the order.
     pub id: String,
 }
 
-impl GetGeSellOrderByIdParams {
+impl GetGeOrderParams {
     pub fn new(id: String) -> Self {
         Self { id }
     }
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_orders`]
+/// struct for passing parameters to the method [`get_ge_orders`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrdersParams {
+pub struct GetGeOrdersParams {
     /// The code of the item.
     pub code: Option<String>,
-    /// The seller (account name) of the item.
-    pub seller: Option<String>,
+    /// The account that sells or buys items.
+    pub account: Option<String>,
+    /// Filter by order type (sell or buy).
+    pub r#type: Option<models::GeOrderType>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-impl GetGeSellOrdersParams {
+impl GetGeOrdersParams {
     pub fn new(
         code: Option<String>,
-        seller: Option<String>,
+        account: Option<String>,
+        r#type: Option<models::GeOrderType>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
         Self {
             code,
-            seller,
+            account,
+            r#type,
             page,
             size,
         }
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_history_by_code`]
+/// struct for typed errors of method [`get_ge_history`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetGeSellHistoryByCodeError {
+pub enum GetGeHistoryError {
     /// item history not found.
     Status404(models::ErrorResponseSchema),
 }
 
-impl<'de> Deserialize<'de> for GetGeSellHistoryByCodeError {
+impl<'de> Deserialize<'de> for GetGeHistoryError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -102,15 +102,15 @@ impl<'de> Deserialize<'de> for GetGeSellHistoryByCodeError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_order_by_id`]
+/// struct for typed errors of method [`get_ge_order`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrderByIdError {
+pub enum GetGeOrderError {
     /// GE order not found.
     Status404(models::ErrorResponseSchema),
 }
 
-impl<'de> Deserialize<'de> for GetGeSellOrderByIdError {
+impl<'de> Deserialize<'de> for GetGeOrderError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -126,12 +126,12 @@ impl<'de> Deserialize<'de> for GetGeSellOrderByIdError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_orders`]
+/// struct for typed errors of method [`get_ge_orders`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrdersError {}
+pub enum GetGeOrdersError {}
 
-impl<'de> Deserialize<'de> for GetGeSellOrdersError {
+impl<'de> Deserialize<'de> for GetGeOrdersError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -144,19 +144,17 @@ impl<'de> Deserialize<'de> for GetGeSellOrdersError {
     }
 }
 
-/// Fetch the sales history of the item for the last 7 days.
-pub async fn get_ge_sell_history_by_code(
+/// Fetch the transaction history of the item for the last 7 days (buy and sell orders).
+pub async fn get_ge_history(
     configuration: &configuration::Configuration,
-    params: GetGeSellHistoryByCodeParams,
-) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeSellHistoryByCodeError>> {
+    params: GetGeHistoryParams,
+) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeHistoryError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
     let code = params.code;
     // unbox the parameters
-    let seller = params.seller;
-    // unbox the parameters
-    let buyer = params.buyer;
+    let account = params.account;
     // unbox the parameters
     let page = params.page;
     // unbox the parameters
@@ -172,13 +170,9 @@ pub async fn get_ge_sell_history_by_code(
     let mut local_var_req_builder =
         local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
-    if let Some(ref local_var_str) = seller {
+    if let Some(ref local_var_str) = account {
         local_var_req_builder =
-            local_var_req_builder.query(&[("seller", &local_var_str.to_string())]);
-    }
-    if let Some(ref local_var_str) = buyer {
-        local_var_req_builder =
-            local_var_req_builder.query(&[("buyer", &local_var_str.to_string())]);
+            local_var_req_builder.query(&[("account", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =
@@ -202,7 +196,7 @@ pub async fn get_ge_sell_history_by_code(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellHistoryByCodeError> =
+        let local_var_entity: Option<GetGeHistoryError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -213,11 +207,11 @@ pub async fn get_ge_sell_history_by_code(
     }
 }
 
-/// Retrieve the sell order of a item.
-pub async fn get_ge_sell_order_by_id(
+/// Retrieve a specific order by ID.
+pub async fn get_ge_order(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrderByIdParams,
-) -> Result<models::GeOrderResponseSchema, Error<GetGeSellOrderByIdError>> {
+    params: GetGeOrderParams,
+) -> Result<models::GeOrderResponseSchema, Error<GetGeOrderError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -247,7 +241,7 @@ pub async fn get_ge_sell_order_by_id(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrderByIdError> =
+        let local_var_entity: Option<GetGeOrderError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -258,17 +252,19 @@ pub async fn get_ge_sell_order_by_id(
     }
 }
 
-/// Fetch all sell orders.
-pub async fn get_ge_sell_orders(
+/// Fetch all orders (sell and buy orders).  Use the `type` parameter to filter by order type; when using `account`, `type` is required to decide whether to match seller or buyer.
+pub async fn get_ge_orders(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrdersParams,
-) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersError>> {
+    params: GetGeOrdersParams,
+) -> Result<models::DataPageGeOrderSchema, Error<GetGeOrdersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
     let code = params.code;
     // unbox the parameters
-    let seller = params.seller;
+    let account = params.account;
+    // unbox the parameters
+    let r#type = params.r#type;
     // unbox the parameters
     let page = params.page;
     // unbox the parameters
@@ -284,9 +280,13 @@ pub async fn get_ge_sell_orders(
         local_var_req_builder =
             local_var_req_builder.query(&[("code", &local_var_str.to_string())]);
     }
-    if let Some(ref local_var_str) = seller {
+    if let Some(ref local_var_str) = account {
         local_var_req_builder =
-            local_var_req_builder.query(&[("seller", &local_var_str.to_string())]);
+            local_var_req_builder.query(&[("account", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = r#type {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =
@@ -310,7 +310,7 @@ pub async fn get_ge_sell_orders(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersError> =
+        let local_var_entity: Option<GetGeOrdersError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

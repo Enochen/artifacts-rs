@@ -1,6 +1,7 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// GeBuyOrderSchema : Schema for buying from a sell order.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct GeBuyOrderSchema {
@@ -13,6 +14,7 @@ pub struct GeBuyOrderSchema {
 }
 
 impl GeBuyOrderSchema {
+    /// Schema for buying from a sell order.
     pub fn new(id: String, quantity: u32) -> GeBuyOrderSchema {
         GeBuyOrderSchema { id, quantity }
     }

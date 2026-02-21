@@ -36,9 +36,9 @@ impl GetBankItemsParams {
     }
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_history`]
+/// struct for passing parameters to the method [`get_ge_history`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellHistoryParams {
+pub struct GetGeHistoryParams {
     /// Order ID to search in your history.
     pub id: Option<String>,
     /// Item to search in your history.
@@ -49,7 +49,7 @@ pub struct GetGeSellHistoryParams {
     pub size: Option<u32>,
 }
 
-impl GetGeSellHistoryParams {
+impl GetGeHistoryParams {
     pub fn new(
         id: Option<String>,
         code: Option<String>,
@@ -65,20 +65,47 @@ impl GetGeSellHistoryParams {
     }
 }
 
-/// struct for passing parameters to the method [`get_ge_sell_orders`]
+/// struct for passing parameters to the method [`get_ge_orders`]
 #[derive(Clone, Debug)]
-pub struct GetGeSellOrdersParams {
+pub struct GetGeOrdersParams {
     /// The code of the item.
     pub code: Option<String>,
+    /// Filter by order type (sell or buy).
+    pub r#type: Option<models::GeOrderType>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
     pub size: Option<u32>,
 }
 
-impl GetGeSellOrdersParams {
-    pub fn new(code: Option<String>, page: Option<u32>, size: Option<u32>) -> Self {
-        Self { code, page, size }
+impl GetGeOrdersParams {
+    pub fn new(
+        code: Option<String>,
+        r#type: Option<models::GeOrderType>,
+        page: Option<u32>,
+        size: Option<u32>,
+    ) -> Self {
+        Self {
+            code,
+            r#type,
+            page,
+            size,
+        }
+    }
+}
+
+/// struct for passing parameters to the method [`get_pending_items`]
+#[derive(Clone, Debug)]
+pub struct GetPendingItemsParams {
+    /// Page number
+    pub page: Option<u32>,
+    /// Page size
+    pub size: Option<u32>,
+}
+
+impl GetPendingItemsParams {
+    pub fn new(page: Option<u32>, size: Option<u32>) -> Self {
+        Self { page, size }
     }
 }
 
@@ -166,12 +193,12 @@ impl<'de> Deserialize<'de> for GetBankItemsError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_history`]
+/// struct for typed errors of method [`get_ge_history`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetGeSellHistoryError {}
+pub enum GetGeHistoryError {}
 
-impl<'de> Deserialize<'de> for GetGeSellHistoryError {
+impl<'de> Deserialize<'de> for GetGeHistoryError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -184,12 +211,30 @@ impl<'de> Deserialize<'de> for GetGeSellHistoryError {
     }
 }
 
-/// struct for typed errors of method [`get_ge_sell_orders`]
+/// struct for typed errors of method [`get_ge_orders`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GetGeSellOrdersError {}
+pub enum GetGeOrdersError {}
 
-impl<'de> Deserialize<'de> for GetGeSellOrdersError {
+impl<'de> Deserialize<'de> for GetGeOrdersError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        Err(de::Error::custom(format!(
+            "Unexpected error code: {}",
+            raw.error.code
+        )))
+    }
+}
+
+/// struct for typed errors of method [`get_pending_items`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GetPendingItemsError {}
+
+impl<'de> Deserialize<'de> for GetPendingItemsError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -387,11 +432,11 @@ pub async fn get_bank_items(
     }
 }
 
-/// Fetch your sales history of the last 7 days.
-pub async fn get_ge_sell_history(
+/// Fetch your transaction history of the last 7 days (buy and sell orders).
+pub async fn get_ge_history(
     configuration: &configuration::Configuration,
-    params: GetGeSellHistoryParams,
-) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeSellHistoryError>> {
+    params: GetGeHistoryParams,
+) -> Result<models::DataPageGeOrderHistorySchema, Error<GetGeHistoryError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -444,7 +489,7 @@ pub async fn get_ge_sell_history(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellHistoryError> =
+        let local_var_entity: Option<GetGeHistoryError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -455,15 +500,17 @@ pub async fn get_ge_sell_history(
     }
 }
 
-/// Fetch your sell orders details.
-pub async fn get_ge_sell_orders(
+/// Fetch your orders details (sell and buy orders).
+pub async fn get_ge_orders(
     configuration: &configuration::Configuration,
-    params: GetGeSellOrdersParams,
-) -> Result<models::DataPageGeOrderSchema, Error<GetGeSellOrdersError>> {
+    params: GetGeOrdersParams,
+) -> Result<models::DataPageGeOrderSchema, Error<GetGeOrdersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
     let code = params.code;
+    // unbox the parameters
+    let r#type = params.r#type;
     // unbox the parameters
     let page = params.page;
     // unbox the parameters
@@ -481,6 +528,10 @@ pub async fn get_ge_sell_orders(
     if let Some(ref local_var_str) = code {
         local_var_req_builder =
             local_var_req_builder.query(&[("code", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = r#type {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =
@@ -507,7 +558,61 @@ pub async fn get_ge_sell_orders(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GetGeSellOrdersError> =
+        let local_var_entity: Option<GetGeOrdersError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Retrieve all unclaimed pending items for your account.  These are items from various sources (achievements, grand exchange, events, etc.) that can be claimed by any character on your account using /my/{name}/action/claim/{id}.
+pub async fn get_pending_items(
+    configuration: &configuration::Configuration,
+    params: GetPendingItemsParams,
+) -> Result<models::DataPagePendingItemSchema, Error<GetPendingItemsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let page = params.page;
+    // unbox the parameters
+    let size = params.size;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!("{}/my/pending-items", local_var_configuration.base_path);
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_str) = page {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("page", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = size {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("size", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetPendingItemsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

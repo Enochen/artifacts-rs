@@ -75,6 +75,21 @@ impl ChangeSkinParams {
     }
 }
 
+/// struct for passing parameters to the method [`claim_pending_item`]
+#[derive(Clone, Debug)]
+pub struct ClaimPendingItemParams {
+    /// Name of your character.
+    pub name: String,
+    /// The ID of the pending item to claim.
+    pub id: String,
+}
+
+impl ClaimPendingItemParams {
+    pub fn new(name: String, id: String) -> Self {
+        Self { name, id }
+    }
+}
+
 /// struct for passing parameters to the method [`complete_task`]
 #[derive(Clone, Debug)]
 pub struct CompleteTaskParams {
@@ -220,19 +235,39 @@ impl GeBuyItemParams {
     }
 }
 
-/// struct for passing parameters to the method [`ge_cancel_sell_order`]
+/// struct for passing parameters to the method [`ge_cancel_order`]
 #[derive(Clone, Debug)]
-pub struct GeCancelSellOrderParams {
+pub struct GeCancelOrderParams {
     /// Name of your character.
     pub name: String,
     pub ge_cancel_order_schema: models::GeCancelOrderSchema,
 }
 
-impl GeCancelSellOrderParams {
+impl GeCancelOrderParams {
     pub fn new(name: String, ge_cancel_order_schema: models::GeCancelOrderSchema) -> Self {
         Self {
             name,
             ge_cancel_order_schema,
+        }
+    }
+}
+
+/// struct for passing parameters to the method [`ge_create_buy_order`]
+#[derive(Clone, Debug)]
+pub struct GeCreateBuyOrderParams {
+    /// Name of your character.
+    pub name: String,
+    pub ge_buy_order_creation_schema: models::GeBuyOrderCreationSchema,
+}
+
+impl GeCreateBuyOrderParams {
+    pub fn new(
+        name: String,
+        ge_buy_order_creation_schema: models::GeBuyOrderCreationSchema,
+    ) -> Self {
+        Self {
+            name,
+            ge_buy_order_creation_schema,
         }
     }
 }
@@ -250,6 +285,23 @@ impl GeCreateSellOrderParams {
         Self {
             name,
             ge_order_creationr_schema,
+        }
+    }
+}
+
+/// struct for passing parameters to the method [`ge_fill_order`]
+#[derive(Clone, Debug)]
+pub struct GeFillOrderParams {
+    /// Name of your character.
+    pub name: String,
+    pub ge_fill_buy_order_schema: models::GeFillBuyOrderSchema,
+}
+
+impl GeFillOrderParams {
+    pub fn new(name: String, ge_fill_buy_order_schema: models::GeFillBuyOrderSchema) -> Self {
+        Self {
+            name,
+            ge_fill_buy_order_schema,
         }
     }
 }
@@ -697,6 +749,45 @@ impl<'de> Deserialize<'de> for ChangeSkinError {
     }
 }
 
+/// struct for typed errors of method [`claim_pending_item`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum ClaimPendingItemError {
+    /// Pending item not found.
+    Status404(models::ErrorResponseSchema),
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character&#39;s inventory is full.
+    Status497(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for ClaimPendingItemError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            498 => Ok(Self::Status498(raw)),
+            497 => Ok(Self::Status497(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
 /// struct for typed errors of method [`complete_task`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -1108,10 +1199,10 @@ impl<'de> Deserialize<'de> for GeBuyItemError {
     }
 }
 
-/// struct for typed errors of method [`ge_cancel_sell_order`]
+/// struct for typed errors of method [`ge_cancel_order`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
-pub enum GeCancelSellOrderError {
+pub enum GeCancelOrderError {
     /// Grand Exchange not found on this map.
     Status598(models::ErrorResponseSchema),
     /// Character not found.
@@ -1132,7 +1223,7 @@ pub enum GeCancelSellOrderError {
     Status422(models::ErrorResponseSchema),
 }
 
-impl<'de> Deserialize<'de> for GeCancelSellOrderError {
+impl<'de> Deserialize<'de> for GeCancelOrderError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -1156,6 +1247,54 @@ impl<'de> Deserialize<'de> for GeCancelSellOrderError {
     }
 }
 
+/// struct for typed errors of method [`ge_create_buy_order`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GeCreateBuyOrderError {
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Item not found.
+    Status404(models::ErrorResponseSchema),
+    /// The character does not have enough gold.
+    Status492(models::ErrorResponseSchema),
+    /// You cannot create more than 100 orders at the same time.
+    Status433(models::ErrorResponseSchema),
+    /// This item cannot be sold.
+    Status437(models::ErrorResponseSchema),
+    /// Grand Exchange not found on this map.
+    Status598(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for GeCreateBuyOrderError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            404 => Ok(Self::Status404(raw)),
+            492 => Ok(Self::Status492(raw)),
+            433 => Ok(Self::Status433(raw)),
+            437 => Ok(Self::Status437(raw)),
+            598 => Ok(Self::Status598(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
 /// struct for typed errors of method [`ge_create_sell_order`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -1170,8 +1309,6 @@ pub enum GeCreateSellOrderError {
     Status404(models::ErrorResponseSchema),
     /// Missing required item(s).
     Status478(models::ErrorResponseSchema),
-    /// The character does not have enough gold.
-    Status492(models::ErrorResponseSchema),
     /// You cannot create more than 100 orders at the same time.
     Status433(models::ErrorResponseSchema),
     /// This item cannot be sold.
@@ -1194,10 +1331,60 @@ impl<'de> Deserialize<'de> for GeCreateSellOrderError {
             486 => Ok(Self::Status486(raw)),
             404 => Ok(Self::Status404(raw)),
             478 => Ok(Self::Status478(raw)),
-            492 => Ok(Self::Status492(raw)),
             433 => Ok(Self::Status433(raw)),
             437 => Ok(Self::Status437(raw)),
             598 => Ok(Self::Status598(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
+/// struct for typed errors of method [`ge_fill_order`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GeFillOrderError {
+    /// Grand Exchange not found on this map.
+    Status598(models::ErrorResponseSchema),
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// A transaction is already in progress for this order by another character.
+    Status436(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// This offer does not contain that many items.
+    Status434(models::ErrorResponseSchema),
+    /// You cannot trade with yourself.
+    Status435(models::ErrorResponseSchema),
+    /// Buy order not found.
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for GeFillOrderError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            598 => Ok(Self::Status598(raw)),
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            436 => Ok(Self::Status436(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            434 => Ok(Self::Status434(raw)),
+            435 => Ok(Self::Status435(raw)),
+            404 => Ok(Self::Status404(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -2101,6 +2288,57 @@ pub async fn change_skin(
     }
 }
 
+/// Claim a pending item with a specific character.
+pub async fn claim_pending_item(
+    configuration: &configuration::Configuration,
+    params: ClaimPendingItemParams,
+) -> Result<models::ClaimPendingItemResponseSchema, Error<ClaimPendingItemError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let id = params.id;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/claim_item/{id}",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name),
+        id = crate::apis::urlencode(id)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<ClaimPendingItemError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
 /// Complete a task.
 pub async fn complete_task(
     configuration: &configuration::Configuration,
@@ -2551,11 +2789,11 @@ pub async fn ge_buy_item(
     }
 }
 
-/// Cancel a sell order at the Grand Exchange on the character's map.
-pub async fn ge_cancel_sell_order(
+/// Cancel an order (sell or buy) at the Grand Exchange on the character's map.  For sell orders: Items are returned to your inventory. For buy orders: Gold is refunded to your character.
+pub async fn ge_cancel_order(
     configuration: &configuration::Configuration,
-    params: GeCancelSellOrderParams,
-) -> Result<models::GeTransactionResponseSchema, Error<GeCancelSellOrderError>> {
+    params: GeCancelOrderParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeCancelOrderError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -2591,7 +2829,7 @@ pub async fn ge_cancel_sell_order(
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
-        let local_var_entity: Option<GeCancelSellOrderError> =
+        let local_var_entity: Option<GeCancelOrderError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -2602,7 +2840,58 @@ pub async fn ge_cancel_sell_order(
     }
 }
 
-/// Create a sell order at the Grand Exchange on the character's map.  Please note there is a 3% listing tax, charged at the time of posting, on the total price.
+/// Create a buy order at the Grand Exchange on the character's map.  The total gold (price * quantity) is locked when creating the order. Other players can then sell items to fulfill your order. Items will be delivered to your pending items when the order is filled.
+pub async fn ge_create_buy_order(
+    configuration: &configuration::Configuration,
+    params: GeCreateBuyOrderParams,
+) -> Result<models::GeCreateOrderTransactionResponseSchema, Error<GeCreateBuyOrderError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let ge_buy_order_creation_schema = params.ge_buy_order_creation_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/grandexchange/create-buy-order",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&ge_buy_order_creation_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GeCreateBuyOrderError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Create a sell order at the Grand Exchange on the character's map.
 pub async fn ge_create_sell_order(
     configuration: &configuration::Configuration,
     params: GeCreateSellOrderParams,
@@ -2617,7 +2906,7 @@ pub async fn ge_create_sell_order(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/sell",
+        "{}/my/{name}/action/grandexchange/create-sell-order",
         local_var_configuration.base_path,
         name = crate::apis::urlencode(name)
     );
@@ -2643,6 +2932,57 @@ pub async fn ge_create_sell_order(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GeCreateSellOrderError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Sell items to an existing buy order at the Grand Exchange on the character's map.  You will receive the gold immediately. The buyer will receive the items in their pending items.
+pub async fn ge_fill_order(
+    configuration: &configuration::Configuration,
+    params: GeFillOrderParams,
+) -> Result<models::GeTransactionResponseSchema, Error<GeFillOrderError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let ge_fill_buy_order_schema = params.ge_fill_buy_order_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/grandexchange/fill",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&ge_fill_buy_order_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GeFillOrderError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

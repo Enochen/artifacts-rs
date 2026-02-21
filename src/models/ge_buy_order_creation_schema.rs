@@ -1,10 +1,10 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// GeOrderCreationrSchema : Schema for creating a sell order.
+/// GeBuyOrderCreationSchema : Schema for creating a buy order.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct GeOrderCreationrSchema {
+pub struct GeBuyOrderCreationSchema {
     /// Item code.
     #[serde(rename = "code")]
     pub code: String,
@@ -16,10 +16,10 @@ pub struct GeOrderCreationrSchema {
     pub price: u32,
 }
 
-impl GeOrderCreationrSchema {
-    /// Schema for creating a sell order.
-    pub fn new(code: String, quantity: u32, price: u32) -> GeOrderCreationrSchema {
-        GeOrderCreationrSchema {
+impl GeBuyOrderCreationSchema {
+    /// Schema for creating a buy order.
+    pub fn new(code: String, quantity: u32, price: u32) -> GeBuyOrderCreationSchema {
+        GeBuyOrderCreationSchema {
             code,
             quantity,
             price,

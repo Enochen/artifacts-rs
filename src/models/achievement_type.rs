@@ -24,6 +24,10 @@ pub enum AchievementType {
     Other,
     #[serde(rename = "use")]
     Use,
+    #[serde(rename = "npc_buy")]
+    NpcBuy,
+    #[serde(rename = "npc_sell")]
+    NpcSell,
 }
 
 impl std::fmt::Display for AchievementType {
@@ -38,6 +42,8 @@ impl std::fmt::Display for AchievementType {
             Self::Task => write!(f, "task"),
             Self::Other => write!(f, "other"),
             Self::Use => write!(f, "use"),
+            Self::NpcBuy => write!(f, "npc_buy"),
+            Self::NpcSell => write!(f, "npc_sell"),
         }
     }
 }
