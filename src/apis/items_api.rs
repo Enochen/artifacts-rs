@@ -107,7 +107,7 @@ impl<'de> Deserialize<'de> for GetItemError {
 pub async fn get_all_items(
     configuration: &configuration::Configuration,
     params: GetAllItemsParams,
-) -> Result<models::DataPageItemSchema, Error<GetAllItemsError>> {
+) -> Result<models::StaticDataPageItemSchema, Error<GetAllItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

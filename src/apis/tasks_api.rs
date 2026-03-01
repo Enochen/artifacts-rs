@@ -169,7 +169,7 @@ impl<'de> Deserialize<'de> for GetTasksRewardError {
 pub async fn get_all_tasks(
     configuration: &configuration::Configuration,
     params: GetAllTasksParams,
-) -> Result<models::DataPageTaskFullSchema, Error<GetAllTasksError>> {
+) -> Result<models::StaticDataPageTaskFullSchema, Error<GetAllTasksError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -244,7 +244,7 @@ pub async fn get_all_tasks(
 pub async fn get_all_tasks_rewards(
     configuration: &configuration::Configuration,
     params: GetAllTasksRewardsParams,
-) -> Result<models::DataPageDropRateSchema, Error<GetAllTasksRewardsError>> {
+) -> Result<models::StaticDataPageDropRateSchema, Error<GetAllTasksRewardsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

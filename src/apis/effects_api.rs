@@ -77,7 +77,7 @@ impl<'de> Deserialize<'de> for GetEffectError {
 pub async fn get_all_effects(
     configuration: &configuration::Configuration,
     params: GetAllEffectsParams,
-) -> Result<models::DataPageEffectSchema, Error<GetAllEffectsError>> {
+) -> Result<models::StaticDataPageEffectSchema, Error<GetAllEffectsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

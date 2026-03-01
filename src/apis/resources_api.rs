@@ -99,7 +99,7 @@ impl<'de> Deserialize<'de> for GetResourceError {
 pub async fn get_all_resources(
     configuration: &configuration::Configuration,
     params: GetAllResourcesParams,
-) -> Result<models::DataPageResourceSchema, Error<GetAllResourcesError>> {
+) -> Result<models::StaticDataPageResourceSchema, Error<GetAllResourcesError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

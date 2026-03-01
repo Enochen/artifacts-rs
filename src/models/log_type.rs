@@ -8,6 +8,8 @@ pub enum LogType {
     #[serde(rename = "spawn")]
     #[default]
     Spawn,
+    #[serde(rename = "delete_character")]
+    DeleteCharacter,
     #[serde(rename = "movement")]
     Movement,
     #[serde(rename = "fight")]
@@ -82,12 +84,21 @@ pub enum LogType {
     Transition,
     #[serde(rename = "claim_item")]
     ClaimItem,
+    #[serde(rename = "sandbox_give_gold")]
+    SandboxGiveGold,
+    #[serde(rename = "sandbox_give_item")]
+    SandboxGiveItem,
+    #[serde(rename = "sandbox_give_xp")]
+    SandboxGiveXp,
+    #[serde(rename = "sandbox_reset_account")]
+    SandboxResetAccount,
 }
 
 impl std::fmt::Display for LogType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Spawn => write!(f, "spawn"),
+            Self::DeleteCharacter => write!(f, "delete_character"),
             Self::Movement => write!(f, "movement"),
             Self::Fight => write!(f, "fight"),
             Self::MultiFight => write!(f, "multi_fight"),
@@ -125,6 +136,10 @@ impl std::fmt::Display for LogType {
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
             Self::ClaimItem => write!(f, "claim_item"),
+            Self::SandboxGiveGold => write!(f, "sandbox_give_gold"),
+            Self::SandboxGiveItem => write!(f, "sandbox_give_item"),
+            Self::SandboxGiveXp => write!(f, "sandbox_give_xp"),
+            Self::SandboxResetAccount => write!(f, "sandbox_reset_account"),
         }
     }
 }

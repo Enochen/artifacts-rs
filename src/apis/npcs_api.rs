@@ -183,7 +183,7 @@ impl<'de> Deserialize<'de> for GetNpcItemsError {
 pub async fn get_all_npc_items(
     configuration: &configuration::Configuration,
     params: GetAllNpcItemsParams,
-) -> Result<models::DataPageNpcItem, Error<GetAllNpcItemsError>> {
+) -> Result<models::StaticDataPageNpcItem, Error<GetAllNpcItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -251,7 +251,7 @@ pub async fn get_all_npc_items(
 pub async fn get_all_npcs(
     configuration: &configuration::Configuration,
     params: GetAllNpcsParams,
-) -> Result<models::DataPageNpcSchema, Error<GetAllNpcsError>> {
+) -> Result<models::StaticDataPageNpcSchema, Error<GetAllNpcsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -358,7 +358,7 @@ pub async fn get_npc(
 pub async fn get_npc_items(
     configuration: &configuration::Configuration,
     params: GetNpcItemsParams,
-) -> Result<models::DataPageNpcItem, Error<GetNpcItemsError>> {
+) -> Result<models::StaticDataPageNpcItem, Error<GetNpcItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

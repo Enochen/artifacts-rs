@@ -95,7 +95,9 @@ impl<'de> Deserialize<'de> for GetAllEventsError {
 pub enum SpawnEventError {
     /// Insufficient event tokens. You need at least 1 event token to spawn an event.
     Status563(models::ErrorResponseSchema),
-    /// Event not found or already active.
+    /// Event not found.
+    Status404(models::ErrorResponseSchema),
+    /// Event already active or maximum active events reached.
     Status564(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
@@ -109,6 +111,7 @@ impl<'de> Deserialize<'de> for SpawnEventError {
         let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
         match raw.error.code {
             563 => Ok(Self::Status563(raw)),
+            404 => Ok(Self::Status404(raw)),
             564 => Ok(Self::Status564(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
@@ -123,7 +126,7 @@ impl<'de> Deserialize<'de> for SpawnEventError {
 pub async fn get_all_active_events(
     configuration: &configuration::Configuration,
     params: GetAllActiveEventsParams,
-) -> Result<models::DataPageActiveEventSchema, Error<GetAllActiveEventsError>> {
+) -> Result<models::StaticDataPageActiveEventSchema, Error<GetAllActiveEventsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -174,7 +177,7 @@ pub async fn get_all_active_events(
 pub async fn get_all_events(
     configuration: &configuration::Configuration,
     params: GetAllEventsParams,
-) -> Result<models::DataPageEventSchema, Error<GetAllEventsError>> {
+) -> Result<models::StaticDataPageEventSchema, Error<GetAllEventsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -227,7 +230,7 @@ pub async fn get_all_events(
     }
 }
 
-/// Spawn a specific event by code consuming 1 event token.  Rules:   - Maximum active events defined by utils.config.max_active_events().   - Event must not already be active.   - Member or founder account required.
+/// Spawn a specific event by consuming 1 event token. Member or founder account required.
 pub async fn spawn_event(
     configuration: &configuration::Configuration,
     params: SpawnEventParams,

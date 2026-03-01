@@ -128,7 +128,7 @@ pub async fn get_achievement(
 pub async fn get_all_achievements(
     configuration: &configuration::Configuration,
     params: GetAllAchievementsParams,
-) -> Result<models::DataPageAchievementSchema, Error<GetAllAchievementsError>> {
+) -> Result<models::StaticDataPageAchievementSchema, Error<GetAllAchievementsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

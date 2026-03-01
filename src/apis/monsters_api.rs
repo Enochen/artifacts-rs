@@ -99,7 +99,7 @@ impl<'de> Deserialize<'de> for GetMonsterError {
 pub async fn get_all_monsters(
     configuration: &configuration::Configuration,
     params: GetAllMonstersParams,
-) -> Result<models::DataPageMonsterSchema, Error<GetAllMonstersError>> {
+) -> Result<models::StaticDataPageMonsterSchema, Error<GetAllMonstersError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

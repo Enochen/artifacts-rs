@@ -21,8 +21,12 @@ impl FightSimulationParams {
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum FightSimulationError {
-    /// Monster not found.
+    /// Monster or item not found.
     Status404(models::ErrorResponseSchema),
+    /// Only boss monsters can be fought by multiple characters.
+    Status486(models::ErrorResponseSchema),
+    /// Access denied, you must be a member to do that.
+    Status451(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -35,6 +39,8 @@ impl<'de> Deserialize<'de> for FightSimulationError {
         let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
         match raw.error.code {
             404 => Ok(Self::Status404(raw)),
+            486 => Ok(Self::Status486(raw)),
+            451 => Ok(Self::Status451(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",

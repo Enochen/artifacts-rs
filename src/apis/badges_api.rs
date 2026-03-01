@@ -77,7 +77,7 @@ impl<'de> Deserialize<'de> for GetBadgeError {
 pub async fn get_all_badges(
     configuration: &configuration::Configuration,
     params: GetAllBadgesParams,
-) -> Result<models::DataPageBadgeSchema, Error<GetAllBadgesError>> {
+) -> Result<models::StaticDataPageBadgeSchema, Error<GetAllBadgesError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters

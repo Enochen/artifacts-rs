@@ -66,6 +66,12 @@ pub enum ActionType {
     Transition,
     #[serde(rename = "claim_item")]
     ClaimItem,
+    #[serde(rename = "sandbox_give_gold")]
+    SandboxGiveGold,
+    #[serde(rename = "sandbox_give_item")]
+    SandboxGiveItem,
+    #[serde(rename = "sandbox_give_xp")]
+    SandboxGiveXp,
 }
 
 impl std::fmt::Display for ActionType {
@@ -101,6 +107,9 @@ impl std::fmt::Display for ActionType {
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
             Self::ClaimItem => write!(f, "claim_item"),
+            Self::SandboxGiveGold => write!(f, "sandbox_give_gold"),
+            Self::SandboxGiveItem => write!(f, "sandbox_give_item"),
+            Self::SandboxGiveXp => write!(f, "sandbox_give_xp"),
         }
     }
 }

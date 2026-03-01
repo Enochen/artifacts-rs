@@ -195,7 +195,7 @@ impl<'de> Deserialize<'de> for GetMapByPositionError {
 pub async fn get_all_maps(
     configuration: &configuration::Configuration,
     params: GetAllMapsParams,
-) -> Result<models::DataPageMapSchema, Error<GetAllMapsError>> {
+) -> Result<models::StaticDataPageMapSchema, Error<GetAllMapsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -270,7 +270,7 @@ pub async fn get_all_maps(
 pub async fn get_layer_maps(
     configuration: &configuration::Configuration,
     params: GetLayerMapsParams,
-) -> Result<models::DataPageMapSchema, Error<GetLayerMapsError>> {
+) -> Result<models::StaticDataPageMapSchema, Error<GetLayerMapsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
