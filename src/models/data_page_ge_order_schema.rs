@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageMapSchema {
+pub struct DataPageGeOrderSchema {
     #[serde(rename = "data")]
-    pub data: Vec<models::MapSchema>,
+    pub data: Vec<models::GeOrderSchema>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageMapSchema {
     pub pages: Option<u32>,
 }
 
-impl DataPageMapSchema {
-    pub fn new(data: Vec<models::MapSchema>) -> DataPageMapSchema {
-        DataPageMapSchema {
+impl DataPageGeOrderSchema {
+    pub fn new(data: Vec<models::GeOrderSchema>) -> DataPageGeOrderSchema {
+        DataPageGeOrderSchema {
             data,
             total: None,
             page: None,

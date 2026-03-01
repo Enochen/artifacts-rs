@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageTaskFullSchema {
+pub struct DataPagePendingItemSchema {
     #[serde(rename = "data")]
-    pub data: Vec<models::TaskFullSchema>,
+    pub data: Vec<models::PendingItemSchema>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageTaskFullSchema {
     pub pages: Option<u32>,
 }
 
-impl DataPageTaskFullSchema {
-    pub fn new(data: Vec<models::TaskFullSchema>) -> DataPageTaskFullSchema {
-        DataPageTaskFullSchema {
+impl DataPagePendingItemSchema {
+    pub fn new(data: Vec<models::PendingItemSchema>) -> DataPagePendingItemSchema {
+        DataPagePendingItemSchema {
             data,
             total: None,
             page: None,

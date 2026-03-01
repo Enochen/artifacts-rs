@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageEventSchema {
+pub struct StaticDataPageResourceSchema {
     #[serde(rename = "data")]
-    pub data: Vec<models::EventSchema>,
+    pub data: Vec<models::ResourceSchema>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageEventSchema {
     pub pages: Option<u32>,
 }
 
-impl DataPageEventSchema {
-    pub fn new(data: Vec<models::EventSchema>) -> DataPageEventSchema {
-        DataPageEventSchema {
+impl StaticDataPageResourceSchema {
+    pub fn new(data: Vec<models::ResourceSchema>) -> StaticDataPageResourceSchema {
+        StaticDataPageResourceSchema {
             data,
             total: None,
             page: None,

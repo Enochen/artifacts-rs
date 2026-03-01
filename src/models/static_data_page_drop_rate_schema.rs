@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageNpcItem {
+pub struct StaticDataPageDropRateSchema {
     #[serde(rename = "data")]
-    pub data: Vec<models::NpcItem>,
+    pub data: Vec<models::DropRateSchema>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageNpcItem {
     pub pages: Option<u32>,
 }
 
-impl DataPageNpcItem {
-    pub fn new(data: Vec<models::NpcItem>) -> DataPageNpcItem {
-        DataPageNpcItem {
+impl StaticDataPageDropRateSchema {
+    pub fn new(data: Vec<models::DropRateSchema>) -> StaticDataPageDropRateSchema {
+        StaticDataPageDropRateSchema {
             data,
             total: None,
             page: None,

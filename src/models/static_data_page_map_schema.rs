@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageEffectSchema {
+pub struct StaticDataPageMapSchema {
     #[serde(rename = "data")]
-    pub data: Vec<models::EffectSchema>,
+    pub data: Vec<models::MapSchema>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageEffectSchema {
     pub pages: Option<u32>,
 }
 
-impl DataPageEffectSchema {
-    pub fn new(data: Vec<models::EffectSchema>) -> DataPageEffectSchema {
-        DataPageEffectSchema {
+impl StaticDataPageMapSchema {
+    pub fn new(data: Vec<models::MapSchema>) -> StaticDataPageMapSchema {
+        StaticDataPageMapSchema {
             data,
             total: None,
             page: None,

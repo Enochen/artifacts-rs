@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
-pub struct DataPageBadgeSchema {
+pub struct StaticDataPageNpcItem {
     #[serde(rename = "data")]
-    pub data: Vec<models::BadgeSchema>,
+    pub data: Vec<models::NpcItem>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<u32>,
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
@@ -16,9 +16,9 @@ pub struct DataPageBadgeSchema {
     pub pages: Option<u32>,
 }
 
-impl DataPageBadgeSchema {
-    pub fn new(data: Vec<models::BadgeSchema>) -> DataPageBadgeSchema {
-        DataPageBadgeSchema {
+impl StaticDataPageNpcItem {
+    pub fn new(data: Vec<models::NpcItem>) -> StaticDataPageNpcItem {
+        StaticDataPageNpcItem {
             data,
             total: None,
             page: None,

@@ -56,7 +56,8 @@ public class ArtifactsCodegen extends RustClientCodegen {
                     Schema<?> pathProp = schema.getProperties().get("path");
                     if (pathProp != null && ModelUtils.isArraySchema(pathProp)) {
                         Schema<?> items = pathProp.getItems();
-                        if (items != null && items.getMinItems() != null && items.getMinItems().equals(items.getMaxItems())) {
+                        if (items != null && items.getMinItems() != null
+                                && items.getMinItems().equals(items.getMaxItems())) {
                             items.setItems(new IntegerSchema());
                         }
                     }
@@ -97,6 +98,16 @@ public class ArtifactsCodegen extends RustClientCodegen {
                             extra,
                             expected));
         }
+    }
+
+    @Override
+    public String toModelFilename(String name) {
+        String filename = super.toModelFilename(name);
+
+        // Remove trailing underscores
+        filename = filename.replaceAll("_+$", "");
+
+        return filename;
     }
 
     @Override
