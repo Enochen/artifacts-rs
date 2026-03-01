@@ -19,7 +19,7 @@ specta = ["dep:specta", "dep:specta-util"]
 
 [dependencies]
 serde = { version = "^1.0", features = ["derive"] }
-serde_with = { version = "^3.8", default-features = false, features = [
+serde_with = { version = "^3.17", default-features = false, features = [
   "base64",
   "std",
   "macros",
