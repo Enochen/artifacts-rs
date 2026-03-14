@@ -43,6 +43,10 @@ pub struct GetAllNpcsParams {
     pub name: Option<String>,
     /// Type of NPCs.
     pub r#type: Option<models::NpcType>,
+    /// Currency code to filter NPCs that trade with this currency.
+    pub currency: Option<String>,
+    /// Item code to filter NPCs that trade this item.
+    pub item: Option<String>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -53,12 +57,16 @@ impl GetAllNpcsParams {
     pub fn new(
         name: Option<String>,
         r#type: Option<models::NpcType>,
+        currency: Option<String>,
+        item: Option<String>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
         Self {
             name,
             r#type,
+            currency,
+            item,
             page,
             size,
         }
@@ -259,6 +267,10 @@ pub async fn get_all_npcs(
     // unbox the parameters
     let r#type = params.r#type;
     // unbox the parameters
+    let currency = params.currency;
+    // unbox the parameters
+    let item = params.item;
+    // unbox the parameters
     let page = params.page;
     // unbox the parameters
     let size = params.size;
@@ -276,6 +288,14 @@ pub async fn get_all_npcs(
     if let Some(ref local_var_str) = r#type {
         local_var_req_builder =
             local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = currency {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("currency", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = item {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("item", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =

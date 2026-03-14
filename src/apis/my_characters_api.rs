@@ -687,6 +687,8 @@ pub enum CancelTaskError {
     Status499(models::ErrorResponseSchema),
     /// An action is already in progress for this character.
     Status486(models::ErrorResponseSchema),
+    /// The character has no task assigned.
+    Status487(models::ErrorResponseSchema),
     /// Tasks Master not found on this map.
     Status598(models::ErrorResponseSchema),
     /// Missing required item(s).
@@ -705,6 +707,7 @@ impl<'de> Deserialize<'de> for CancelTaskError {
             498 => Ok(Self::Status498(raw)),
             499 => Ok(Self::Status499(raw)),
             486 => Ok(Self::Status486(raw)),
+            487 => Ok(Self::Status487(raw)),
             598 => Ok(Self::Status598(raw)),
             478 => Ok(Self::Status478(raw)),
             422 => Ok(Self::Status422(raw)),
