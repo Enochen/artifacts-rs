@@ -14,8 +14,8 @@ pub struct CharacterLeaderboardSchema {
     #[serde(rename = "account")]
     pub account: String,
     /// Member status.
-    #[serde(rename = "status")]
-    pub status: models::AccountStatus,
+    #[serde(rename = "member")]
+    pub member: bool,
     /// Character skin code.
     #[serde(rename = "skin")]
     pub skin: String,
@@ -83,7 +83,7 @@ impl CharacterLeaderboardSchema {
         position: i32,
         name: String,
         account: String,
-        status: models::AccountStatus,
+        member: bool,
         skin: String,
         level: i32,
         total_xp: i32,
@@ -109,7 +109,7 @@ impl CharacterLeaderboardSchema {
             position,
             name,
             account,
-            status,
+            member,
             skin,
             level,
             total_xp,

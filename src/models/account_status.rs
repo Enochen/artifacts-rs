@@ -14,6 +14,8 @@ pub enum AccountStatus {
     GoldFounder,
     #[serde(rename = "vip_founder")]
     VipFounder,
+    #[serde(rename = "goblin1")]
+    Goblin1,
 }
 
 impl std::fmt::Display for AccountStatus {
@@ -23,6 +25,7 @@ impl std::fmt::Display for AccountStatus {
             Self::Founder => write!(f, "founder"),
             Self::GoldFounder => write!(f, "gold_founder"),
             Self::VipFounder => write!(f, "vip_founder"),
+            Self::Goblin1 => write!(f, "goblin1"),
         }
     }
 }

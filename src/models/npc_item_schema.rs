@@ -1,0 +1,34 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct NpcItemSchema {
+    /// The code of the NPC. This is the NPC's unique identifier (ID).
+    #[serde(rename = "code")]
+    pub code: String,
+    /// Code of the NPC that sells/buys the item.
+    #[serde(rename = "npc")]
+    pub npc: String,
+    /// Currency used to buy/sell the item. If it's not gold, it's the item code.
+    #[serde(rename = "currency")]
+    pub currency: String,
+    /// Price to buy the item.
+    #[serde(rename = "buy_price", skip_serializing_if = "Option::is_none")]
+    pub buy_price: Option<i32>,
+    /// Price to sell the item.
+    #[serde(rename = "sell_price", skip_serializing_if = "Option::is_none")]
+    pub sell_price: Option<i32>,
+}
+
+impl NpcItemSchema {
+    pub fn new(code: String, npc: String, currency: String) -> NpcItemSchema {
+        NpcItemSchema {
+            code,
+            npc,
+            currency,
+            buy_price: None,
+            sell_price: None,
+        }
+    }
+}

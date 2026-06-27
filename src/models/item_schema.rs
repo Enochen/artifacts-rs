@@ -34,6 +34,9 @@ pub struct ItemSchema {
     /// Item tradeable status. A non-tradeable item cannot be exchanged or sold.
     #[serde(rename = "tradeable")]
     pub tradeable: bool,
+    /// Item recyclable status. A recyclable item can be recycled at the matching workshop.
+    #[serde(rename = "recyclable", skip_serializing_if = "Option::is_none")]
+    pub recyclable: Option<bool>,
 }
 
 impl ItemSchema {
@@ -57,6 +60,7 @@ impl ItemSchema {
             effects: None,
             craft: None,
             tradeable,
+            recyclable: None,
         }
     }
 }

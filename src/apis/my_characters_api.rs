@@ -179,11 +179,11 @@ impl DepositItemParams {
 pub struct EquipItemParams {
     /// Name of your character.
     pub name: String,
-    pub equip_schema: models::EquipSchema,
+    pub equip_schema: Vec<models::EquipSchema>,
 }
 
 impl EquipItemParams {
-    pub fn new(name: String, equip_schema: models::EquipSchema) -> Self {
+    pub fn new(name: String, equip_schema: Vec<models::EquipSchema>) -> Self {
         Self { name, equip_schema }
     }
 }
@@ -277,14 +277,14 @@ impl GeCreateBuyOrderParams {
 pub struct GeCreateSellOrderParams {
     /// Name of your character.
     pub name: String,
-    pub ge_order_creationr_schema: models::GeOrderCreationrSchema,
+    pub ge_order_creation_schema: models::GeOrderCreationSchema,
 }
 
 impl GeCreateSellOrderParams {
-    pub fn new(name: String, ge_order_creationr_schema: models::GeOrderCreationrSchema) -> Self {
+    pub fn new(name: String, ge_order_creation_schema: models::GeOrderCreationSchema) -> Self {
         Self {
             name,
-            ge_order_creationr_schema,
+            ge_order_creation_schema,
         }
     }
 }
@@ -488,11 +488,11 @@ impl TaskTradeParams {
 pub struct UnequipItemParams {
     /// Name of your character.
     pub name: String,
-    pub unequip_schema: models::UnequipSchema,
+    pub unequip_schema: Vec<models::UnequipSchema>,
 }
 
 impl UnequipItemParams {
-    pub fn new(name: String, unequip_schema: models::UnequipSchema) -> Self {
+    pub fn new(name: String, unequip_schema: Vec<models::UnequipSchema>) -> Self {
         Self {
             name,
             unequip_schema,
@@ -729,6 +729,8 @@ pub enum ChangeSkinError {
     Status486(models::ErrorResponseSchema),
     /// You cannot choose this skin because you do not own it.
     Status550(models::ErrorResponseSchema),
+    /// Skin not found.
+    Status404(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -743,6 +745,7 @@ impl<'de> Deserialize<'de> for ChangeSkinError {
             499 => Ok(Self::Status499(raw)),
             486 => Ok(Self::Status486(raw)),
             550 => Ok(Self::Status550(raw)),
+            404 => Ok(Self::Status404(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -1081,6 +1084,8 @@ pub enum FightError {
     Status486(models::ErrorResponseSchema),
     /// The character&#39;s inventory is full.
     Status497(models::ErrorResponseSchema),
+    /// This raid phase is not currently active.
+    Status567(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -1097,6 +1102,7 @@ impl<'de> Deserialize<'de> for FightError {
             598 => Ok(Self::Status598(raw)),
             486 => Ok(Self::Status486(raw)),
             497 => Ok(Self::Status497(raw)),
+            567 => Ok(Self::Status567(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -1714,6 +1720,8 @@ pub enum RecycleError {
     Status493(models::ErrorResponseSchema),
     /// Missing required item(s).
     Status478(models::ErrorResponseSchema),
+    /// The character does not have enough gold.
+    Status492(models::ErrorResponseSchema),
     /// This item cannot be recycled.
     Status473(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
@@ -1735,6 +1743,7 @@ impl<'de> Deserialize<'de> for RecycleError {
             486 => Ok(Self::Status486(raw)),
             493 => Ok(Self::Status493(raw)),
             478 => Ok(Self::Status478(raw)),
+            492 => Ok(Self::Status492(raw)),
             473 => Ok(Self::Status473(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
@@ -2593,7 +2602,7 @@ pub async fn deposit_item(
     }
 }
 
-/// Equip an item on your character.
+/// Equip multiple items on your character. The cooldown will be 3 seconds multiplied by the number of different items equipped.
 pub async fn equip_item(
     configuration: &configuration::Configuration,
     params: EquipItemParams,
@@ -2858,7 +2867,7 @@ pub async fn ge_create_buy_order(
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/create-buy-order",
+        "{}/my/{name}/action/grandexchange/create_buy_order",
         local_var_configuration.base_path,
         name = crate::apis::urlencode(name)
     );
@@ -2904,12 +2913,12 @@ pub async fn ge_create_sell_order(
     // unbox the parameters
     let name = params.name;
     // unbox the parameters
-    let ge_order_creationr_schema = params.ge_order_creationr_schema;
+    let ge_order_creation_schema = params.ge_order_creation_schema;
 
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!(
-        "{}/my/{name}/action/grandexchange/create-sell-order",
+        "{}/my/{name}/action/grandexchange/create_sell_order",
         local_var_configuration.base_path,
         name = crate::apis::urlencode(name)
     );
@@ -2923,7 +2932,7 @@ pub async fn ge_create_sell_order(
     if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
         local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
     };
-    local_var_req_builder = local_var_req_builder.json(&ge_order_creationr_schema);
+    local_var_req_builder = local_var_req_builder.json(&ge_order_creation_schema);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
@@ -3601,7 +3610,7 @@ pub async fn task_trade(
     }
 }
 
-/// Unequip an item on your character.
+/// Unequip multiple items on your character. The cooldown will be 3 seconds multiplied by the number of different items unequipped.
 pub async fn unequip_item(
     configuration: &configuration::Configuration,
     params: UnequipItemParams,

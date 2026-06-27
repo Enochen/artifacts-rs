@@ -7,13 +7,13 @@ pub struct AddCharacterSchema {
     /// Your desired character name. It's unique and all players can see it.
     #[serde(rename = "name")]
     pub name: String,
-    /// Your desired skin. Skins unlocked by default: 'men1', 'men2', 'men3', 'women1', 'women2', 'women3'.
+    /// Your desired skin.
     #[serde(rename = "skin")]
-    pub skin: models::CharacterSkin,
+    pub skin: String,
 }
 
 impl AddCharacterSchema {
-    pub fn new(name: String, skin: models::CharacterSkin) -> AddCharacterSchema {
+    pub fn new(name: String, skin: String) -> AddCharacterSchema {
         AddCharacterSchema { name, skin }
     }
 }

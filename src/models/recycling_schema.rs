@@ -10,6 +10,9 @@ pub struct RecyclingSchema {
     /// Quantity of items to recycle.
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<u32>,
+    /// Whether to use enhanced recycling.
+    #[serde(rename = "enhanced", skip_serializing_if = "Option::is_none")]
+    pub enhanced: Option<bool>,
 }
 
 impl RecyclingSchema {
@@ -17,6 +20,7 @@ impl RecyclingSchema {
         RecyclingSchema {
             code,
             quantity: None,
+            enhanced: None,
         }
     }
 }

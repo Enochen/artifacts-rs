@@ -1,0 +1,35 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct GemShopCustomDesignPurchaseResponseDataSchema {
+    /// Purchased custom design code.
+    #[serde(rename = "code")]
+    pub code: String,
+    /// Purchased custom design name.
+    #[serde(rename = "name")]
+    pub name: String,
+    /// Remaining gem balance.
+    #[serde(rename = "gems")]
+    pub gems: i32,
+    /// Gem cost of the purchase.
+    #[serde(rename = "cost")]
+    pub cost: i32,
+}
+
+impl GemShopCustomDesignPurchaseResponseDataSchema {
+    pub fn new(
+        code: String,
+        name: String,
+        gems: i32,
+        cost: i32,
+    ) -> GemShopCustomDesignPurchaseResponseDataSchema {
+        GemShopCustomDesignPurchaseResponseDataSchema {
+            code,
+            name,
+            gems,
+            cost,
+        }
+    }
+}

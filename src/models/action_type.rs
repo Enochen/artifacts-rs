@@ -10,6 +10,8 @@ pub enum ActionType {
     Movement,
     #[serde(rename = "fight")]
     Fight,
+    #[serde(rename = "raid_fight")]
+    RaidFight,
     #[serde(rename = "multi_fight")]
     MultiFight,
     #[serde(rename = "crafting")]
@@ -58,6 +60,8 @@ pub enum ActionType {
     GiveItem,
     #[serde(rename = "give_gold")]
     GiveGold,
+    #[serde(rename = "raid_deposit")]
+    RaidDeposit,
     #[serde(rename = "change_skin")]
     ChangeSkin,
     #[serde(rename = "rename")]
@@ -72,6 +76,10 @@ pub enum ActionType {
     SandboxGiveItem,
     #[serde(rename = "sandbox_give_xp")]
     SandboxGiveXp,
+    #[serde(rename = "sandbox_clear_cooldown")]
+    SandboxClearCooldown,
+    #[serde(rename = "sandbox_teleport")]
+    SandboxTeleport,
 }
 
 impl std::fmt::Display for ActionType {
@@ -79,6 +87,7 @@ impl std::fmt::Display for ActionType {
         match self {
             Self::Movement => write!(f, "movement"),
             Self::Fight => write!(f, "fight"),
+            Self::RaidFight => write!(f, "raid_fight"),
             Self::MultiFight => write!(f, "multi_fight"),
             Self::Crafting => write!(f, "crafting"),
             Self::Gathering => write!(f, "gathering"),
@@ -103,6 +112,7 @@ impl std::fmt::Display for ActionType {
             Self::BuyBankExpansion => write!(f, "buy_bank_expansion"),
             Self::GiveItem => write!(f, "give_item"),
             Self::GiveGold => write!(f, "give_gold"),
+            Self::RaidDeposit => write!(f, "raid_deposit"),
             Self::ChangeSkin => write!(f, "change_skin"),
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
@@ -110,6 +120,8 @@ impl std::fmt::Display for ActionType {
             Self::SandboxGiveGold => write!(f, "sandbox_give_gold"),
             Self::SandboxGiveItem => write!(f, "sandbox_give_item"),
             Self::SandboxGiveXp => write!(f, "sandbox_give_xp"),
+            Self::SandboxClearCooldown => write!(f, "sandbox_clear_cooldown"),
+            Self::SandboxTeleport => write!(f, "sandbox_teleport"),
         }
     }
 }

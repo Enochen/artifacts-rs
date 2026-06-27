@@ -12,7 +12,7 @@ pub struct ActiveCharacterSchema {
     pub account: String,
     /// Character skin code.
     #[serde(rename = "skin")]
-    pub skin: models::CharacterSkin,
+    pub skin: String,
     /// Character x coordinate.
     #[serde(rename = "x")]
     pub x: i32,
@@ -31,7 +31,7 @@ impl ActiveCharacterSchema {
     pub fn new(
         name: String,
         account: String,
-        skin: models::CharacterSkin,
+        skin: String,
         x: i32,
         y: i32,
         layer: models::MapLayer,

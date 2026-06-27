@@ -6,24 +6,30 @@ use serde::{Deserialize, Serialize};
 pub struct StaticDataPageMonsterSchema {
     #[serde(rename = "data")]
     pub data: Vec<models::MonsterSchema>,
-    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
-    pub total: Option<u32>,
-    #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
-    pub page: Option<u32>,
-    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
-    pub size: Option<u32>,
-    #[serde(rename = "pages", skip_serializing_if = "Option::is_none")]
-    pub pages: Option<u32>,
+    #[serde(rename = "total")]
+    pub total: u32,
+    #[serde(rename = "page")]
+    pub page: u32,
+    #[serde(rename = "size")]
+    pub size: u32,
+    #[serde(rename = "pages")]
+    pub pages: u32,
 }
 
 impl StaticDataPageMonsterSchema {
-    pub fn new(data: Vec<models::MonsterSchema>) -> StaticDataPageMonsterSchema {
+    pub fn new(
+        data: Vec<models::MonsterSchema>,
+        total: u32,
+        page: u32,
+        size: u32,
+        pages: u32,
+    ) -> StaticDataPageMonsterSchema {
         StaticDataPageMonsterSchema {
             data,
-            total: None,
-            page: None,
-            size: None,
-            pages: None,
+            total,
+            page,
+            size,
+            pages,
         }
     }
 }

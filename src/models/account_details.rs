@@ -10,7 +10,7 @@ pub struct AccountDetails {
     /// Member status.
     #[serde(rename = "member")]
     pub member: bool,
-    /// Account status.
+    /// Account status. Status for contributors during the alpha and beta phases. It is no longer possible to obtain founder status.
     #[serde(rename = "status")]
     pub status: models::AccountStatus,
     /// Account badges.

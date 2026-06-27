@@ -54,6 +54,8 @@ pub struct GetGeOrdersParams {
     pub account: Option<String>,
     /// Filter by order type (sell or buy).
     pub r#type: Option<models::GeOrderType>,
+    /// Filter by item type.
+    pub item_type: Option<models::ItemType>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -65,6 +67,7 @@ impl GetGeOrdersParams {
         code: Option<String>,
         account: Option<String>,
         r#type: Option<models::GeOrderType>,
+        item_type: Option<models::ItemType>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
@@ -72,6 +75,7 @@ impl GetGeOrdersParams {
             code,
             account,
             r#type,
+            item_type,
             page,
             size,
         }
@@ -266,6 +270,8 @@ pub async fn get_ge_orders(
     // unbox the parameters
     let r#type = params.r#type;
     // unbox the parameters
+    let item_type = params.item_type;
+    // unbox the parameters
     let page = params.page;
     // unbox the parameters
     let size = params.size;
@@ -287,6 +293,10 @@ pub async fn get_ge_orders(
     if let Some(ref local_var_str) = r#type {
         local_var_req_builder =
             local_var_req_builder.query(&[("type", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = item_type {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("item_type", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =

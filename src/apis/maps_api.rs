@@ -14,6 +14,10 @@ pub struct GetAllMapsParams {
     pub content_code: Option<String>,
     /// When true, excludes maps with access_type 'blocked' from the results.
     pub hide_blocked_maps: Option<bool>,
+    /// When true, does not overlay active events on maps.
+    pub hide_event: Option<bool>,
+    /// Filter maps by transition. True returns only maps with transitions, False returns only maps without.
+    pub transition: Option<bool>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -26,6 +30,8 @@ impl GetAllMapsParams {
         content_type: Option<models::MapContentType>,
         content_code: Option<String>,
         hide_blocked_maps: Option<bool>,
+        hide_event: Option<bool>,
+        transition: Option<bool>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
@@ -34,6 +40,8 @@ impl GetAllMapsParams {
             content_type,
             content_code,
             hide_blocked_maps,
+            hide_event,
+            transition,
             page,
             size,
         }
@@ -44,13 +52,17 @@ impl GetAllMapsParams {
 #[derive(Clone, Debug)]
 pub struct GetLayerMapsParams {
     /// The layer of the map (interior, overworld, underground).
-    pub layer: String,
+    pub layer: models::MapLayer,
     /// Type of maps.
-    pub content_type: Option<String>,
+    pub content_type: Option<models::MapContentType>,
     /// Content code on the map.
     pub content_code: Option<String>,
     /// When true, excludes maps with access_type 'blocked' from the results.
     pub hide_blocked_maps: Option<bool>,
+    /// When true, does not overlay active events on maps.
+    pub hide_event: Option<bool>,
+    /// Filter maps by transition. True returns only maps with transitions, False returns only maps without.
+    pub transition: Option<bool>,
     /// Page number
     pub page: Option<u32>,
     /// Page size
@@ -59,10 +71,12 @@ pub struct GetLayerMapsParams {
 
 impl GetLayerMapsParams {
     pub fn new(
-        layer: String,
-        content_type: Option<String>,
+        layer: models::MapLayer,
+        content_type: Option<models::MapContentType>,
         content_code: Option<String>,
         hide_blocked_maps: Option<bool>,
+        hide_event: Option<bool>,
+        transition: Option<bool>,
         page: Option<u32>,
         size: Option<u32>,
     ) -> Self {
@@ -71,6 +85,8 @@ impl GetLayerMapsParams {
             content_type,
             content_code,
             hide_blocked_maps,
+            hide_event,
+            transition,
             page,
             size,
         }
@@ -94,7 +110,7 @@ impl GetMapByIdParams {
 #[derive(Clone, Debug)]
 pub struct GetMapByPositionParams {
     /// The layer of the map (interior, overworld, underground).
-    pub layer: String,
+    pub layer: models::MapLayer,
     /// The position x of the map.
     pub x: i32,
     /// The position y of the map.
@@ -102,7 +118,7 @@ pub struct GetMapByPositionParams {
 }
 
 impl GetMapByPositionParams {
-    pub fn new(layer: String, x: i32, y: i32) -> Self {
+    pub fn new(layer: models::MapLayer, x: i32, y: i32) -> Self {
         Self { layer, x, y }
     }
 }
@@ -207,6 +223,10 @@ pub async fn get_all_maps(
     // unbox the parameters
     let hide_blocked_maps = params.hide_blocked_maps;
     // unbox the parameters
+    let hide_event = params.hide_event;
+    // unbox the parameters
+    let transition = params.transition;
+    // unbox the parameters
     let page = params.page;
     // unbox the parameters
     let size = params.size;
@@ -232,6 +252,14 @@ pub async fn get_all_maps(
     if let Some(ref local_var_str) = hide_blocked_maps {
         local_var_req_builder =
             local_var_req_builder.query(&[("hide_blocked_maps", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = hide_event {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("hide_event", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = transition {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("transition", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =
@@ -282,6 +310,10 @@ pub async fn get_layer_maps(
     // unbox the parameters
     let hide_blocked_maps = params.hide_blocked_maps;
     // unbox the parameters
+    let hide_event = params.hide_event;
+    // unbox the parameters
+    let transition = params.transition;
+    // unbox the parameters
     let page = params.page;
     // unbox the parameters
     let size = params.size;
@@ -307,6 +339,14 @@ pub async fn get_layer_maps(
     if let Some(ref local_var_str) = hide_blocked_maps {
         local_var_req_builder =
             local_var_req_builder.query(&[("hide_blocked_maps", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = hide_event {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("hide_event", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = transition {
+        local_var_req_builder =
+            local_var_req_builder.query(&[("transition", &local_var_str.to_string())]);
     }
     if let Some(ref local_var_str) = page {
         local_var_req_builder =

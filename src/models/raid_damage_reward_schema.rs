@@ -1,0 +1,26 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct RaidDamageRewardSchema {
+    /// Damage required per reward instance.
+    #[serde(rename = "damage_per_reward")]
+    pub damage_per_reward: u32,
+    /// Maximum number of times this reward can be granted. Null means no cap.
+    #[serde(rename = "max_rewards", skip_serializing_if = "Option::is_none")]
+    pub max_rewards: Option<u32>,
+    /// Items granted per reward instance.
+    #[serde(rename = "items", skip_serializing_if = "Option::is_none")]
+    pub items: Option<Vec<models::SimpleItemSchema>>,
+}
+
+impl RaidDamageRewardSchema {
+    pub fn new(damage_per_reward: u32) -> RaidDamageRewardSchema {
+        RaidDamageRewardSchema {
+            damage_per_reward,
+            max_rewards: None,
+            items: None,
+        }
+    }
+}

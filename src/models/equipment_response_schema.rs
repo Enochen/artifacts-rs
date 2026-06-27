@@ -5,11 +5,11 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct EquipmentResponseSchema {
     #[serde(rename = "data")]
-    pub data: Box<models::EquipRequestSchema>,
+    pub data: Box<models::EquipmentTransactionSchema>,
 }
 
 impl EquipmentResponseSchema {
-    pub fn new(data: models::EquipRequestSchema) -> EquipmentResponseSchema {
+    pub fn new(data: models::EquipmentTransactionSchema) -> EquipmentResponseSchema {
         EquipmentResponseSchema {
             data: Box::new(data),
         }
@@ -17,7 +17,7 @@ impl EquipmentResponseSchema {
 }
 
 impl crate::traits::IntoData for EquipmentResponseSchema {
-    type Data = Box<models::EquipRequestSchema>;
+    type Data = Box<models::EquipmentTransactionSchema>;
     fn into_data(self) -> Self::Data {
         self.data
     }

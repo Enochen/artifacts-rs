@@ -16,6 +16,8 @@ pub enum PendingItemSource {
     Admin,
     #[serde(rename = "event")]
     Event,
+    #[serde(rename = "raid")]
+    Raid,
     #[serde(rename = "other")]
     Other,
 }
@@ -27,6 +29,7 @@ impl std::fmt::Display for PendingItemSource {
             Self::GrandExchange => write!(f, "grand_exchange"),
             Self::Admin => write!(f, "admin"),
             Self::Event => write!(f, "event"),
+            Self::Raid => write!(f, "raid"),
             Self::Other => write!(f, "other"),
         }
     }

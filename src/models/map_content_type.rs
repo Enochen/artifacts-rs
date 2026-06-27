@@ -20,6 +20,8 @@ pub enum MapContentType {
     TasksMaster,
     #[serde(rename = "npc")]
     Npc,
+    #[serde(rename = "raid")]
+    Raid,
 }
 
 impl std::fmt::Display for MapContentType {
@@ -32,6 +34,7 @@ impl std::fmt::Display for MapContentType {
             Self::GrandExchange => write!(f, "grand_exchange"),
             Self::TasksMaster => write!(f, "tasks_master"),
             Self::Npc => write!(f, "npc"),
+            Self::Raid => write!(f, "raid"),
         }
     }
 }

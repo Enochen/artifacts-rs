@@ -13,25 +13,18 @@ pub struct SeasonSchema {
     /// Season start date.
     #[serde(rename = "start_date", skip_serializing_if = "Option::is_none")]
     pub start_date: Option<String>,
-    /// Season badges with required achievement points.
-    #[serde(rename = "badges")]
-    pub badges: Vec<models::SeasonBadgeSchema>,
-    /// Season skins with required achievement points.
-    #[serde(rename = "skins")]
-    pub skins: Vec<models::SeasonSkinSchema>,
+    /// Season rewards with required achievement points, sorted by points ascending.
+    #[serde(rename = "rewards")]
+    pub rewards: Vec<models::StatusSeasonRewardSchema>,
 }
 
 impl SeasonSchema {
-    pub fn new(
-        badges: Vec<models::SeasonBadgeSchema>,
-        skins: Vec<models::SeasonSkinSchema>,
-    ) -> SeasonSchema {
+    pub fn new(rewards: Vec<models::StatusSeasonRewardSchema>) -> SeasonSchema {
         SeasonSchema {
             name: None,
             number: None,
             start_date: None,
-            badges,
-            skins,
+            rewards,
         }
     }
 }

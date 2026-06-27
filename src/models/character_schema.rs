@@ -12,7 +12,7 @@ pub struct CharacterSchema {
     pub account: String,
     /// Character skin code.
     #[serde(rename = "skin")]
-    pub skin: models::CharacterSkin,
+    pub skin: String,
     /// Combat level.
     #[serde(rename = "level")]
     pub level: i32,
@@ -258,14 +258,14 @@ pub struct CharacterSchema {
     pub inventory_max_items: i32,
     /// List of inventory slots.
     #[serde(rename = "inventory", skip_serializing_if = "Option::is_none")]
-    pub inventory: Option<Vec<models::InventorySlot>>,
+    pub inventory: Option<Vec<models::InventorySlotSchema>>,
 }
 
 impl CharacterSchema {
     pub fn new(
         name: String,
         account: String,
-        skin: models::CharacterSkin,
+        skin: String,
         level: i32,
         xp: i32,
         max_xp: i32,

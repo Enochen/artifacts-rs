@@ -13,22 +13,14 @@ pub struct BadgeSchema {
     /// Description of the badge.
     #[serde(rename = "description")]
     pub description: String,
-    /// Conditions to get the badge.
-    #[serde(rename = "conditions")]
-    pub conditions: Vec<models::BadgeConditionSchema>,
 }
 
 impl BadgeSchema {
-    pub fn new(
-        code: String,
-        description: String,
-        conditions: Vec<models::BadgeConditionSchema>,
-    ) -> BadgeSchema {
+    pub fn new(code: String, description: String) -> BadgeSchema {
         BadgeSchema {
             code,
             season: None,
             description,
-            conditions,
         }
     }
 }

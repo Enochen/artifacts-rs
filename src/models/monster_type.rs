@@ -12,6 +12,8 @@ pub enum MonsterType {
     Elite,
     #[serde(rename = "boss")]
     Boss,
+    #[serde(rename = "raid_boss")]
+    RaidBoss,
 }
 
 impl std::fmt::Display for MonsterType {
@@ -20,6 +22,7 @@ impl std::fmt::Display for MonsterType {
             Self::Normal => write!(f, "normal"),
             Self::Elite => write!(f, "elite"),
             Self::Boss => write!(f, "boss"),
+            Self::RaidBoss => write!(f, "raid_boss"),
         }
     }
 }

@@ -13,7 +13,7 @@ pub struct MyAccountDetails {
     /// Member status.
     #[serde(rename = "member")]
     pub member: bool,
-    /// Member expiration date.
+    /// Membership expiration date.
     #[serde(rename = "member_expiration", skip_serializing_if = "Option::is_none")]
     pub member_expiration: Option<String>,
     /// Account status.
@@ -28,9 +28,9 @@ pub struct MyAccountDetails {
     /// Gems.
     #[serde(rename = "gems")]
     pub gems: i32,
-    /// Event tokens for spawning events.
-    #[serde(rename = "event_token")]
-    pub event_token: i32,
+    /// Member tokens manually granted as rewards for events. Each token can be redeemed for one month of membership.
+    #[serde(rename = "member_token", skip_serializing_if = "Option::is_none")]
+    pub member_token: Option<i32>,
     /// Achievement points.
     #[serde(rename = "achievements_points")]
     pub achievements_points: i32,
@@ -50,7 +50,6 @@ impl MyAccountDetails {
         status: models::AccountStatus,
         skins: Vec<String>,
         gems: i32,
-        event_token: i32,
         achievements_points: i32,
         banned: bool,
     ) -> MyAccountDetails {
@@ -63,7 +62,7 @@ impl MyAccountDetails {
             badges: None,
             skins,
             gems,
-            event_token,
+            member_token: None,
             achievements_points,
             banned,
             ban_reason: None,

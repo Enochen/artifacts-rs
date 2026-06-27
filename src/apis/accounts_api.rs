@@ -48,7 +48,7 @@ pub struct GetAccountAchievementsParams {
     /// The name of the account.
     pub account: String,
     /// Type of achievements.
-    pub r#type: Option<String>,
+    pub r#type: Option<models::AchievementType>,
     /// Filter by completed achievements.
     pub completed: Option<bool>,
     /// Page number
@@ -60,7 +60,7 @@ pub struct GetAccountAchievementsParams {
 impl GetAccountAchievementsParams {
     pub fn new(
         account: String,
-        r#type: Option<String>,
+        r#type: Option<models::AchievementType>,
         completed: Option<bool>,
         page: Option<u32>,
         size: Option<u32>,

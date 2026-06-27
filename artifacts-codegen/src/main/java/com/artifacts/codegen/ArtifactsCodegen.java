@@ -148,13 +148,4 @@ public class ArtifactsCodegen extends RustClientCodegen {
         }
         return map;
     }
-
-    @Override
-    public CodegenParameter fromRequestBody(RequestBody body, Set<String> imports, String bodyParameterName) {
-        CodegenParameter codegenParameter = super.fromRequestBody(body, imports, bodyParameterName);
-        if (codegenParameter.isModel && !codegenParameter.dataType.startsWith("models::")) {
-            codegenParameter.dataType = "models::" + codegenParameter.dataType;
-        }
-        return codegenParameter;
-    }
 }

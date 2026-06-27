@@ -8,8 +8,8 @@ pub enum MapAccessType {
     #[serde(rename = "standard")]
     #[default]
     Standard,
-    #[serde(rename = "teleportation")]
-    Teleportation,
+    #[serde(rename = "restricted")]
+    Restricted,
     #[serde(rename = "conditional")]
     Conditional,
     #[serde(rename = "blocked")]
@@ -20,7 +20,7 @@ impl std::fmt::Display for MapAccessType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Standard => write!(f, "standard"),
-            Self::Teleportation => write!(f, "teleportation"),
+            Self::Restricted => write!(f, "restricted"),
             Self::Conditional => write!(f, "conditional"),
             Self::Blocked => write!(f, "blocked"),
         }

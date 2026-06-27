@@ -1,0 +1,45 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct GemShopSpawnEventCatalogItemSchema {
+    /// Event code.
+    #[serde(rename = "code")]
+    pub code: String,
+    /// Event name.
+    #[serde(rename = "name")]
+    pub name: String,
+    /// Spawned content type.
+    #[serde(rename = "content_type")]
+    pub content_type: models::MapContentType,
+    /// Spawned content code.
+    #[serde(rename = "content_code")]
+    pub content_code: String,
+    /// Event duration in minutes.
+    #[serde(rename = "duration")]
+    pub duration: i32,
+    /// Spawn cost in gems.
+    #[serde(rename = "price")]
+    pub price: i32,
+}
+
+impl GemShopSpawnEventCatalogItemSchema {
+    pub fn new(
+        code: String,
+        name: String,
+        content_type: models::MapContentType,
+        content_code: String,
+        duration: i32,
+        price: i32,
+    ) -> GemShopSpawnEventCatalogItemSchema {
+        GemShopSpawnEventCatalogItemSchema {
+            code,
+            name,
+            content_type,
+            content_code,
+            duration,
+            price,
+        }
+    }
+}

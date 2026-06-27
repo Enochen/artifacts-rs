@@ -6,24 +6,30 @@ use serde::{Deserialize, Serialize};
 pub struct StaticDataPageEffectSchema {
     #[serde(rename = "data")]
     pub data: Vec<models::EffectSchema>,
-    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
-    pub total: Option<u32>,
-    #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
-    pub page: Option<u32>,
-    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
-    pub size: Option<u32>,
-    #[serde(rename = "pages", skip_serializing_if = "Option::is_none")]
-    pub pages: Option<u32>,
+    #[serde(rename = "total")]
+    pub total: u32,
+    #[serde(rename = "page")]
+    pub page: u32,
+    #[serde(rename = "size")]
+    pub size: u32,
+    #[serde(rename = "pages")]
+    pub pages: u32,
 }
 
 impl StaticDataPageEffectSchema {
-    pub fn new(data: Vec<models::EffectSchema>) -> StaticDataPageEffectSchema {
+    pub fn new(
+        data: Vec<models::EffectSchema>,
+        total: u32,
+        page: u32,
+        size: u32,
+        pages: u32,
+    ) -> StaticDataPageEffectSchema {
         StaticDataPageEffectSchema {
             data,
-            total: None,
-            page: None,
-            size: None,
-            pages: None,
+            total,
+            page,
+            size,
+            pages,
         }
     }
 }

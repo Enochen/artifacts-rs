@@ -4,13 +4,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct ChangeSkinCharacterSchema {
-    /// Your desired skin. Skins unlocked by default: 'men1', 'men2', 'men3', 'women1', 'women2', 'women3'.
+    /// Your desired skin.
     #[serde(rename = "skin")]
-    pub skin: models::CharacterSkin,
+    pub skin: String,
 }
 
 impl ChangeSkinCharacterSchema {
-    pub fn new(skin: models::CharacterSkin) -> ChangeSkinCharacterSchema {
+    pub fn new(skin: String) -> ChangeSkinCharacterSchema {
         ChangeSkinCharacterSchema { skin }
     }
 }

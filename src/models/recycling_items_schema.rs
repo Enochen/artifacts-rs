@@ -7,10 +7,20 @@ pub struct RecyclingItemsSchema {
     /// Objects received.
     #[serde(rename = "items")]
     pub items: Vec<models::DropSchema>,
+    /// Whether enhanced recycling was used.
+    #[serde(rename = "enhanced", skip_serializing_if = "Option::is_none")]
+    pub enhanced: Option<bool>,
+    /// Gold spent for enhanced recycling.
+    #[serde(rename = "gold", skip_serializing_if = "Option::is_none")]
+    pub gold: Option<i32>,
 }
 
 impl RecyclingItemsSchema {
     pub fn new(items: Vec<models::DropSchema>) -> RecyclingItemsSchema {
-        RecyclingItemsSchema { items }
+        RecyclingItemsSchema {
+            items,
+            enhanced: None,
+            gold: None,
+        }
     }
 }

@@ -1,0 +1,47 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct SeasonRewardSchema {
+    /// Code of the item/badge/skin associated with this reward.
+    #[serde(rename = "code")]
+    pub code: String,
+    /// Type of the reward.
+    #[serde(rename = "type")]
+    pub r#type: models::RewardType,
+    /// Description of how to earn this reward.
+    #[serde(rename = "description")]
+    pub description: String,
+    /// Number of achievement points required to earn this reward.
+    #[serde(rename = "required_points")]
+    pub required_points: i32,
+    /// Quantity of the reward (e.g., gold amount, item quantity).
+    #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
+    pub quantity: Option<i32>,
+    /// Whether member status is required to earn this reward.
+    #[serde(rename = "member_required", skip_serializing_if = "Option::is_none")]
+    pub member_required: Option<bool>,
+    /// Whether this reward is only for the first player to reach the required points.
+    #[serde(rename = "first_only", skip_serializing_if = "Option::is_none")]
+    pub first_only: Option<bool>,
+}
+
+impl SeasonRewardSchema {
+    pub fn new(
+        code: String,
+        r#type: models::RewardType,
+        description: String,
+        required_points: i32,
+    ) -> SeasonRewardSchema {
+        SeasonRewardSchema {
+            code,
+            r#type,
+            description,
+            required_points,
+            quantity: None,
+            member_required: None,
+            first_only: None,
+        }
+    }
+}

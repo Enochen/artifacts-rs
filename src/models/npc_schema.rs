@@ -18,7 +18,7 @@ pub struct NpcSchema {
     pub r#type: models::NpcType,
     /// Items sold/bought by the NPC.
     #[serde(rename = "items", skip_serializing_if = "Option::is_none")]
-    pub items: Option<Vec<models::SimpleNpcItem>>,
+    pub items: Option<Vec<models::SimpleNpcItemSchema>>,
 }
 
 impl NpcSchema {

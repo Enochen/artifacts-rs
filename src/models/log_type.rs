@@ -14,6 +14,8 @@ pub enum LogType {
     Movement,
     #[serde(rename = "fight")]
     Fight,
+    #[serde(rename = "raid_fight")]
+    RaidFight,
     #[serde(rename = "multi_fight")]
     MultiFight,
     #[serde(rename = "crafting")]
@@ -76,6 +78,8 @@ pub enum LogType {
     ReceiveItem,
     #[serde(rename = "receive_gold")]
     ReceiveGold,
+    #[serde(rename = "raid_deposit")]
+    RaidDeposit,
     #[serde(rename = "change_skin")]
     ChangeSkin,
     #[serde(rename = "rename")]
@@ -92,6 +96,10 @@ pub enum LogType {
     SandboxGiveXp,
     #[serde(rename = "sandbox_reset_account")]
     SandboxResetAccount,
+    #[serde(rename = "sandbox_clear_cooldown")]
+    SandboxClearCooldown,
+    #[serde(rename = "sandbox_teleport")]
+    SandboxTeleport,
 }
 
 impl std::fmt::Display for LogType {
@@ -101,6 +109,7 @@ impl std::fmt::Display for LogType {
             Self::DeleteCharacter => write!(f, "delete_character"),
             Self::Movement => write!(f, "movement"),
             Self::Fight => write!(f, "fight"),
+            Self::RaidFight => write!(f, "raid_fight"),
             Self::MultiFight => write!(f, "multi_fight"),
             Self::Crafting => write!(f, "crafting"),
             Self::Gathering => write!(f, "gathering"),
@@ -132,6 +141,7 @@ impl std::fmt::Display for LogType {
             Self::GiveGold => write!(f, "give_gold"),
             Self::ReceiveItem => write!(f, "receive_item"),
             Self::ReceiveGold => write!(f, "receive_gold"),
+            Self::RaidDeposit => write!(f, "raid_deposit"),
             Self::ChangeSkin => write!(f, "change_skin"),
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
@@ -140,6 +150,8 @@ impl std::fmt::Display for LogType {
             Self::SandboxGiveItem => write!(f, "sandbox_give_item"),
             Self::SandboxGiveXp => write!(f, "sandbox_give_xp"),
             Self::SandboxResetAccount => write!(f, "sandbox_reset_account"),
+            Self::SandboxClearCooldown => write!(f, "sandbox_clear_cooldown"),
+            Self::SandboxTeleport => write!(f, "sandbox_teleport"),
         }
     }
 }

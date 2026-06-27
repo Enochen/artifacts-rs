@@ -16,7 +16,7 @@ pub struct CombatResultSchema {
     /// Character results from combat.
     #[serde(rename = "character_results")]
     #[cfg_attr(feature = "specta", specta(type = Vec<specta_util::Unknown>))]
-    pub character_results: Vec<serde_json::Value>,
+    pub character_results: Vec<std::collections::HashMap<String, serde_json::Value>>,
 }
 
 impl CombatResultSchema {
@@ -24,7 +24,7 @@ impl CombatResultSchema {
         result: String,
         turns: i32,
         logs: Vec<String>,
-        character_results: Vec<serde_json::Value>,
+        character_results: Vec<std::collections::HashMap<String, serde_json::Value>>,
     ) -> CombatResultSchema {
         CombatResultSchema {
             result,

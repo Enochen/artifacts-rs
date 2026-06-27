@@ -59,6 +59,19 @@ impl GetCharacterParams {
     }
 }
 
+/// struct for passing parameters to the method [`get_character_stats`]
+#[derive(Clone, Debug)]
+pub struct GetCharacterStatsParams {
+    /// The name of the character.
+    pub name: String,
+}
+
+impl GetCharacterStatsParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+}
+
 /// struct for typed errors of method [`create_character`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -69,6 +82,8 @@ pub enum CreateCharacterError {
     Status495(models::ErrorResponseSchema),
     /// You cannot choose this skin because you do not own it.
     Status550(models::ErrorResponseSchema),
+    /// Skin not found.
+    Status404(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -83,6 +98,7 @@ impl<'de> Deserialize<'de> for CreateCharacterError {
             494 => Ok(Self::Status494(raw)),
             495 => Ok(Self::Status495(raw)),
             550 => Ok(Self::Status550(raw)),
+            404 => Ok(Self::Status404(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -146,6 +162,30 @@ pub enum GetCharacterError {
 }
 
 impl<'de> Deserialize<'de> for GetCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            404 => Ok(Self::Status404(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
+/// struct for typed errors of method [`get_character_stats`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GetCharacterStatsError {
+    /// character stats not found.
+    Status404(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for GetCharacterStatsError {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -337,6 +377,51 @@ pub async fn get_character(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Retrieve gameplay statistics for a character.  Stats are only visible if the character's account has an active subscription. Statistics are still collected for all accounts regardless of subscription status.
+pub async fn get_character_stats(
+    configuration: &configuration::Configuration,
+    params: GetCharacterStatsParams,
+) -> Result<models::CharacterStatsResponseSchema, Error<GetCharacterStatsError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/characters/{name}/stats",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetCharacterStatsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

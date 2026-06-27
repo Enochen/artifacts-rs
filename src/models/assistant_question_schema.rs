@@ -1,0 +1,22 @@
+use crate::models;
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
+pub struct AssistantQuestionSchema {
+    /// Your question
+    #[serde(rename = "question")]
+    pub question: String,
+    /// Spend 1 gem if no free member question is available.
+    #[serde(rename = "pay_with_gems", skip_serializing_if = "Option::is_none")]
+    pub pay_with_gems: Option<bool>,
+}
+
+impl AssistantQuestionSchema {
+    pub fn new(question: String) -> AssistantQuestionSchema {
+        AssistantQuestionSchema {
+            question,
+            pay_with_gems: None,
+        }
+    }
+}
