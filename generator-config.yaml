@@ -52,6 +52,7 @@ operationIdNameMappings:
   action_claim_pending_item_my__name__action_claim_item__id__post: claim_pending_item
   action_delete_item_my__name__action_delete_post: delete_item
   action_change_skin_my__name__action_change_skin_post: change_skin
+  action_rename_my__name__action_rename_post: rename_character
   get_all_characters_logs_my_logs_get: get_all_characters_logs
   get_character_logs_my_logs__name__get: get_character_logs
   get_my_characters_my_characters_get: get_my_characters

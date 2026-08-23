@@ -440,6 +440,23 @@ impl RecycleParams {
     }
 }
 
+/// struct for passing parameters to the method [`rename_character`]
+#[derive(Clone, Debug)]
+pub struct RenameCharacterParams {
+    /// Current name of your character.
+    pub name: String,
+    pub rename_character_schema: models::RenameCharacterSchema,
+}
+
+impl RenameCharacterParams {
+    pub fn new(name: String, rename_character_schema: models::RenameCharacterSchema) -> Self {
+        Self {
+            name,
+            rename_character_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`rest_character`]
 #[derive(Clone, Debug)]
 pub struct RestCharacterParams {
@@ -1745,6 +1762,45 @@ impl<'de> Deserialize<'de> for RecycleError {
             478 => Ok(Self::Status478(raw)),
             492 => Ok(Self::Status492(raw)),
             473 => Ok(Self::Status473(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
+/// struct for typed errors of method [`rename_character`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum RenameCharacterError {
+    /// Access denied, you must be a member to do that.
+    Status451(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// This name is already in use.
+    Status494(models::ErrorResponseSchema),
+    /// Character not found.
+    Status404(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for RenameCharacterError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            451 => Ok(Self::Status451(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            494 => Ok(Self::Status494(raw)),
+            404 => Ok(Self::Status404(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -3454,6 +3510,57 @@ pub async fn recycle(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<RecycleError> = serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Rename a character. An active membership is required.
+pub async fn rename_character(
+    configuration: &configuration::Configuration,
+    params: RenameCharacterParams,
+) -> Result<models::RenameResponseSchema, Error<RenameCharacterError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let rename_character_schema = params.rename_character_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/rename",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&rename_character_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<RenameCharacterError> =
+            serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
             content: local_var_content,

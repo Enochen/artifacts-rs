@@ -13,7 +13,7 @@ pub struct RateLimitsDataSchema {
     /// Rate limits for action endpoints.
     #[serde(rename = "action")]
     pub action: Box<models::RateLimitScopeSchema>,
-    /// Rate limits for the fight simulation endpoint. Only available for members.
+    /// Rate limit for the fight simulation endpoint. Only available for members.
     #[serde(rename = "simulation")]
     pub simulation: Box<models::RateLimitScopeSchema>,
     /// Assistant daily usage. Only available for members.

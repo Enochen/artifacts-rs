@@ -25,18 +25,18 @@ pub struct EventSchema {
     /// Cooldown in minutes before the event can be spawned with gems.
     #[serde(rename = "cooldown", skip_serializing_if = "Option::is_none")]
     pub cooldown: Option<i32>,
-    /// Price in gems to spawn the event. Null if not purchasable.
-    #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<i32>,
-    /// Transition to add to the map when event is active.
-    #[serde(rename = "transition", skip_serializing_if = "Option::is_none")]
-    pub transition: Option<Box<models::TransitionSchema>>,
     /// Gems spawn cooldown expiration datetime (null if not on cooldown).
     #[serde(
         rename = "cooldown_expiration",
         skip_serializing_if = "Option::is_none"
     )]
     pub cooldown_expiration: Option<String>,
+    /// Price in gems to spawn the event. Null if not purchasable.
+    #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
+    pub price: Option<i32>,
+    /// Transition to add to the map when event is active.
+    #[serde(rename = "transition", skip_serializing_if = "Option::is_none")]
+    pub transition: Option<Box<models::TransitionSchema>>,
 }
 
 impl EventSchema {
@@ -55,9 +55,9 @@ impl EventSchema {
             duration,
             rate,
             cooldown: None,
+            cooldown_expiration: None,
             price: None,
             transition: None,
-            cooldown_expiration: None,
         }
     }
 }

@@ -186,6 +186,8 @@ impl<'de> Deserialize<'de> for BuyGemsError {
 pub enum BuySubscriptionStripeError {
     /// You already have an active subscription.
     Status565(models::ErrorResponseSchema),
+    /// An active Stripe subscription cannot be extended with gems or member tokens.
+    Status573(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
     Status422(models::ErrorResponseSchema),
 }
@@ -198,6 +200,7 @@ impl<'de> Deserialize<'de> for BuySubscriptionStripeError {
         let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
         match raw.error.code {
             565 => Ok(Self::Status565(raw)),
+            573 => Ok(Self::Status573(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",

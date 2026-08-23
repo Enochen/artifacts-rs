@@ -10,6 +10,9 @@ pub struct CharacterStatsSchema {
     #[serde(rename = "resources_gathered", skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "specta", specta(type = Option<specta_util::Unknown>))]
     pub resources_gathered: Option<std::collections::HashMap<String, i32>>,
+    #[serde(rename = "items_crafted", skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "specta", specta(type = Option<specta_util::Unknown>))]
+    pub items_crafted: Option<std::collections::HashMap<String, i32>>,
     #[serde(rename = "action_counts", skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "specta", specta(type = Option<specta_util::Unknown>))]
     pub action_counts: Option<std::collections::HashMap<String, i32>>,
@@ -22,6 +25,7 @@ impl CharacterStatsSchema {
         CharacterStatsSchema {
             monsters_killed: None,
             resources_gathered: None,
+            items_crafted: None,
             action_counts: None,
             deaths: None,
         }

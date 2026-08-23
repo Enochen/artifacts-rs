@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct NpcItemSchema {
-    /// The code of the NPC. This is the NPC's unique identifier (ID).
+    /// The code of the item. This is the item's unique identifier (ID).
     #[serde(rename = "code")]
     pub code: String,
     /// Code of the NPC that sells/buys the item.
