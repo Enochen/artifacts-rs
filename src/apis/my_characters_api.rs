@@ -1685,8 +1685,8 @@ pub enum NpcSellItemError {
     Status486(models::ErrorResponseSchema),
     /// Missing required item(s).
     Status478(models::ErrorResponseSchema),
-    /// This item cannot be sold.
-    Status442(models::ErrorResponseSchema),
+    /// This item is not available to be sold.
+    Status441(models::ErrorResponseSchema),
     /// Item not found.
     Status404(models::ErrorResponseSchema),
     /// Request could not be processed due to an invalid payload.
@@ -1706,7 +1706,7 @@ impl<'de> Deserialize<'de> for NpcSellItemError {
             499 => Ok(Self::Status499(raw)),
             486 => Ok(Self::Status486(raw)),
             478 => Ok(Self::Status478(raw)),
-            442 => Ok(Self::Status442(raw)),
+            441 => Ok(Self::Status441(raw)),
             404 => Ok(Self::Status404(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
