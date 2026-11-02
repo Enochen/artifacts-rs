@@ -16,6 +16,26 @@ impl AcceptNewTaskParams {
     }
 }
 
+/// struct for passing parameters to the method [`accept_seasonal_offering`]
+#[derive(Clone, Debug)]
+pub struct AcceptSeasonalOfferingParams {
+    /// Name of your character.
+    pub name: String,
+    pub accept_offering_request_schema: models::AcceptOfferingRequestSchema,
+}
+
+impl AcceptSeasonalOfferingParams {
+    pub fn new(
+        name: String,
+        accept_offering_request_schema: models::AcceptOfferingRequestSchema,
+    ) -> Self {
+        Self {
+            name,
+            accept_offering_request_schema,
+        }
+    }
+}
+
 /// struct for passing parameters to the method [`action_transition`]
 #[derive(Clone, Debug)]
 pub struct ActionTransitionParams {
@@ -87,6 +107,26 @@ pub struct ClaimPendingItemParams {
 impl ClaimPendingItemParams {
     pub fn new(name: String, id: String) -> Self {
         Self { name, id }
+    }
+}
+
+/// struct for passing parameters to the method [`complete_seasonal_offering`]
+#[derive(Clone, Debug)]
+pub struct CompleteSeasonalOfferingParams {
+    /// Name of your character.
+    pub name: String,
+    pub complete_offering_request_schema: models::CompleteOfferingRequestSchema,
+}
+
+impl CompleteSeasonalOfferingParams {
+    pub fn new(
+        name: String,
+        complete_offering_request_schema: models::CompleteOfferingRequestSchema,
+    ) -> Self {
+        Self {
+            name,
+            complete_offering_request_schema,
+        }
     }
 }
 
@@ -335,6 +375,19 @@ pub struct GetCharacterLogsParams {
 impl GetCharacterLogsParams {
     pub fn new(name: String, page: Option<u32>, size: Option<u32>) -> Self {
         Self { name, page, size }
+    }
+}
+
+/// struct for passing parameters to the method [`get_character_seasonal_offerings`]
+#[derive(Clone, Debug)]
+pub struct GetCharacterSeasonalOfferingsParams {
+    /// Name of your character.
+    pub name: String,
+}
+
+impl GetCharacterSeasonalOfferingsParams {
+    pub fn new(name: String) -> Self {
+        Self { name }
     }
 }
 
@@ -610,6 +663,51 @@ impl<'de> Deserialize<'de> for AcceptNewTaskError {
     }
 }
 
+/// struct for typed errors of method [`accept_seasonal_offering`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum AcceptSeasonalOfferingError {
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Seasonal Altar not found on this map.
+    Status598(models::ErrorResponseSchema),
+    /// The character has already completed an offering in this category today.
+    Status574(models::ErrorResponseSchema),
+    /// The character has already selected an offering in this category today.
+    Status576(models::ErrorResponseSchema),
+    /// This seasonal offering is not available.
+    Status575(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for AcceptSeasonalOfferingError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            598 => Ok(Self::Status598(raw)),
+            574 => Ok(Self::Status574(raw)),
+            576 => Ok(Self::Status576(raw)),
+            575 => Ok(Self::Status575(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
 /// struct for typed errors of method [`action_transition`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -802,6 +900,54 @@ impl<'de> Deserialize<'de> for ClaimPendingItemError {
             497 => Ok(Self::Status497(raw)),
             499 => Ok(Self::Status499(raw)),
             486 => Ok(Self::Status486(raw)),
+            422 => Ok(Self::Status422(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
+/// struct for typed errors of method [`complete_seasonal_offering`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum CompleteSeasonalOfferingError {
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// The character is in cooldown.
+    Status499(models::ErrorResponseSchema),
+    /// An action is already in progress for this character.
+    Status486(models::ErrorResponseSchema),
+    /// Missing required item(s).
+    Status478(models::ErrorResponseSchema),
+    /// Seasonal Altar not found on this map.
+    Status598(models::ErrorResponseSchema),
+    /// The character has already completed an offering in this category today.
+    Status574(models::ErrorResponseSchema),
+    /// The character must accept this seasonal offering first.
+    Status577(models::ErrorResponseSchema),
+    /// This seasonal offering is not available.
+    Status575(models::ErrorResponseSchema),
+    /// Request could not be processed due to an invalid payload.
+    Status422(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for CompleteSeasonalOfferingError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            499 => Ok(Self::Status499(raw)),
+            486 => Ok(Self::Status486(raw)),
+            478 => Ok(Self::Status478(raw)),
+            598 => Ok(Self::Status598(raw)),
+            574 => Ok(Self::Status574(raw)),
+            577 => Ok(Self::Status577(raw)),
+            575 => Ok(Self::Status575(raw)),
             422 => Ok(Self::Status422(raw)),
             _ => Err(de::Error::custom(format!(
                 "Unexpected error code: {}",
@@ -1474,6 +1620,33 @@ impl<'de> Deserialize<'de> for GetCharacterLogsError {
     }
 }
 
+/// struct for typed errors of method [`get_character_seasonal_offerings`]
+#[derive(Debug, Clone, Serialize)]
+#[serde(untagged)]
+pub enum GetCharacterSeasonalOfferingsError {
+    /// Character not found.
+    Status498(models::ErrorResponseSchema),
+    /// This seasonal offering is not available.
+    Status575(models::ErrorResponseSchema),
+}
+
+impl<'de> Deserialize<'de> for GetCharacterSeasonalOfferingsError {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
+        match raw.error.code {
+            498 => Ok(Self::Status498(raw)),
+            575 => Ok(Self::Status575(raw)),
+            _ => Err(de::Error::custom(format!(
+                "Unexpected error code: {}",
+                raw.error.code
+            ))),
+        }
+    }
+}
+
 /// struct for typed errors of method [`get_my_characters`]
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -1982,6 +2155,8 @@ impl<'de> Deserialize<'de> for UnequipItemError {
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum UseItemError {
+    /// Commercial features are disabled on sandbox and beta servers.
+    Status403(models::ErrorResponseSchema),
     /// Item not found.
     Status404(models::ErrorResponseSchema),
     /// Character not found.
@@ -2007,6 +2182,7 @@ impl<'de> Deserialize<'de> for UseItemError {
     {
         let raw = models::ErrorResponseSchema::deserialize(deserializer)?;
         match raw.error.code {
+            403 => Ok(Self::Status403(raw)),
             404 => Ok(Self::Status404(raw)),
             498 => Ok(Self::Status498(raw)),
             499 => Ok(Self::Status499(raw)),
@@ -2151,6 +2327,57 @@ pub async fn accept_new_task(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<AcceptNewTaskError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Accept one offering in a daily category and activate its favor.
+pub async fn accept_seasonal_offering(
+    configuration: &configuration::Configuration,
+    params: AcceptSeasonalOfferingParams,
+) -> Result<models::AcceptOfferingResponseSchema, Error<AcceptSeasonalOfferingError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let accept_offering_request_schema = params.accept_offering_request_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/offering/accept",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&accept_offering_request_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<AcceptSeasonalOfferingError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -2397,6 +2624,57 @@ pub async fn claim_pending_item(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<ClaimPendingItemError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Complete a previously accepted offering and receive its XP reward.
+pub async fn complete_seasonal_offering(
+    configuration: &configuration::Configuration,
+    params: CompleteSeasonalOfferingParams,
+) -> Result<models::CompleteOfferingResponseSchema, Error<CompleteSeasonalOfferingError>> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+    // unbox the parameters
+    let complete_offering_request_schema = params.complete_offering_request_schema;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/action/offering",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+    local_var_req_builder = local_var_req_builder.json(&complete_offering_request_schema);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<CompleteSeasonalOfferingError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -3165,6 +3443,57 @@ pub async fn get_character_logs(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<GetCharacterLogsError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+/// Return today's offerings and completion state for one character.
+pub async fn get_character_seasonal_offerings(
+    configuration: &configuration::Configuration,
+    params: GetCharacterSeasonalOfferingsParams,
+) -> Result<
+    models::CharacterSeasonalOfferingsResponseSchema,
+    Error<GetCharacterSeasonalOfferingsError>,
+> {
+    let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let name = params.name;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/my/{name}/offerings",
+        local_var_configuration.base_path,
+        name = crate::apis::urlencode(name)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    };
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<GetCharacterSeasonalOfferingsError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,

@@ -20,6 +20,8 @@ pub enum AchievementType {
     Recycling,
     #[serde(rename = "task")]
     Task,
+    #[serde(rename = "favor")]
+    Favor,
     #[serde(rename = "other")]
     Other,
     #[serde(rename = "use")]
@@ -40,6 +42,7 @@ impl std::fmt::Display for AchievementType {
             Self::Crafting => write!(f, "crafting"),
             Self::Recycling => write!(f, "recycling"),
             Self::Task => write!(f, "task"),
+            Self::Favor => write!(f, "favor"),
             Self::Other => write!(f, "other"),
             Self::Use => write!(f, "use"),
             Self::NpcBuy => write!(f, "npc_buy"),

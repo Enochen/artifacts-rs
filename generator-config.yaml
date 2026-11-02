@@ -53,6 +53,9 @@ operationIdNameMappings:
   action_delete_item_my__name__action_delete_post: delete_item
   action_change_skin_my__name__action_change_skin_post: change_skin
   action_rename_my__name__action_rename_post: rename_character
+  action_accept_seasonal_offering_my__name__action_offering_accept_post: accept_seasonal_offering
+  action_complete_seasonal_offering_my__name__action_offering_post: complete_seasonal_offering
+  get_character_seasonal_offerings_my__name__offerings_get: get_character_seasonal_offerings
   get_all_characters_logs_my_logs_get: get_all_characters_logs
   get_character_logs_my_logs__name__get: get_character_logs
   get_my_characters_my_characters_get: get_my_characters
@@ -101,6 +104,7 @@ operationIdNameMappings:
   get_raid_leaderboard_raids__code__leaderboard_get: get_raid_leaderboard
   get_all_resources_resources_get: get_all_resources
   get_resource_resources__code__get: get_resource
+  get_daily_seasonal_offerings_seasonal_offerings_get: get_daily_seasonal_offerings
   get_all_tasks_tasks_list_get: get_all_tasks
   get_task_tasks_list__code__get: get_task
   get_all_tasks_rewards_tasks_rewards_get: get_all_tasks_rewards

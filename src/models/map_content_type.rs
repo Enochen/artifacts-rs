@@ -18,6 +18,8 @@ pub enum MapContentType {
     GrandExchange,
     #[serde(rename = "tasks_master")]
     TasksMaster,
+    #[serde(rename = "seasonal_altar")]
+    SeasonalAltar,
     #[serde(rename = "npc")]
     Npc,
     #[serde(rename = "raid")]
@@ -33,6 +35,7 @@ impl std::fmt::Display for MapContentType {
             Self::Bank => write!(f, "bank"),
             Self::GrandExchange => write!(f, "grand_exchange"),
             Self::TasksMaster => write!(f, "tasks_master"),
+            Self::SeasonalAltar => write!(f, "seasonal_altar"),
             Self::Npc => write!(f, "npc"),
             Self::Raid => write!(f, "raid"),
         }

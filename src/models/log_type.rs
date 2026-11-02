@@ -88,6 +88,8 @@ pub enum LogType {
     Transition,
     #[serde(rename = "claim_item")]
     ClaimItem,
+    #[serde(rename = "offering")]
+    Offering,
     #[serde(rename = "sandbox_give_gold")]
     SandboxGiveGold,
     #[serde(rename = "sandbox_give_item")]
@@ -146,6 +148,7 @@ impl std::fmt::Display for LogType {
             Self::Rename => write!(f, "rename"),
             Self::Transition => write!(f, "transition"),
             Self::ClaimItem => write!(f, "claim_item"),
+            Self::Offering => write!(f, "offering"),
             Self::SandboxGiveGold => write!(f, "sandbox_give_gold"),
             Self::SandboxGiveItem => write!(f, "sandbox_give_item"),
             Self::SandboxGiveXp => write!(f, "sandbox_give_xp"),

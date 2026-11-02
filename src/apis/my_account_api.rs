@@ -816,7 +816,7 @@ pub async fn get_bank_details(
 pub async fn get_bank_items(
     configuration: &configuration::Configuration,
     params: GetBankItemsParams,
-) -> Result<models::DataPageSimpleItemSchema, Error<GetBankItemsError>> {
+) -> Result<models::BankDataPageSimpleItemSchema, Error<GetBankItemsError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
